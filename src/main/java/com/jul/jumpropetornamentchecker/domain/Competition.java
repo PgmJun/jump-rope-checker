@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.domain;
 
+import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -7,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
@@ -37,14 +38,14 @@ public class Competition {
 
     @Column
     @NotNull
-    private LocalDateTime competitionStartDate;
+    private LocalDate competitionStartDate;
 
     @Column
     @NotNull
-    private LocalDateTime competitionEndDate;
+    private LocalDate competitionEndDate;
 
     @Builder
-    public Competition(String competitionName, String competitionHost, String hostEmail, String hostTel, LocalDateTime competitionStartDate, LocalDateTime competitionEndDate) {
+    public Competition(String competitionName, String competitionHost, String hostEmail, String hostTel, LocalDate competitionStartDate, LocalDate competitionEndDate) {
         this.competitionName = competitionName;
         this.competitionHost = competitionHost;
         this.hostEmail = hostEmail;
@@ -53,6 +54,15 @@ public class Competition {
         this.competitionEndDate = competitionEndDate;
     }
 
-
-
+    public CompetitionResponseDto toDto() {
+        return CompetitionResponseDto.builder()
+                .competitionId(competitionId)
+                .competitionName(competitionName)
+                .competitionHost(competitionHost)
+                .hostEmail(hostEmail)
+                .hostTel(hostTel)
+                .competitionStartDate(competitionStartDate)
+                .competitionEndDate(competitionEndDate)
+                .build();
+    }
 }
