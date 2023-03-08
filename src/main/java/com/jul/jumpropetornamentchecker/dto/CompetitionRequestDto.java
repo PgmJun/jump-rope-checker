@@ -1,18 +1,16 @@
 package com.jul.jumpropetornamentchecker.dto;
 
 import com.jul.jumpropetornamentchecker.domain.Competition;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class CompetitionDto {
-
-    private Long competitionId;
+public class CompetitionRequestDto {
 
     private String competitionName;
 
@@ -22,9 +20,9 @@ public class CompetitionDto {
 
     private String hostTel;
 
-    private LocalDateTime competitionStartDate;
+    private LocalDate competitionStartDate;
 
-    private LocalDateTime competitionEndDate;
+    private LocalDate competitionEndDate;
 
     public Competition to() {
         return Competition.builder()
