@@ -1,10 +1,10 @@
 package com.jul.jumpropetornamentchecker.dto;
 
 import com.jul.jumpropetornamentchecker.domain.Competition;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -12,28 +12,28 @@ import java.time.LocalDateTime;
 @Builder
 public class CompetitionDto {
 
-    private Long competition_id;
+    private Long competitionId;
 
-    private String competition_name;
+    private String competitionName;
 
-    private String competition_host;
+    private String competitionHost;
 
-    private String host_email;
+    private String hostEmail;
 
-    private String host_tel;
+    private String hostTel;
 
-    private LocalDateTime competition_start_date;
+    private LocalDateTime competitionStartDate;
 
-    private LocalDateTime competition_end_date;
+    private LocalDateTime competitionEndDate;
 
     public Competition to() {
         return Competition.builder()
-                .competition_name(this.competition_name)
-                .competition_host(this.competition_host)
-                .host_email(this.host_email)
-                .host_tel(this.host_tel)
-                .competition_start_date(this.competition_start_date)
-                .competition_end_date(this.competition_end_date)
+                .competitionName(this.competitionName)
+                .competitionHost(this.competitionHost)
+                .hostEmail(this.hostEmail)
+                .hostTel(this.hostTel)
+                .competitionStartDate(this.competitionStartDate)
+                .competitionEndDate(this.competitionEndDate)
                 .build();
     }
 }

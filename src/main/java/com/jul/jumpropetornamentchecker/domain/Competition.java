@@ -17,40 +17,42 @@ public class Competition {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long competition_id;
+    private Long competitionId;
 
     @Column
     @NotNull
-    private String competition_name;
+    private String competitionName;
 
     @Column
     @NotNull
-    private String competition_host;
+    private String competitionHost;
 
     @Column
     @Email
-    private String host_email;
+    private String hostEmail;
 
     @Column
     @NotNull
-    private String host_tel;
+    private String hostTel;
 
     @Column
     @NotNull
-    private LocalDateTime competition_start_date;
+    private LocalDateTime competitionStartDate;
 
     @Column
     @NotNull
-    private LocalDateTime competition_end_date;
-
+    private LocalDateTime competitionEndDate;
 
     @Builder
-    public Competition(String competition_name, String competition_host, String host_email, String host_tel, LocalDateTime competition_start_date, LocalDateTime competition_end_date) {
-        this.competition_name = competition_name;
-        this.competition_host = competition_host;
-        this.host_email = host_email;
-        this.host_tel = host_tel;
-        this.competition_start_date = competition_start_date;
-        this.competition_end_date = competition_end_date;
+    public Competition(String competitionName, String competitionHost, String hostEmail, String hostTel, LocalDateTime competitionStartDate, LocalDateTime competitionEndDate) {
+        this.competitionName = competitionName;
+        this.competitionHost = competitionHost;
+        this.hostEmail = hostEmail;
+        this.hostTel = hostTel;
+        this.competitionStartDate = competitionStartDate;
+        this.competitionEndDate = competitionEndDate;
     }
+
+
+
 }
