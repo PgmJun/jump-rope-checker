@@ -22,7 +22,7 @@ public class CompetitionController {
         Boolean saveResult = competitionService.saveCompetition(competitionDto);
 
         return (saveResult) ?
-                new ResponseEntity<>(competitionDto.getCompetitionName() + " 경기가 등록되었습니다.", HttpStatus.OK) :
+                new ResponseEntity<>(competitionDto.competitionName() + " 경기가 등록되었습니다.", HttpStatus.OK) :
                 new ResponseEntity<>("경기 등록에 실패하였습니다.", HttpStatus.BAD_REQUEST);
     }
 
