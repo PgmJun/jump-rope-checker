@@ -2,6 +2,7 @@ package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.dto.CompetitionRequestDto;
 import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
+import com.jul.jumpropetornamentchecker.dto.CompetitionUpdateDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,13 @@ public class CompetitionController {
         return (competitionService.removeCompetitionData(competitionIds)) ?
                 new ResponseEntity<>("competition datum are removed", HttpStatus.OK) :
                 new ResponseEntity<>("competition datum are not removed", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<?> updateCompetitionData(@RequestBody List<CompetitionUpdateDto> competitionUpdateDtos) {
+        return (competitionService.updateCompetitionData(competitionUpdateDtos)) ?
+                new ResponseEntity<>("competition datum is updated",HttpStatus.OK) :
+                new ResponseEntity<>("competition datum are fail to update", HttpStatus.BAD_REQUEST);
     }
 
 }

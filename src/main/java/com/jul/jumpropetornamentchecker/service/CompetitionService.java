@@ -3,6 +3,7 @@ package com.jul.jumpropetornamentchecker.service;
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.dto.CompetitionRequestDto;
 import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
+import com.jul.jumpropetornamentchecker.dto.CompetitionUpdateDto;
 import com.jul.jumpropetornamentchecker.repository.CompetitionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,6 +54,18 @@ public class CompetitionService {
     public Boolean removeCompetitionData(List<Long> competitionIds) {
         try {
             competitionIds.forEach(id -> competitionRepository.deleteById(id));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean updateCompetitionData(List<CompetitionUpdateDto> competitionUpdateDtos) {
+        try {
+            for (CompetitionUpdateDto c : competitionUpdateDtos) {
+                Competition competitionData = competitionRepository.findByCompetitionId(c.competitionId()).orElseThrow();
+                competitionData.changeData(c);
+            }
             return true;
         } catch (Exception e) {
             return false;

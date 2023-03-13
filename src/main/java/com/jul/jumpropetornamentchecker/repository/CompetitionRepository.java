@@ -22,4 +22,6 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     void deleteById(Long competitionId);
 
 
+
+
 }

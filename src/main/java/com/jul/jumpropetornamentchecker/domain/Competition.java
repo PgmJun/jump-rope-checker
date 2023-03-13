@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.domain;
 
 import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
+import com.jul.jumpropetornamentchecker.dto.CompetitionUpdateDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -12,7 +13,6 @@ import java.time.LocalDate;
 
 @Entity
 @NoArgsConstructor
-@Getter
 @Table(name = "competition")
 public class Competition {
 
@@ -64,5 +64,14 @@ public class Competition {
                 .competitionStartDate(competitionStartDate)
                 .competitionEndDate(competitionEndDate)
                 .build();
+    }
+
+    public void changeData(CompetitionUpdateDto updateData) {
+        this.competitionName = updateData.competitionName();
+        this.competitionHost = updateData.competitionHost();
+        this.hostEmail = updateData.hostEmail();
+        this.hostTel = updateData.hostTel();
+        this.competitionStartDate = updateData.competitionStartDate();
+        this.competitionEndDate = updateData.competitionEndDate();
     }
 }
