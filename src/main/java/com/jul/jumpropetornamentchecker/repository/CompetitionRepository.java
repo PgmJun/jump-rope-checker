@@ -18,4 +18,8 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
     List<Competition> findByCompetitionName(String competitionName);
 
     List<Competition> findAll();
+
+    void deleteById(Long competitionId);
+
+
 }

@@ -3,6 +3,7 @@ package com.jul.jumpropetornamentchecker.api;
 import com.jul.jumpropetornamentchecker.dto.CompetitionRequestDto;
 import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +49,13 @@ public class CompetitionController {
         return (competitionInfo.isEmpty()) ?
                 new ResponseEntity<>("no ID." + competitionId + " competition data", HttpStatus.NOT_FOUND) :
                 new ResponseEntity<>(competitionInfo, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteCompetitionDataById(@RequestBody List<Long> competitionIds) {
+        return (competitionService.removeCompetitionData(competitionIds)) ?
+                new ResponseEntity<>("competition datum are removed", HttpStatus.OK) :
+                new ResponseEntity<>("competition datum are not removed", HttpStatus.BAD_REQUEST);
     }
 
 }

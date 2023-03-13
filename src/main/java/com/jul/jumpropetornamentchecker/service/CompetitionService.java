@@ -49,4 +49,13 @@ public class CompetitionService {
                 .map(Competition::toDto)
                 .findAny();
     }
+
+    public Boolean removeCompetitionData(List<Long> competitionIds) {
+        try {
+            competitionIds.forEach(id -> competitionRepository.deleteById(id));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
