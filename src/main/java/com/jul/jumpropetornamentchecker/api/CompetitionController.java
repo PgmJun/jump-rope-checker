@@ -60,7 +60,7 @@ public class CompetitionController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<?> updateCompetitionData(@RequestBody List<CompetitionUpdateDto> competitionUpdateDtos) {
+    public ResponseEntity<?> updateCompetitionData(@RequestBody CompetitionUpdateDto competitionUpdateDtos) {
         return (competitionService.updateCompetitionData(competitionUpdateDtos)) ?
                 new ResponseEntity<>("competition datum is updated",HttpStatus.OK) :
                 new ResponseEntity<>("competition datum are fail to update", HttpStatus.BAD_REQUEST);

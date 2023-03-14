@@ -60,12 +60,10 @@ public class CompetitionService {
         }
     }
 
-    public boolean updateCompetitionData(List<CompetitionUpdateDto> competitionUpdateDtos) {
+    public boolean updateCompetitionData(CompetitionUpdateDto competitionUpdateData) {
         try {
-            for (CompetitionUpdateDto c : competitionUpdateDtos) {
-                Competition competitionData = competitionRepository.findByCompetitionId(c.competitionId()).orElseThrow();
-                competitionData.changeData(c);
-            }
+            Competition competitionData = competitionRepository.findByCompetitionId(competitionUpdateData.competitionId()).orElseThrow();
+            competitionData.changeData(competitionUpdateData);
             return true;
         } catch (Exception e) {
             return false;

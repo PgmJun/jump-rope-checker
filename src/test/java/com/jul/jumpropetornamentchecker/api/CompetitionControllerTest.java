@@ -1,11 +1,12 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.dto.CompetitionRequestDto;
 import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
+import com.jul.jumpropetornamentchecker.dto.CompetitionUpdateDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionService;
 import jakarta.transaction.Transactional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +14,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.Assert;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -27,10 +30,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Transactional
 class CompetitionControllerTest {
-    @Autowired private MockMvc mockMvc;
-    @Autowired private ObjectMapper mapper;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper mapper;
 
-    @Autowired private CompetitionService competitionService;
+    @Autowired
+    private CompetitionService competitionService;
+
+    private String compName = "test대회";
+    private String compHost = "test";
+    private String compHostTel = "02-1234-1234";
+    private String compHostEmail = "test@test.com";
 
     @Test
     @DisplayName("대회 데이터 add 테스트")
@@ -39,8 +50,8 @@ class CompetitionControllerTest {
         String competitionDataJsonString = mapper.writeValueAsString(createTestCompDto());
 
         mockMvc.perform(post("/competition/add")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(competitionDataJsonString))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(competitionDataJsonString))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -50,11 +61,11 @@ class CompetitionControllerTest {
     void testFailInsertCompetitionData() throws Exception {
 
         CompetitionRequestDto testCompetition = CompetitionRequestDto.builder()
-                .competitionName("test대회")
-                .competitionHost("test")
+                .competitionName(compName)
+                .competitionHost(compHost)
                 .competitionEndDate(LocalDate.now())
-                .hostTel("02-1234-1234")
-                .hostEmail("test@test.com")
+                .hostTel(compHostTel)
+                .hostEmail(compHostEmail)
                 .build();
 
         String competitionDataJsonString = mapper.writeValueAsString(testCompetition);
@@ -74,7 +85,7 @@ class CompetitionControllerTest {
 
 
         mockMvc.perform(get("/competition/find")
-                        .param("name","test대회"))
+                        .param("name", compName))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -84,10 +95,10 @@ class CompetitionControllerTest {
     void testFailFindCompetitionDataByName() throws Exception {
 
         competitionService.saveCompetition(createTestCompDto());
-
+        String errorCompName = "ttest대회";
 
         mockMvc.perform(get("/competition/find")
-                        .param("name","ttest대회"))
+                        .param("name", errorCompName))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
@@ -98,27 +109,57 @@ class CompetitionControllerTest {
 
         competitionService.saveCompetition(createTestCompDto());
 
-        List<CompetitionResponseDto> testCompetitions = competitionService.findCompetitionInfoByName("test대회");
+        List<CompetitionResponseDto> testCompetitions = competitionService.findCompetitionInfoByName(compName);
 
         competitionService.removeCompetitionData(testCompetitions.stream()
                 .map(CompetitionResponseDto::competitionId)
                 .collect(Collectors.toList()));
 
         mockMvc.perform(get("/competition/find")
-                .param("name","test대회"))
+                        .param("name", compName))
                 .andExpect(status().isNotFound())
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("대회 데이터 update 테스트")
+    void testUpdateCompetitionData() throws Exception {
+        CompetitionRequestDto testCompDto = createTestCompDto();
+
+        competitionService.saveCompetition(testCompDto);
+        CompetitionResponseDto beforeCompData = competitionService.findCompetitionInfoByName(testCompDto.competitionName()).get(0);
+
+        competitionService.updateCompetitionData(createUpdateCompDto(beforeCompData.competitionId()));
+        CompetitionResponseDto afterCompData = competitionService.findCompetitionInfoById(beforeCompData.competitionId()).get();
+
+        System.out.println("beforeCompData.competitionName() = " + beforeCompData.competitionName());
+        System.out.println("afterCompData.competitionName() = " + afterCompData.competitionName());
+
+        Assertions.assertThat(beforeCompData.competitionName()).isNotEqualTo(afterCompData.competitionName());
+        Assertions.assertThat(afterCompData.competitionName()).isEqualTo("updated " + beforeCompData.competitionName());
     }
 
 
     private CompetitionRequestDto createTestCompDto() {
         return CompetitionRequestDto.builder()
-                .competitionName("test대회")
-                .competitionHost("test")
+                .competitionName(compName)
+                .competitionHost(compHost)
                 .competitionStartDate(LocalDate.now())
                 .competitionEndDate(LocalDate.now())
-                .hostTel("02-1234-1234")
-                .hostEmail("test@test.com")
+                .hostTel(compHostTel)
+                .hostEmail(compHostEmail)
+                .build();
+    }
+
+    private CompetitionUpdateDto createUpdateCompDto(Long id) {
+        return CompetitionUpdateDto.builder()
+                .competitionId(id)
+                .competitionName("updated " + compName)
+                .competitionHost(compHost)
+                .competitionStartDate(LocalDate.now())
+                .competitionEndDate(LocalDate.now())
+                .hostTel(compHostTel)
+                .hostEmail(compHostEmail)
                 .build();
     }
 }
