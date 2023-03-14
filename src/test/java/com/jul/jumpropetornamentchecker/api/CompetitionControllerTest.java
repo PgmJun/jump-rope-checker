@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.dto.CompetitionRequestDto;
 import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionService;
@@ -34,16 +35,8 @@ class CompetitionControllerTest {
     @Test
     @DisplayName("대회 데이터 add 테스트")
     void testInsertCompetitionData() throws Exception {
-        CompetitionRequestDto testCompetition = CompetitionRequestDto.builder()
-                .competitionName("test대회1")
-                .competitionHost("test")
-                .competitionStartDate(LocalDate.now())
-                .competitionEndDate(LocalDate.now())
-                .hostTel("02-1234-1234")
-                .hostEmail("test@test.com")
-                .build();
 
-        String competitionDataJsonString = mapper.writeValueAsString(testCompetition);
+        String competitionDataJsonString = mapper.writeValueAsString(createTestCompDto());
 
         mockMvc.perform(post("/competition/add")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -55,6 +48,7 @@ class CompetitionControllerTest {
     @Test
     @DisplayName("필수 데이터 누락이로 인한 add 실패 테스트")
     void testFailInsertCompetitionData() throws Exception {
+
         CompetitionRequestDto testCompetition = CompetitionRequestDto.builder()
                 .competitionName("test대회")
                 .competitionHost("test")
@@ -76,16 +70,7 @@ class CompetitionControllerTest {
     @DisplayName("대회 데이터 findByName 테스트")
     void testFindCompetitionDataByName() throws Exception {
 
-        CompetitionRequestDto testCompetition = CompetitionRequestDto.builder()
-                .competitionName("test대회")
-                .competitionHost("test")
-                .competitionStartDate(LocalDate.now())
-                .competitionEndDate(LocalDate.now())
-                .hostTel("02-1234-1234")
-                .hostEmail("test@test.com")
-                .build();
-
-        competitionService.saveCompetition(testCompetition);
+        competitionService.saveCompetition(createTestCompDto());
 
 
         mockMvc.perform(get("/competition/find")
@@ -98,16 +83,7 @@ class CompetitionControllerTest {
     @DisplayName("대회 데이터 findByName 실패 테스트")
     void testFailFindCompetitionDataByName() throws Exception {
 
-        CompetitionRequestDto testCompetition = CompetitionRequestDto.builder()
-                .competitionName("test대회")
-                .competitionHost("test")
-                .competitionStartDate(LocalDate.now())
-                .competitionEndDate(LocalDate.now())
-                .hostTel("02-1234-1234")
-                .hostEmail("test@test.com")
-                .build();
-
-        competitionService.saveCompetition(testCompetition);
+        competitionService.saveCompetition(createTestCompDto());
 
 
         mockMvc.perform(get("/competition/find")
@@ -119,16 +95,9 @@ class CompetitionControllerTest {
     @Test
     @DisplayName("대회 데이터 delete 테스트")
     void testDeleteCompetitionData() throws Exception {
-        CompetitionRequestDto testCompetition = CompetitionRequestDto.builder()
-                .competitionName("test대회")
-                .competitionHost("test")
-                .competitionStartDate(LocalDate.now())
-                .competitionEndDate(LocalDate.now())
-                .hostTel("02-1234-1234")
-                .hostEmail("test@test.com")
-                .build();
 
-        competitionService.saveCompetition(testCompetition);
+        competitionService.saveCompetition(createTestCompDto());
+
         List<CompetitionResponseDto> testCompetitions = competitionService.findCompetitionInfoByName("test대회");
 
         competitionService.removeCompetitionData(testCompetitions.stream()
@@ -139,5 +108,17 @@ class CompetitionControllerTest {
                 .param("name","test대회"))
                 .andExpect(status().isNotFound())
                 .andDo(print());
+    }
+
+
+    private CompetitionRequestDto createTestCompDto() {
+        return CompetitionRequestDto.builder()
+                .competitionName("test대회")
+                .competitionHost("test")
+                .competitionStartDate(LocalDate.now())
+                .competitionEndDate(LocalDate.now())
+                .hostTel("02-1234-1234")
+                .hostEmail("test@test.com")
+                .build();
     }
 }
