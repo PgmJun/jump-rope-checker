@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -38,14 +38,14 @@ public class Competition {
 
     @Column
     @NotNull
-    private LocalDate competitionStartDate;
+    private LocalDateTime competitionStartDate;
 
     @Column
     @NotNull
-    private LocalDate competitionEndDate;
+    private LocalDateTime competitionEndDate;
 
     @Builder
-    public Competition(String competitionName, String competitionHost, String hostEmail, String hostTel, LocalDate competitionStartDate, LocalDate competitionEndDate) {
+    public Competition(String competitionName, String competitionHost, String hostEmail, String hostTel, LocalDateTime competitionStartDate, LocalDateTime competitionEndDate) {
         this.competitionName = competitionName;
         this.competitionHost = competitionHost;
         this.hostEmail = hostEmail;
