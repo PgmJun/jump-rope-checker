@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.Assert;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,6 +39,7 @@ class CompetitionControllerTest {
     private CompetitionService competitionService;
 
     private String compName = "test대회";
+    private String recordingSheetName = "test대회";
     private String compHost = "test";
     private String compHostTel = "02-1234-1234";
     private String compHostEmail = "test@test.com";
@@ -63,7 +64,7 @@ class CompetitionControllerTest {
         CompetitionRequestDto testCompetition = CompetitionRequestDto.builder()
                 .competitionName(compName)
                 .competitionHost(compHost)
-                .competitionEndDate(LocalDate.now())
+                .competitionEndDate(LocalDateTime.now())
                 .hostTel(compHostTel)
                 .hostEmail(compHostEmail)
                 .build();
@@ -143,9 +144,10 @@ class CompetitionControllerTest {
     private CompetitionRequestDto createTestCompDto() {
         return CompetitionRequestDto.builder()
                 .competitionName(compName)
+                .recordingSheetName(recordingSheetName)
                 .competitionHost(compHost)
-                .competitionStartDate(LocalDate.now())
-                .competitionEndDate(LocalDate.now())
+                .competitionStartDate(LocalDateTime.now())
+                .competitionEndDate(LocalDateTime.now())
                 .hostTel(compHostTel)
                 .hostEmail(compHostEmail)
                 .build();
@@ -155,9 +157,10 @@ class CompetitionControllerTest {
         return CompetitionUpdateDto.builder()
                 .competitionId(id)
                 .competitionName("updated " + compName)
+                .recordingSheetName(recordingSheetName)
                 .competitionHost(compHost)
-                .competitionStartDate(LocalDate.now())
-                .competitionEndDate(LocalDate.now())
+                .competitionStartDate(LocalDateTime.now())
+                .competitionEndDate(LocalDateTime.now())
                 .hostTel(compHostTel)
                 .hostEmail(compHostEmail)
                 .build();
