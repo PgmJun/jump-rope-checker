@@ -5,5 +5,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record CompetitionUpdateDto(Long competitionId, String competitionName, String competitionHost,
-                                  String hostEmail, String hostTel, LocalDateTime competitionStartDate, LocalDateTime competitionEndDate) {}
+public record CompetitionUpdateDto(Long competitionId, String competitionName, String recordingSheetName, String competitionHost,
+                                   String hostEmail, String hostTel, LocalDateTime competitionStartDate,
+                                   LocalDateTime competitionEndDate) {
+}

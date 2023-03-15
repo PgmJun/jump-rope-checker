@@ -26,6 +26,10 @@ public class Competition {
 
     @Column
     @NotNull
+    private String recordingSheetName;
+
+    @Column
+    @NotNull
     private String competitionHost;
 
     @Column
@@ -45,8 +49,9 @@ public class Competition {
     private LocalDateTime competitionEndDate;
 
     @Builder
-    public Competition(String competitionName, String competitionHost, String hostEmail, String hostTel, LocalDateTime competitionStartDate, LocalDateTime competitionEndDate) {
+    public Competition(String competitionName, String recordingSheetName, String competitionHost, String hostEmail, String hostTel, LocalDateTime competitionStartDate, LocalDateTime competitionEndDate) {
         this.competitionName = competitionName;
+        this.recordingSheetName = recordingSheetName;
         this.competitionHost = competitionHost;
         this.hostEmail = hostEmail;
         this.hostTel = hostTel;
@@ -58,6 +63,7 @@ public class Competition {
         return CompetitionResponseDto.builder()
                 .competitionId(competitionId)
                 .competitionName(competitionName)
+                .recordingSheetName(recordingSheetName)
                 .competitionHost(competitionHost)
                 .hostEmail(hostEmail)
                 .hostTel(hostTel)
