@@ -9,7 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -26,6 +26,10 @@ public class Competition {
 
     @Column
     @NotNull
+    private String recordingSheetName;
+
+    @Column
+    @NotNull
     private String competitionHost;
 
     @Column
@@ -38,15 +42,16 @@ public class Competition {
 
     @Column
     @NotNull
-    private LocalDate competitionStartDate;
+    private LocalDateTime competitionStartDate;
 
     @Column
     @NotNull
-    private LocalDate competitionEndDate;
+    private LocalDateTime competitionEndDate;
 
     @Builder
-    public Competition(String competitionName, String competitionHost, String hostEmail, String hostTel, LocalDate competitionStartDate, LocalDate competitionEndDate) {
+    public Competition(String competitionName, String recordingSheetName, String competitionHost, String hostEmail, String hostTel, LocalDateTime competitionStartDate, LocalDateTime competitionEndDate) {
         this.competitionName = competitionName;
+        this.recordingSheetName = recordingSheetName;
         this.competitionHost = competitionHost;
         this.hostEmail = hostEmail;
         this.hostTel = hostTel;
@@ -58,6 +63,7 @@ public class Competition {
         return CompetitionResponseDto.builder()
                 .competitionId(competitionId)
                 .competitionName(competitionName)
+                .recordingSheetName(recordingSheetName)
                 .competitionHost(competitionHost)
                 .hostEmail(hostEmail)
                 .hostTel(hostTel)

@@ -2,8 +2,10 @@ package com.jul.jumpropetornamentchecker.dto;
 
 import lombok.Builder;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Builder
-public record CompetitionUpdateDto(Long competitionId, String competitionName, String competitionHost,
-                                  String hostEmail, String hostTel, LocalDate competitionStartDate, LocalDate competitionEndDate) {}
+public record CompetitionUpdateDto(Long competitionId, String competitionName, String recordingSheetName, String competitionHost,
+                                   String hostEmail, String hostTel, LocalDateTime competitionStartDate,
+                                   LocalDateTime competitionEndDate) {
+}

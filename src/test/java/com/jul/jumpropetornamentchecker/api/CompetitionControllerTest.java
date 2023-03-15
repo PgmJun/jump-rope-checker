@@ -14,11 +14,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.Assert;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -38,10 +36,11 @@ class CompetitionControllerTest {
     @Autowired
     private CompetitionService competitionService;
 
-    private String compName = "test대회";
-    private String compHost = "test";
-    private String compHostTel = "02-1234-1234";
-    private String compHostEmail = "test@test.com";
+    private final String compName = "test대회";
+    private final String recordingSheetName = "test대회";
+    private final String compHost = "test";
+    private final String compHostTel = "02-1234-1234";
+    private final String compHostEmail = "test@test.com";
 
     @Test
     @DisplayName("대회 데이터 add 테스트")
@@ -63,7 +62,7 @@ class CompetitionControllerTest {
         CompetitionRequestDto testCompetition = CompetitionRequestDto.builder()
                 .competitionName(compName)
                 .competitionHost(compHost)
-                .competitionEndDate(LocalDate.now())
+                .competitionEndDate(LocalDateTime.now())
                 .hostTel(compHostTel)
                 .hostEmail(compHostEmail)
                 .build();
@@ -123,7 +122,7 @@ class CompetitionControllerTest {
 
     @Test
     @DisplayName("대회 데이터 update 테스트")
-    void testUpdateCompetitionData() throws Exception {
+    void testUpdateCompetitionData() {
         CompetitionRequestDto testCompDto = createTestCompDto();
 
         competitionService.saveCompetition(testCompDto);
@@ -143,9 +142,10 @@ class CompetitionControllerTest {
     private CompetitionRequestDto createTestCompDto() {
         return CompetitionRequestDto.builder()
                 .competitionName(compName)
+                .recordingSheetName(recordingSheetName)
                 .competitionHost(compHost)
-                .competitionStartDate(LocalDate.now())
-                .competitionEndDate(LocalDate.now())
+                .competitionStartDate(LocalDateTime.now())
+                .competitionEndDate(LocalDateTime.now())
                 .hostTel(compHostTel)
                 .hostEmail(compHostEmail)
                 .build();
@@ -155,9 +155,10 @@ class CompetitionControllerTest {
         return CompetitionUpdateDto.builder()
                 .competitionId(id)
                 .competitionName("updated " + compName)
+                .recordingSheetName(recordingSheetName)
                 .competitionHost(compHost)
-                .competitionStartDate(LocalDate.now())
-                .competitionEndDate(LocalDate.now())
+                .competitionStartDate(LocalDateTime.now())
+                .competitionEndDate(LocalDateTime.now())
                 .hostTel(compHostTel)
                 .hostEmail(compHostEmail)
                 .build();
