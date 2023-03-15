@@ -11,7 +11,21 @@ spring:
     show-sql: true
     hibernate:
       format_sql: true
-      ddl-auto: create
+      ddl-auto: update
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  springdoc:
+    default-consumes-media-type: application/json
+    default-produces-media-type: application/json
+    # Package to include
+    packagesToScan: com.jul.jumpropetornamentchecker.api
+    swagger-ui:
+      path: /swagger-ui.html
+      disable-swagger-default-url: true
+      display-query-params-without-oauth2: true
 
 logging:
   level:
@@ -22,3 +36,6 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+server:
+  port: 8080
