@@ -2,8 +2,10 @@ package com.jul.jumpropetornamentchecker.api;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationUpdateDto;
 import com.jul.jumpropetornamentchecker.service.OrganizationService;
 import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
@@ -82,9 +84,38 @@ class OrganizationControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @DisplayName("단체 정보 수정 기능 테스트")
+    void testUpdateOrganizationData() {
+        OrganizationRequestDto testDto = createTestDto();
+        organizationService.saveOrganization(testDto);
+
+        OrganizationResponseDto organizationData = organizationService.findOrganizationByName(testDto.orgName()).get(0);
+        organizationService.updateOrganizationData(createUpdateDto(organizationData.orgId()));
+
+        Organization updatedOrganizationData = organizationService.findOrganizationById(organizationData.orgId()).get();
+
+        assertThat(organizationData.orgName()).isNotEqualTo(updatedOrganizationData.toDto().orgName());
+        assertThat(updatedOrganizationData.toDto().orgName()).isEqualTo("updated"+organizationData.orgName());
+
+
+
+    }
+
     private OrganizationRequestDto createTestDto() {
         return OrganizationRequestDto.builder()
                 .orgName(orgName)
+                .orgEmail(orgEmail)
+                .orgTel(orgTel)
+                .orgLeaderName(orgLeaderName)
+                .leaderTel(leaderTel)
+                .build();
+    }
+
+    private OrganizationUpdateDto createUpdateDto(Long id) {
+        return OrganizationUpdateDto.builder()
+                .orgId(id)
+                .orgName("updated" + orgName)
                 .orgEmail(orgEmail)
                 .orgTel(orgTel)
                 .orgLeaderName(orgLeaderName)
