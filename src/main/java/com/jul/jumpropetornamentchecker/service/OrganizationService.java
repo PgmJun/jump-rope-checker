@@ -1,11 +1,16 @@
 package com.jul.jumpropetornamentchecker.service;
 
+import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.repository.OrganizationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +30,14 @@ public class OrganizationService {
         } finally {
             return registerResult;
         }
+    }
+
+    public List<OrganizationResponseDto> findAllOrganizationDatum() {
+        List<Organization> allOrganizationDatum = organizationRepository.findAll();
+
+        return allOrganizationDatum.stream()
+                .map(Organization::toDto)
+                .collect(Collectors.toList());
+
     }
 }
