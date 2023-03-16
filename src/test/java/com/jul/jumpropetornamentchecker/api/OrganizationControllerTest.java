@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -61,6 +63,23 @@ class OrganizationControllerTest {
         List<OrganizationResponseDto> organizationDatum = organizationService.findOrganizationByName(testDto.orgName());
         organizationDatum.forEach(orgData -> assertThat(orgData.orgName()).contains(testDto.orgName()));
 
+    }
+
+    @Test
+    @DisplayName("단체 정보 삭제 기능 테스트")
+    void testDeleteOrganizationDatumByIds() throws Exception {
+        OrganizationRequestDto testDto = createTestDto();
+        organizationService.saveOrganization(testDto);
+
+        OrganizationResponseDto testOrgData = organizationService.findOrganizationByName(testDto.orgName()).get(0);
+
+        String orgIdJson = objectMapper.writeValueAsString(testOrgData.orgId());
+
+        mockMvc.perform(delete("/organization/delete")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(orgIdJson))
+                .andExpect(status().isBadRequest())
+                .andDo(print());
     }
 
     private OrganizationRequestDto createTestDto() {
