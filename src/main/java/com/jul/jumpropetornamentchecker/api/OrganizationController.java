@@ -39,7 +39,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/find")
-    @Operation(summary = "", description = "")
+    @Operation(summary = "단체 이름 조회 API", description = "이름을 통해 단체 정보를 조회합니다.")
     public ResponseEntity<?> findOrganizationDatumByName(@RequestParam(name = "name") String orgName) {
         List<OrganizationResponseDto> organizationDatum = organizationService.findOrganizationByName(orgName);
 
