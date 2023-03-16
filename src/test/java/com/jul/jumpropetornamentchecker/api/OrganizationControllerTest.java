@@ -2,8 +2,10 @@ package com.jul.jumpropetornamentchecker.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.service.OrganizationService;
 import jakarta.transaction.Transactional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,6 +50,17 @@ class OrganizationControllerTest {
                         .content(orgDataJsonString))
                 .andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("단체 이름 조회 기능 테스트")
+    void testFindOrganizationDataByName() {
+        OrganizationRequestDto testDto = createTestDto();
+        organizationService.saveOrganization(testDto);
+
+        List<OrganizationResponseDto> organizationDatum = organizationService.findOrganizationByName(testDto.orgName());
+        organizationDatum.forEach(orgData -> assertThat(orgData.orgName()).contains(testDto.orgName()));
+
     }
 
     private OrganizationRequestDto createTestDto() {
