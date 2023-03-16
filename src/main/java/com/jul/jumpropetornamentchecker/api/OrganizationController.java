@@ -1,15 +1,15 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/organization")
@@ -25,6 +25,16 @@ public class OrganizationController {
         return (isSaved) ?
                 new ResponseEntity<>("단체 등록에 성공하였습니다.", HttpStatus.OK) :
                 new ResponseEntity<>("단체 등록에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/find/all")
+    @Operation(summary = "단체 전체 조회 API", description = "모든 단체 정보를 조회합니다.")
+    public ResponseEntity<?> findAllOrganizationData() {
+        List<OrganizationResponseDto> organizationDatum = organizationService.findAllOrganizationDatum();
+
+        return (organizationDatum.isEmpty()) ?
+                new ResponseEntity<>("단체 정보를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(organizationDatum, HttpStatus.OK);
     }
 
 

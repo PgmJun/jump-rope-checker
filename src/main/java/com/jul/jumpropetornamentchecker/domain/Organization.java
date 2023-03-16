@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.domain;
 
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -43,5 +44,16 @@ public class Organization {
         this.orgTel = orgTel;
         this.orgLeaderName = orgLeaderName;
         this.leaderTel = leaderTel;
+    }
+
+    public OrganizationResponseDto toDto() {
+        return OrganizationResponseDto.builder()
+                .orgId(orgId)
+                .orgName(orgName)
+                .orgEmail(orgEmail)
+                .orgTel(orgTel)
+                .orgLeaderName(orgLeaderName)
+                .leaderTel(leaderTel)
+                .build();
     }
 }
