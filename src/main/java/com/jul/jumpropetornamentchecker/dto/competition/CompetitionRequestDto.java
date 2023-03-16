@@ -1,4 +1,4 @@
-package com.jul.jumpropetornamentchecker.dto;
+package com.jul.jumpropetornamentchecker.dto.competition;
 
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import lombok.Builder;
