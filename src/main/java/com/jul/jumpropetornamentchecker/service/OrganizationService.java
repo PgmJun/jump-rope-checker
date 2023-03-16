@@ -3,6 +3,7 @@ package com.jul.jumpropetornamentchecker.service;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationUpdateDto;
 import com.jul.jumpropetornamentchecker.repository.OrganizationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,6 +51,10 @@ public class OrganizationService {
                 .collect(Collectors.toList());
     }
 
+    public Optional<Organization> findOrganizationById(Long id) {
+        return organizationRepository.findById(id);
+    }
+
     public Boolean removeOrganizationData(List<Long> organizationIds) {
         Boolean deleteResult = true;
         try {
@@ -59,4 +65,6 @@ public class OrganizationService {
             return deleteResult;
         }
     }
+
+
 }

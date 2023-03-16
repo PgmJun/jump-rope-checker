@@ -1,16 +1,18 @@
 package com.jul.jumpropetornamentchecker.api;
 
+import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationUpdateDto;
 import com.jul.jumpropetornamentchecker.service.OrganizationService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/organization")
@@ -48,6 +50,16 @@ public class OrganizationController {
                 new ResponseEntity<>(organizationDatum, HttpStatus.OK);
     }
 
+    @GetMapping("/find/{id}")
+    @Operation
+    public ResponseEntity<?> findOrganizationDataById(@PathVariable Long id) {
+        Optional<Organization> organizationData = organizationService.findOrganizationById(id);
+
+        return (organizationData.isEmpty()) ?
+                new ResponseEntity<>("단체 정보를 조회하지 못했습니다.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(organizationData.get(), HttpStatus.OK);
+    }
+
     @DeleteMapping("/delete")
     @Operation(summary = "단체 정보 삭제 API", description = "단체의 Id를 통해 단체 정보를 삭제합니다.")
     public ResponseEntity<?> deleteOrganizationDatumById(@RequestBody List<Long> organizationIds) {
@@ -57,6 +69,7 @@ public class OrganizationController {
 
     }
 
+   
 
 
 }
