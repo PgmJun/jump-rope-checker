@@ -48,4 +48,15 @@ public class OrganizationService {
                 .map(Organization::toDto)
                 .collect(Collectors.toList());
     }
+
+    public Boolean removeOrganizationData(List<Long> organizationIds) {
+        Boolean deleteResult = true;
+        try {
+            organizationIds.forEach(id -> organizationRepository.deleteByOrgId(id));
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        } finally {
+            return deleteResult;
+        }
+    }
 }

@@ -48,6 +48,15 @@ public class OrganizationController {
                 new ResponseEntity<>(organizationDatum, HttpStatus.OK);
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "단체 정보 삭제 API", description = "단체의 Id를 통해 단체 정보를 삭제합니다.")
+    public ResponseEntity<?> deleteOrganizationDatumById(@RequestBody List<Long> organizationIds) {
+        return organizationService.removeOrganizationData(organizationIds) ?
+                new ResponseEntity<>("단체 정보가 삭제되었습니다.", HttpStatus.OK) :
+                new ResponseEntity<>("단체 정보 삭제에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+
+    }
+
 
 
 }

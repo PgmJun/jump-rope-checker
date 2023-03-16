@@ -13,6 +13,8 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 
     List<Organization> findByOrgName(String orgName);
 
+    void deleteByOrgId(Long orgId);
+
 
 
 }
