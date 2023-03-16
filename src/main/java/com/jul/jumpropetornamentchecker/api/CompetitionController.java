@@ -66,8 +66,8 @@ public class CompetitionController {
 
     @PutMapping("/update")
     @Operation(summary = "대회 정보 수정 API", description = "대회 정보를 업데이트합니다.")
-    public ResponseEntity<?> updateCompetitionData(@RequestBody CompetitionUpdateDto competitionUpdateDtos) {
-        return (competitionService.updateCompetitionData(competitionUpdateDtos)) ?
+    public ResponseEntity<?> updateCompetitionData(@RequestBody CompetitionUpdateDto competitionUpdateDto) {
+        return (competitionService.updateCompetitionData(competitionUpdateDto)) ?
                 new ResponseEntity<>("competition datum is updated", HttpStatus.OK) :
                 new ResponseEntity<>("competition datum are fail to update", HttpStatus.BAD_REQUEST);
     }

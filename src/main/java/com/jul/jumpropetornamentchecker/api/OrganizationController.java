@@ -69,7 +69,14 @@ public class OrganizationController {
 
     }
 
-   
+    @PutMapping
+    @Operation(summary = "", description = "")
+    public ResponseEntity<?> updateOrganizationData(@RequestBody OrganizationUpdateDto organizationUpdateDto) {
+        return (organizationService.updateOrganizationData(organizationUpdateDto)) ?
+                new ResponseEntity<>("단체 정보가 갱신되었습니다.", HttpStatus.OK) :
+                new ResponseEntity<>("단체 정보 갱신에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+
+    }
 
 
 }

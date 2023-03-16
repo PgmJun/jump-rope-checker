@@ -66,5 +66,17 @@ public class OrganizationService {
         }
     }
 
+    public Boolean updateOrganizationData(OrganizationUpdateDto organizationUpdateDto) {
+        Boolean updateResult = true;
 
+        try {
+            Organization organizationData = organizationRepository.findById(organizationUpdateDto.orgId()).orElseThrow();
+            organizationData.changeData(organizationUpdateDto);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            updateResult = false;
+        } finally {
+            return updateResult;
+        }
+    }
 }

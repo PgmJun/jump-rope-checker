@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.domain;
 
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationUpdateDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -55,5 +56,13 @@ public class Organization {
                 .orgLeaderName(orgLeaderName)
                 .leaderTel(leaderTel)
                 .build();
+    }
+
+    public void changeData(OrganizationUpdateDto updateData) {
+        orgName = updateData.orgName();
+        orgEmail = updateData.orgEmail();
+        orgTel = updateData.orgTel();
+        orgLeaderName = updateData.orgLeaderName();
+        leaderTel = updateData.leaderTel();
     }
 }
