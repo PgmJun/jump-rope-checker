@@ -1,8 +1,8 @@
 package com.jul.jumpropetornamentchecker.api;
 
-import com.jul.jumpropetornamentchecker.dto.CompetitionRequestDto;
-import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
-import com.jul.jumpropetornamentchecker.dto.CompetitionUpdateDto;
+import com.jul.jumpropetornamentchecker.dto.competition.CompetitionRequestDto;
+import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
+import com.jul.jumpropetornamentchecker.dto.competition.CompetitionUpdateDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -66,8 +66,8 @@ public class CompetitionController {
 
     @PutMapping("/update")
     @Operation(summary = "대회 정보 수정 API", description = "대회 정보를 업데이트합니다.")
-    public ResponseEntity<?> updateCompetitionData(@RequestBody CompetitionUpdateDto competitionUpdateDtos) {
-        return (competitionService.updateCompetitionData(competitionUpdateDtos)) ?
+    public ResponseEntity<?> updateCompetitionData(@RequestBody CompetitionUpdateDto competitionUpdateDto) {
+        return (competitionService.updateCompetitionData(competitionUpdateDto)) ?
                 new ResponseEntity<>("competition datum is updated", HttpStatus.OK) :
                 new ResponseEntity<>("competition datum are fail to update", HttpStatus.BAD_REQUEST);
     }

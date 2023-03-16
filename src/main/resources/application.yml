@@ -11,7 +11,11 @@ spring:
     show-sql: true
     hibernate:
       format_sql: true
-      ddl-auto: update
+      ddl-auto: create
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
 
   mvc:
     pathmatch:
@@ -38,4 +42,4 @@ logging:
               BasicBinder: TRACE
 
 server:
-  port: 8080
+  port: 8082

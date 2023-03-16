@@ -1,12 +1,11 @@
 package com.jul.jumpropetornamentchecker.domain;
 
-import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
-import com.jul.jumpropetornamentchecker.dto.CompetitionUpdateDto;
+import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
+import com.jul.jumpropetornamentchecker.dto.competition.CompetitionUpdateDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;

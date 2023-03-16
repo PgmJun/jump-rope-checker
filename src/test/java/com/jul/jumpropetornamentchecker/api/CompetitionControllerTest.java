@@ -1,9 +1,9 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jul.jumpropetornamentchecker.dto.CompetitionRequestDto;
-import com.jul.jumpropetornamentchecker.dto.CompetitionResponseDto;
-import com.jul.jumpropetornamentchecker.dto.CompetitionUpdateDto;
+import com.jul.jumpropetornamentchecker.dto.competition.CompetitionRequestDto;
+import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
+import com.jul.jumpropetornamentchecker.dto.competition.CompetitionUpdateDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionService;
 import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
