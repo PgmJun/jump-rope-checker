@@ -42,7 +42,7 @@ public class OrganizationService {
     }
 
     public List<OrganizationResponseDto> findOrganizationByName(String orgName) {
-        List<Organization> organizationDatum = organizationRepository.findByOrganizationName(orgName);
+        List<Organization> organizationDatum = organizationRepository.findByOrgName(orgName);
 
         return organizationDatum.stream()
                 .map(Organization::toDto)
