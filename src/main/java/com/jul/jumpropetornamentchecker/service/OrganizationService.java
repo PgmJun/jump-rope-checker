@@ -40,4 +40,12 @@ public class OrganizationService {
                 .collect(Collectors.toList());
 
     }
+
+    public List<OrganizationResponseDto> findOrganizationByName(String orgName) {
+        List<Organization> organizationDatum = organizationRepository.findByOrganizationName(orgName);
+
+        return organizationDatum.stream()
+                .map(Organization::toDto)
+                .collect(Collectors.toList());
+    }
 }
