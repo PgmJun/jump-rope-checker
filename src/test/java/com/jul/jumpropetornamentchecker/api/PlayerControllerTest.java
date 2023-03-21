@@ -5,6 +5,7 @@ import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
+import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
 import com.jul.jumpropetornamentchecker.repository.OrganizationRepository;
 import com.jul.jumpropetornamentchecker.service.OrganizationService;
 import com.jul.jumpropetornamentchecker.service.PlayerService;
@@ -79,6 +80,32 @@ class PlayerControllerTest {
     void testNotFoundPlayerDataByName() throws Exception {
         mockMvc.perform(get("/player/find")
                         .param("name","testName"))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+
+    @Test
+    @DisplayName("선수 ID 조회 기능 테스트")
+    void testFindPlayerDataById() throws Exception {
+        OrganizationRequestDto testOrg = createTestOrgDto();
+        orgService.saveOrganization(testOrg);
+
+        Organization organization = orgRepository.findByOrgName(testOrg.orgName()).get(0);
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "Male", 20, "010-1234-1234");
+
+        playerService.savePlayer(playerRequestDto);
+        PlayerResponseDto player = playerService.findPlayerByName(playerRequestDto.playerName()).get(0);
+
+        mockMvc.perform(get("/player/find/"+player.playerId()))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("선수 ID 조회 실패 기능 테스트")
+    void testNotFoundPlayerDataById() throws Exception {
+        mockMvc.perform(get("/player/find/0"))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
