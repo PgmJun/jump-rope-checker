@@ -5,11 +5,11 @@ import com.jul.jumpropetornamentchecker.domain.Player;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
 import com.jul.jumpropetornamentchecker.repository.PlayerRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +41,23 @@ public class PlayerService {
     public List<PlayerResponseDto> findAllPlayer() {
         return playerRepository.findAll()
                 .stream()
-                .map(player -> player.toDto())
+                .map(Player::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public List<PlayerResponseDto> findPlayerByName(String name) {
+        List<PlayerResponseDto> playerDatum = new ArrayList<>();
+
+        try {
+            playerDatum = playerRepository.findByPlayerName(name).stream()
+                    .map(Player::toDto)
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+
+        } finally {
+            return playerDatum;
+        }
     }
 }
