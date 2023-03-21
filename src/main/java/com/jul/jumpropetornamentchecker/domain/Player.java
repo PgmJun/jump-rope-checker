@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.domain;
 
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
+import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -45,5 +46,16 @@ public class Player {
         this.playerSex = playerRequestDto.playerSex();
         this.playerAge = playerRequestDto.playerAge();
         this.playerTel = playerRequestDto.playerTel();
+    }
+
+    public PlayerResponseDto toDto() {
+        return PlayerResponseDto.builder()
+                .organizationName(organization.getOrgName())
+                .playerId(playerId)
+                .playerAge(playerAge)
+                .playerName(playerName)
+                .playerSex(playerSex)
+                .playerTel(playerTel)
+                .build();
     }
 }
