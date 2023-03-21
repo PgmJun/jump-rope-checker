@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,11 +29,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 class PlayerControllerTest {
 
-    @Autowired private MockMvc mockMvc;
-    @Autowired private ObjectMapper objectMapper;
-    @Autowired private PlayerService playerService;
-    @Autowired private OrganizationService orgService;
-    @Autowired private OrganizationRepository orgRepository;
+    @Autowired
+    private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private PlayerService playerService;
+    @Autowired
+    private OrganizationService orgService;
+    @Autowired
+    private OrganizationRepository orgRepository;
 
     private String orgName = "testOrg";
     private String orgEmail = "testOrg@test.com";
@@ -51,7 +55,7 @@ class PlayerControllerTest {
         OrganizationResponseDto orgResponseDto = orgService.findOrganizationByName(orgName).get(0);
         PlayerRequestDto playerRequestDto = new PlayerRequestDto(orgResponseDto.orgId(), "playerName", "Male", 20, "010-1234-1234");
         String playerDataJsonString = objectMapper.writeValueAsString(playerRequestDto);
-        
+
         mockMvc.perform(post("/player/add")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(playerDataJsonString))
@@ -72,7 +76,7 @@ class PlayerControllerTest {
         playerService.savePlayer(playerRequestDto);
 
         mockMvc.perform(get("/player/find")
-                .param("name",playerRequestDto.playerName()))
+                        .param("name", playerRequestDto.playerName()))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -81,7 +85,7 @@ class PlayerControllerTest {
     @DisplayName("선수 이름 조회 실패 기능 테스트")
     void testNotFoundPlayerDataByName() throws Exception {
         mockMvc.perform(get("/player/find")
-                        .param("name","testName"))
+                        .param("name", "testName"))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
@@ -99,7 +103,7 @@ class PlayerControllerTest {
         playerService.savePlayer(playerRequestDto);
         PlayerResponseDto player = playerService.findPlayerByName(playerRequestDto.playerName()).get(0);
 
-        mockMvc.perform(get("/player/find/"+player.playerId()))
+        mockMvc.perform(get("/player/find/" + player.playerId()))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -131,7 +135,6 @@ class PlayerControllerTest {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
-
 
 
     private OrganizationRequestDto createTestOrgDto() {
