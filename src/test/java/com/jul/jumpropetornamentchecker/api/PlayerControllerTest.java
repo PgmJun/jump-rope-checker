@@ -18,8 +18,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -107,6 +109,26 @@ class PlayerControllerTest {
     void testNotFoundPlayerDataById() throws Exception {
         mockMvc.perform(get("/player/find/0"))
                 .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("선수 정보 삭제 기능 테스트")
+    void testRemovePlayerDataById() throws Exception {
+        OrganizationRequestDto testOrg = createTestOrgDto();
+        orgService.saveOrganization(testOrg);
+
+        Organization organization = orgRepository.findByOrgName(testOrg.orgName()).get(0);
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "Male", 20, "010-1234-1234");
+
+        playerService.savePlayer(playerRequestDto);
+        PlayerResponseDto player = playerService.findPlayerByName(playerRequestDto.playerName()).get(0);
+        String playerIdsJsonString = objectMapper.writeValueAsString(List.of(player.playerId()));
+
+        mockMvc.perform(delete("/player/delete")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(playerIdsJsonString))
+                .andExpect(status().isOk())
                 .andDo(print());
     }
 
