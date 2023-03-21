@@ -38,7 +38,7 @@ public class PlayerController {
     }
 
     @GetMapping("/find")
-    @Operation
+    @Operation(summary = "선수 이름 조회 API", description = "이름으로 선수 정보를 조회합니다")
     public ResponseEntity<?> findPlayerDataByName(@RequestParam("name") String name) {
         List<PlayerResponseDto> playerDatum = playerService.findPlayerByName(name);
 
