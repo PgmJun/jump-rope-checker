@@ -55,6 +55,14 @@ public class PlayerController {
         return getFindByIdPlayerResponseEntity(playerData);
     }
 
+    @DeleteMapping("/delete")
+    @Operation(summary = "선수 정보 삭제 API", description = "선수의 Id를 통해 선수 정보를 삭제합니다.")
+    public ResponseEntity<?> deletePlayerDatumById(@RequestBody List<Long> playerIds) {
+        return playerService.removePlayerData(playerIds) ?
+                new ResponseEntity<>("선수 정보가 삭제되었습니다.", HttpStatus.OK) :
+                new ResponseEntity<>("선수 정보 삭제에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+    }
+
 
     protected static class PlayerResponseEntityCreator {
         static ResponseEntity<?> getFindPlayerResponseEntity(List<PlayerResponseDto> playerDatum) {

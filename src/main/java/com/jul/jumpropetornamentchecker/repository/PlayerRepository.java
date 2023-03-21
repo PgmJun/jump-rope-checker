@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface PlayerRepository extends JpaRepository<Player, Long> {
 
+    void deleteByPlayerId(Long playerId);
+
     @Query("SELECT p FROM Player p WHERE p.playerName LIKE ?1%")
     List<Player> findByPlayerName(String playerName);
 

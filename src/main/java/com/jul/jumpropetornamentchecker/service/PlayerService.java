@@ -7,6 +7,7 @@ import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
 import com.jul.jumpropetornamentchecker.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.type.TrueFalseConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -64,5 +65,20 @@ public class PlayerService {
 
     public Optional<Player> findPlayerById(Long id) {
         return playerRepository.findById(id);
+    }
+
+    public boolean removePlayerData(List<Long> playerIds) {
+        boolean removeResult = true;
+
+        try {
+            playerIds.forEach(id -> playerRepository.deleteByPlayerId(id));
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            removeResult = false;
+
+        } finally {
+            return removeResult;
+        }
     }
 }
