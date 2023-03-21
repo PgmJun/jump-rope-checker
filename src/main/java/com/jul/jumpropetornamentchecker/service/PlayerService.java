@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,5 +60,9 @@ public class PlayerService {
         } finally {
             return playerDatum;
         }
+    }
+
+    public Optional<Player> findPlayerById(Long id) {
+        return playerRepository.findById(id);
     }
 }
