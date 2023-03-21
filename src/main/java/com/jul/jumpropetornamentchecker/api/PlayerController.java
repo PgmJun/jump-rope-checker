@@ -55,6 +55,14 @@ public class PlayerController {
         return getFindByIdPlayerResponseEntity(playerData);
     }
 
+    @GetMapping("/find/org/{organizationId}")
+    @Operation(summary = "단체 소속 선수 조회 API", description = "단체 ID를 통해 단체에 소속된 선수 정보를 조회합니다")
+    public ResponseEntity<?> findPlayerDatumByOrganizationId(@PathVariable Long organizationId) {
+        List<PlayerResponseDto> playerDatum = playerService.findPlayerDataByOrganizationId(organizationId);
+
+        return getFindPlayerResponseEntity(playerDatum);
+    }
+
     @DeleteMapping("/delete")
     @Operation(summary = "선수 정보 삭제 API", description = "선수의 Id를 통해 선수 정보를 삭제합니다.")
     public ResponseEntity<?> deletePlayerDatumById(@RequestBody List<Long> playerIds) {

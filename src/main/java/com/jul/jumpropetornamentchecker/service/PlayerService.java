@@ -7,7 +7,6 @@ import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
 import com.jul.jumpropetornamentchecker.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.type.TrueFalseConverter;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -79,6 +78,24 @@ public class PlayerService {
 
         } finally {
             return removeResult;
+        }
+    }
+
+
+    public List<PlayerResponseDto> findPlayerDataByOrganizationId(Long organizationId) {
+        List<PlayerResponseDto> playerDatum = new ArrayList<>();
+        try {
+            Organization organization = organizationService.findOrganizationById(organizationId).orElseThrow();
+            playerDatum = playerRepository.findByOrganization(organization)
+                    .stream()
+                    .map(Player::toDto)
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+
+        } finally {
+            return playerDatum;
         }
     }
 }
