@@ -109,6 +109,30 @@ class PlayerControllerTest {
     }
 
     @Test
+    @DisplayName("단체 소속 선수 조회 기능 테스트")
+    void testFindPlayerDataOrganizationId() throws Exception {
+        mockMvc.perform(get("/player/find/org/0"))
+                .andExpect(status().isNotFound())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("단체 소속 선수 조회 실패 기능 테스트")
+    void testNotFoundPlayerDataOrganizationId() throws Exception {
+        OrganizationRequestDto testOrg = createTestOrgDto();
+        orgService.saveOrganization(testOrg);
+
+        Organization organization = orgRepository.findByOrgName(testOrg.orgName()).get(0);
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "Male", 20, "010-1234-1234");
+
+        playerService.savePlayer(playerRequestDto);
+
+        mockMvc.perform(get("/player/find/org/"+organization.getOrgId()))
+                .andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
     @DisplayName("선수 ID 조회 실패 기능 테스트")
     void testNotFoundPlayerDataById() throws Exception {
         mockMvc.perform(get("/player/find/0"))
