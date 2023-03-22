@@ -3,9 +3,11 @@ package com.jul.jumpropetornamentchecker.api;
 import com.jul.jumpropetornamentchecker.domain.player.Player;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
+import com.jul.jumpropetornamentchecker.dto.player.PlayerUpdateDto;
 import com.jul.jumpropetornamentchecker.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -69,6 +71,14 @@ public class PlayerController {
         return playerService.removePlayerData(playerIds) ?
                 new ResponseEntity<>("선수 정보가 삭제되었습니다.", HttpStatus.OK) :
                 new ResponseEntity<>("선수 정보 삭제에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/update")
+    @Operation(summary = "선수 정보 수정 API", description = "선수 정보를 업데이트합니다.")
+    public ResponseEntity<?> updatePlayerData(@RequestBody PlayerUpdateDto playerUpdateDto) {
+        return (playerService.updatePlayerData(playerUpdateDto)) ?
+                new ResponseEntity<>("선수 정보가 갱신되었습니다.", HttpStatus.OK) :
+                new ResponseEntity<>("선수 정보 갱신에 실패하였습니다.", HttpStatus.BAD_REQUEST);
     }
 
 

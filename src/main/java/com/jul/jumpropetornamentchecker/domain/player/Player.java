@@ -3,14 +3,17 @@ package com.jul.jumpropetornamentchecker.domain.player;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
+import com.jul.jumpropetornamentchecker.dto.player.PlayerUpdateDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Player {
@@ -59,5 +62,13 @@ public class Player {
                 .playerGender(playerGender.name())
                 .playerTel(playerTel)
                 .build();
+    }
+
+    public void changeData(PlayerUpdateDto updateDto) {
+        playerName = updateDto.playerName();
+        playerGender = Gender.findByType(updateDto.playerGender());
+        playerAge = updateDto.playerAge();
+        playerTel = updateDto.playerTel();
+
     }
 }

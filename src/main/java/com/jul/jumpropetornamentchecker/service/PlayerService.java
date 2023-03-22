@@ -2,8 +2,10 @@ package com.jul.jumpropetornamentchecker.service;
 
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.player.Player;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
+import com.jul.jumpropetornamentchecker.dto.player.PlayerUpdateDto;
 import com.jul.jumpropetornamentchecker.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -95,6 +97,20 @@ public class PlayerService {
 
         } finally {
             return playerDatum;
+        }
+    }
+
+    public Boolean updatePlayerData(PlayerUpdateDto playerUpdateDto) {
+        Boolean updateResult = true;
+
+        try {
+            Player player = playerRepository.findById(playerUpdateDto.playerId()).orElseThrow();
+            player.changeData(playerUpdateDto);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            updateResult = false;
+        } finally {
+            return updateResult;
         }
     }
 }
