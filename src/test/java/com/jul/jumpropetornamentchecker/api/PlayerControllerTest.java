@@ -2,15 +2,18 @@ package com.jul.jumpropetornamentchecker.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jul.jumpropetornamentchecker.domain.Organization;
-import com.jul.jumpropetornamentchecker.domain.player.Gender;
+import com.jul.jumpropetornamentchecker.domain.player.Player;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
+import com.jul.jumpropetornamentchecker.dto.player.PlayerUpdateDto;
 import com.jul.jumpropetornamentchecker.repository.OrganizationRepository;
+import com.jul.jumpropetornamentchecker.repository.PlayerRepository;
 import com.jul.jumpropetornamentchecker.service.OrganizationService;
 import com.jul.jumpropetornamentchecker.service.PlayerService;
 import jakarta.transaction.Transactional;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,8 @@ class PlayerControllerTest {
     private ObjectMapper objectMapper;
     @Autowired
     private PlayerService playerService;
+    @Autowired
+    private PlayerRepository playerRepository;
     @Autowired
     private OrganizationService orgService;
     @Autowired
@@ -159,6 +164,25 @@ class PlayerControllerTest {
                         .content(playerIdsJsonString))
                 .andExpect(status().isOk())
                 .andDo(print());
+    }
+
+    @Test
+    @DisplayName("단체 정보 수정 기능 테스트")
+    void testUpdateOrganizationData() throws Exception {
+        OrganizationRequestDto testOrg = createTestOrgDto();
+        orgService.saveOrganization(testOrg);
+
+        Organization organization = orgRepository.findByOrgName(testOrg.orgName()).get(0);
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "male", 20, "010-1234-1234");
+
+        playerService.savePlayer(playerRequestDto);
+        Player player = playerRepository.findByPlayerName(playerRequestDto.playerName()).get(0);
+
+        PlayerUpdateDto updateData = new PlayerUpdateDto(player.getPlayerId(), "changedName", "female", 21, "010-1234-1235");
+        playerService.updatePlayerData(updateData);
+
+        Player updatedPlayer = playerRepository.findById(player.getPlayerId()).get();
+        Assertions.assertThat(updatedPlayer.getPlayerName()).isEqualTo("changedName");
     }
 
 
