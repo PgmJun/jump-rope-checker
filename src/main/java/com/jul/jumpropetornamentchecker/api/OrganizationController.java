@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/organization")
+@RequestMapping(value = "/organization", produces = "application/json; charset=UTF8")
 @RequiredArgsConstructor
 public class OrganizationController extends ResponseEntityCreator {
     private final OrganizationService organizationService;

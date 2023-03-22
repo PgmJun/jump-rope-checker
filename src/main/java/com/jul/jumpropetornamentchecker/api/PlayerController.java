@@ -18,7 +18,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/player")
+@RequestMapping(value = "/player", produces = "application/json; charset=UTF8")
 @RequiredArgsConstructor
 public class PlayerController extends ResponseEntityCreator {
     private final PlayerService playerService;
