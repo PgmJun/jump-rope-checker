@@ -2,4 +2,4 @@
 줄넘기 경기 기록 시스템
 
 ## 🖼 ERD
-![JumpRopeChecker (3)](https://user-images.githubusercontent.com/84304802/226648455-329e78e4-0245-4b57-9f12-8f7a3340d591.png)
+![image](https://user-images.githubusercontent.com/84304802/226780388-54e75530-c76d-4768-ba85-6c013b1bd0a1.png)
