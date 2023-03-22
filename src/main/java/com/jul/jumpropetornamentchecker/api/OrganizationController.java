@@ -69,8 +69,8 @@ public class OrganizationController {
 
     }
 
-    @PutMapping
-    @Operation(summary = "", description = "")
+    @PutMapping("/update")
+    @Operation(summary = "단체 정보 수정 API", description = "단체 정보를 업데이트합니다.")
     public ResponseEntity<?> updateOrganizationData(@RequestBody OrganizationUpdateDto organizationUpdateDto) {
         return (organizationService.updateOrganizationData(organizationUpdateDto)) ?
                 new ResponseEntity<>("단체 정보가 갱신되었습니다.", HttpStatus.OK) :
