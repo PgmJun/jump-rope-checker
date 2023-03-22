@@ -1,7 +1,7 @@
 package com.jul.jumpropetornamentchecker.repository;
 
 import com.jul.jumpropetornamentchecker.domain.Organization;
-import com.jul.jumpropetornamentchecker.domain.Player;
+import com.jul.jumpropetornamentchecker.domain.player.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

@@ -1,6 +1,6 @@
 package com.jul.jumpropetornamentchecker.api;
 
-import com.jul.jumpropetornamentchecker.domain.Player;
+import com.jul.jumpropetornamentchecker.domain.player.Player;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
 import com.jul.jumpropetornamentchecker.service.PlayerService;

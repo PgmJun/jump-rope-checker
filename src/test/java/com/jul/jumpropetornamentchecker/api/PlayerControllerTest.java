@@ -2,6 +2,7 @@ package com.jul.jumpropetornamentchecker.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jul.jumpropetornamentchecker.domain.Organization;
+import com.jul.jumpropetornamentchecker.domain.player.Gender;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
@@ -53,7 +54,7 @@ class PlayerControllerTest {
         orgService.saveOrganization(testOrg);
 
         OrganizationResponseDto orgResponseDto = orgService.findOrganizationByName(orgName).get(0);
-        PlayerRequestDto playerRequestDto = new PlayerRequestDto(orgResponseDto.orgId(), "playerName", "Male", 20, "010-1234-1234");
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(orgResponseDto.orgId(), "playerName", "male", 20, "010-1234-1234");
         String playerDataJsonString = objectMapper.writeValueAsString(playerRequestDto);
 
         mockMvc.perform(post("/player/add")
@@ -71,7 +72,7 @@ class PlayerControllerTest {
         orgService.saveOrganization(testOrg);
 
         Organization organization = orgRepository.findByOrgName(testOrg.orgName()).get(0);
-        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "Male", 20, "010-1234-1234");
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "male", 20, "010-1234-1234");
 
         playerService.savePlayer(playerRequestDto);
 
@@ -98,7 +99,7 @@ class PlayerControllerTest {
         orgService.saveOrganization(testOrg);
 
         Organization organization = orgRepository.findByOrgName(testOrg.orgName()).get(0);
-        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "Male", 20, "010-1234-1234");
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "male", 20, "010-1234-1234");
 
         playerService.savePlayer(playerRequestDto);
         PlayerResponseDto player = playerService.findPlayerByName(playerRequestDto.playerName()).get(0);
@@ -123,7 +124,7 @@ class PlayerControllerTest {
         orgService.saveOrganization(testOrg);
 
         Organization organization = orgRepository.findByOrgName(testOrg.orgName()).get(0);
-        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "Male", 20, "010-1234-1234");
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "male", 20, "010-1234-1234");
 
         playerService.savePlayer(playerRequestDto);
 
@@ -147,7 +148,7 @@ class PlayerControllerTest {
         orgService.saveOrganization(testOrg);
 
         Organization organization = orgRepository.findByOrgName(testOrg.orgName()).get(0);
-        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "Male", 20, "010-1234-1234");
+        PlayerRequestDto playerRequestDto = new PlayerRequestDto(organization.getOrgId(), "playerName", "male", 20, "010-1234-1234");
 
         playerService.savePlayer(playerRequestDto);
         PlayerResponseDto player = playerService.findPlayerByName(playerRequestDto.playerName()).get(0);

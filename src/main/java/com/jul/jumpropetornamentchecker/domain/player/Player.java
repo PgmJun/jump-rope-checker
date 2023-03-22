@@ -1,5 +1,6 @@
-package com.jul.jumpropetornamentchecker.domain;
+package com.jul.jumpropetornamentchecker.domain.player;
 
+import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
 import jakarta.persistence.*;
@@ -27,9 +28,10 @@ public class Player {
     @NotNull
     private String playerName;
 
-    @Column(name = "playerSex")
+    @Column(name = "playerGender")
+    @Enumerated(EnumType.STRING)
     @NotNull
-    private String playerSex;
+    private Gender playerGender;
 
     @Column(name = "playerAge")
     @NotNull
@@ -43,7 +45,7 @@ public class Player {
     public Player(Organization organization, PlayerRequestDto playerRequestDto) {
         this.organization = organization;
         this.playerName = playerRequestDto.playerName();
-        this.playerSex = playerRequestDto.playerSex();
+        this.playerGender = Gender.getGender(playerRequestDto.playerGender().toUpperCase());
         this.playerAge = playerRequestDto.playerAge();
         this.playerTel = playerRequestDto.playerTel();
     }
@@ -54,7 +56,7 @@ public class Player {
                 .playerId(playerId)
                 .playerAge(playerAge)
                 .playerName(playerName)
-                .playerSex(playerSex)
+                .playerGender(playerGender.name())
                 .playerTel(playerTel)
                 .build();
     }
