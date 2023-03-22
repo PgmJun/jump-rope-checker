@@ -23,7 +23,6 @@ public class PlayerService {
 
     public Boolean savePlayer(PlayerRequestDto playerRequestDto) {
         boolean saveResult = true;
-        System.out.println("playerRequestDto = " + playerRequestDto.toString());
         try {
             Organization organization = organizationService.findOrganizationById(playerRequestDto.organizationId()).orElseThrow();
             Player player = playerRequestDto.from(organization);
@@ -32,7 +31,6 @@ public class PlayerService {
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             saveResult = false;
 
         } finally {

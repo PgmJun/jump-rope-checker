@@ -45,7 +45,7 @@ public class Player {
     public Player(Organization organization, PlayerRequestDto playerRequestDto) {
         this.organization = organization;
         this.playerName = playerRequestDto.playerName();
-        this.playerGender = Gender.getGender(playerRequestDto.playerGender().toUpperCase());
+        this.playerGender = Gender.findByType(playerRequestDto.playerGender().toUpperCase());
         this.playerAge = playerRequestDto.playerAge();
         this.playerTel = playerRequestDto.playerTel();
     }

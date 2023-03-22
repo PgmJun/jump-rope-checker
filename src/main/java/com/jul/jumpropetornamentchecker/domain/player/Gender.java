@@ -5,14 +5,14 @@ import java.util.Arrays;
 public enum Gender {
     MALE("MALE"), FEMALE("FEMALE");
 
-    private String type;
+    private final String type;
 
     Gender(String type) {
         this.type = type;
     }
 
 
-    public static Gender getGender(String genderType) {
+    public static Gender findByType(String genderType) {
         return Arrays.stream(values())
                 .filter(g -> g.type.equals(genderType))
                 .findAny()
