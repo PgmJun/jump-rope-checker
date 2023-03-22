@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.api;
 
+import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
@@ -17,17 +18,16 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/organization")
 @RequiredArgsConstructor
-public class OrganizationController {
+public class OrganizationController extends ResponseEntityCreator {
     private final OrganizationService organizationService;
+
 
     @PostMapping("/add")
     @Operation(summary = "단체 추가 API", description = "단체 정보를 입력하여 단체를 추가합니다.")
     public ResponseEntity<?> registerOrganizationData(@RequestBody OrganizationRequestDto requestDto) {
-        Boolean isSaved = organizationService.saveOrganization(requestDto);
+        Boolean saveResult = organizationService.saveOrganization(requestDto);
 
-        return (isSaved) ?
-                new ResponseEntity<>("단체 등록에 성공하였습니다.", HttpStatus.OK) :
-                new ResponseEntity<>("단체 등록에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        return getSaveDataResponseEntity(saveResult);
     }
 
     @GetMapping("/find/all")
@@ -35,9 +35,7 @@ public class OrganizationController {
     public ResponseEntity<?> findAllOrganizationDatum() {
         List<OrganizationResponseDto> organizationDatum = organizationService.findAllOrganizationDatum();
 
-        return (organizationDatum.isEmpty()) ?
-                new ResponseEntity<>("단체 정보를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(organizationDatum, HttpStatus.OK);
+        return getFindDatumResponseEntity(organizationDatum);
     }
 
     @GetMapping("/find")
@@ -45,9 +43,7 @@ public class OrganizationController {
     public ResponseEntity<?> findOrganizationDatumByName(@RequestParam(name = "name") String orgName) {
         List<OrganizationResponseDto> organizationDatum = organizationService.findOrganizationByName(orgName);
 
-        return (organizationDatum.isEmpty()) ?
-                new ResponseEntity<>("단체 정보를 조회하지 못했습니다.", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(organizationDatum, HttpStatus.OK);
+        return getFindDatumResponseEntity(organizationDatum);
     }
 
     @GetMapping("/find/{id}")
@@ -55,27 +51,31 @@ public class OrganizationController {
     public ResponseEntity<?> findOrganizationDataById(@PathVariable Long id) {
         Optional<Organization> organizationData = organizationService.findOrganizationById(id);
 
-        return (organizationData.isEmpty()) ?
-                new ResponseEntity<>("단체 정보를 조회하지 못했습니다.", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(organizationData.get(), HttpStatus.OK);
+        return getFindDataResponseEntity(organizationData);
     }
 
     @DeleteMapping("/delete")
     @Operation(summary = "단체 정보 삭제 API", description = "단체의 Id를 통해 단체 정보를 삭제합니다.")
     public ResponseEntity<?> deleteOrganizationDatumById(@RequestBody List<Long> organizationIds) {
-        return organizationService.removeOrganizationData(organizationIds) ?
-                new ResponseEntity<>("단체 정보가 삭제되었습니다.", HttpStatus.OK) :
-                new ResponseEntity<>("단체 정보 삭제에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        Boolean removeResult = organizationService.removeOrganizationData(organizationIds);
 
+        return getRemoveDataResponseEntity(removeResult);
     }
 
     @PutMapping
     @Operation(summary = "", description = "")
     public ResponseEntity<?> updateOrganizationData(@RequestBody OrganizationUpdateDto organizationUpdateDto) {
-        return (organizationService.updateOrganizationData(organizationUpdateDto)) ?
-                new ResponseEntity<>("단체 정보가 갱신되었습니다.", HttpStatus.OK) :
-                new ResponseEntity<>("단체 정보 갱신에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        Boolean updateResult = organizationService.updateOrganizationData(organizationUpdateDto);
 
+        return getUpdateDataResponseEntity(updateResult);
+    }
+
+
+    @Override
+    public ResponseEntity<?> getFindDataResponseEntity(Optional<?> data) {
+        return (data.isEmpty()) ?
+                new ResponseEntity<>("데이터를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(((Organization) data.get()).toDto(), HttpStatus.OK);
     }
 
 

@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.api;
 
+import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
 import com.jul.jumpropetornamentchecker.domain.player.Player;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
@@ -7,7 +8,6 @@ import com.jul.jumpropetornamentchecker.dto.player.PlayerUpdateDto;
 import com.jul.jumpropetornamentchecker.service.PlayerService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-import static com.jul.jumpropetornamentchecker.api.PlayerController.PlayerResponseEntityCreator.*;
 
 
 @RestController
 @RequestMapping("/player")
 @RequiredArgsConstructor
-public class PlayerController {
+public class PlayerController extends ResponseEntityCreator {
     private final PlayerService playerService;
 
 
@@ -30,7 +29,7 @@ public class PlayerController {
     public ResponseEntity<?> registerPlayer(@RequestBody PlayerRequestDto playerRequestDto) {
         Boolean saveResult = playerService.savePlayer(playerRequestDto);
 
-        return getSavePlayerResponseEntity(saveResult);
+        return getSaveDataResponseEntity(saveResult);
     }
 
     @GetMapping("/find/all")
@@ -38,7 +37,7 @@ public class PlayerController {
     public ResponseEntity<?> findAllPlayerData() {
         List<PlayerResponseDto> playerDatum = playerService.findAllPlayer();
 
-        return getFindPlayerResponseEntity(playerDatum);
+        return getFindDatumResponseEntity(playerDatum);
     }
 
     @GetMapping("/find")
@@ -46,7 +45,7 @@ public class PlayerController {
     public ResponseEntity<?> findPlayerDataByName(@RequestParam("name") String name) {
         List<PlayerResponseDto> playerDatum = playerService.findPlayerByName(name);
 
-        return getFindPlayerResponseEntity(playerDatum);
+        return getFindDatumResponseEntity(playerDatum);
     }
 
     @GetMapping("/find/{id}")
@@ -54,7 +53,7 @@ public class PlayerController {
     public ResponseEntity<?> findPlayerDataById(@PathVariable Long id) {
         Optional<Player> playerData = playerService.findPlayerById(id);
 
-        return getFindByIdPlayerResponseEntity(playerData);
+        return getFindDataResponseEntity(playerData);
     }
 
     @GetMapping("/find/org/{organizationId}")
@@ -62,43 +61,30 @@ public class PlayerController {
     public ResponseEntity<?> findPlayerDatumByOrganizationId(@PathVariable Long organizationId) {
         List<PlayerResponseDto> playerDatum = playerService.findPlayerDataByOrganizationId(organizationId);
 
-        return getFindPlayerResponseEntity(playerDatum);
+        return getFindDatumResponseEntity(playerDatum);
     }
 
     @DeleteMapping("/delete")
     @Operation(summary = "선수 정보 삭제 API", description = "선수의 Id를 통해 선수 정보를 삭제합니다.")
     public ResponseEntity<?> deletePlayerDatumById(@RequestBody List<Long> playerIds) {
-        return playerService.removePlayerData(playerIds) ?
-                new ResponseEntity<>("선수 정보가 삭제되었습니다.", HttpStatus.OK) :
-                new ResponseEntity<>("선수 정보 삭제에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        boolean removeResult = playerService.removePlayerData(playerIds);
+
+        return getRemoveDataResponseEntity(removeResult);
     }
 
     @PutMapping("/update")
     @Operation(summary = "선수 정보 수정 API", description = "선수 정보를 업데이트합니다.")
     public ResponseEntity<?> updatePlayerData(@RequestBody PlayerUpdateDto playerUpdateDto) {
-        return (playerService.updatePlayerData(playerUpdateDto)) ?
-                new ResponseEntity<>("선수 정보가 갱신되었습니다.", HttpStatus.OK) :
-                new ResponseEntity<>("선수 정보 갱신에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        Boolean updateResult = playerService.updatePlayerData(playerUpdateDto);
+
+        return getUpdateDataResponseEntity(updateResult);
     }
 
-
-    protected static class PlayerResponseEntityCreator {
-        static ResponseEntity<?> getFindPlayerResponseEntity(List<PlayerResponseDto> playerDatum) {
-            return (playerDatum.isEmpty()) ?
-                    new ResponseEntity<>("선수 정보를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
-                    new ResponseEntity<>(playerDatum, HttpStatus.OK);
-        }
-
-        static ResponseEntity<?> getFindByIdPlayerResponseEntity(Optional<Player> playerData) {
-            return (playerData.isEmpty()) ?
-                    new ResponseEntity<>("선수 정보를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
-                    new ResponseEntity<>(playerData.stream().map(Player::toDto), HttpStatus.OK);
-        }
-
-        static ResponseEntity<?> getSavePlayerResponseEntity(boolean saveResult) {
-            return (saveResult) ?
-                    new ResponseEntity<>("선수가 등록되었습니다.", HttpStatus.OK) :
-                    new ResponseEntity<>("선수 등록에 실패하였습니다.", HttpStatus.BAD_REQUEST);
-        }
+    @Override
+    public ResponseEntity<?> getFindDataResponseEntity(Optional<?> playerData) {
+        return (playerData.isEmpty()) ?
+                new ResponseEntity<>("데이터를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(((Player)playerData.get()).toDto(), HttpStatus.OK);
     }
+
 }

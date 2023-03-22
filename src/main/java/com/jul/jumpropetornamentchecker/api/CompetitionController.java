@@ -1,5 +1,7 @@
 package com.jul.jumpropetornamentchecker.api;
 
+import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
+import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionRequestDto;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionUpdateDto;
@@ -14,9 +16,9 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/competition")
+@RequestMapping(value = "/competition", produces = "application/json; charset=UTF8")
 @RequiredArgsConstructor
-public class CompetitionController {
+public class CompetitionController extends ResponseEntityCreator {
     private final CompetitionService competitionService;
 
     @PostMapping("/add")
@@ -24,52 +26,54 @@ public class CompetitionController {
     public ResponseEntity<?> registerCompetitionData(@RequestBody CompetitionRequestDto competitionDto) {
         Boolean saveResult = competitionService.saveCompetition(competitionDto);
 
-        return (saveResult) ?
-                new ResponseEntity<>(competitionDto.competitionName() + " 경기가 등록되었습니다.", HttpStatus.OK) :
-                new ResponseEntity<>("경기 등록에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+        return getSaveDataResponseEntity(saveResult);
     }
 
     @GetMapping("/find/all")
     @Operation(summary = "대회 전체 조회 API", description = "전체 대회 정보를 조회합니다.")
     public ResponseEntity<?> findAllCompetitionData() {
-        List<CompetitionResponseDto> competitionInfo = competitionService.findAllCompetitionInfo();
-        return (competitionInfo.isEmpty()) ?
-                new ResponseEntity<>("no competition data", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(competitionInfo, HttpStatus.OK);
+        List<CompetitionResponseDto> competitionDatum = competitionService.findAllCompetitionInfo();
+
+        return getFindDatumResponseEntity(competitionDatum);
     }
 
-    @GetMapping("/find")
+    @GetMapping(value = "/find")
     @Operation(summary = "대회 이름 조회 API", description = "대회명을 사용하여 대회 정보를 조회합니다.")
     public ResponseEntity<?> findCompetitionDataByName(@RequestParam("name") String competitionName) {
-        List<CompetitionResponseDto> competitionInfo = competitionService.findCompetitionInfoByName(competitionName);
-        return (competitionInfo.isEmpty()) ?
-                new ResponseEntity<>("no NAME: " + competitionName + " competition data", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(competitionInfo, HttpStatus.OK);
+        List<CompetitionResponseDto> competitionDatum = competitionService.findCompetitionInfoByName(competitionName);
+
+        return getFindDatumResponseEntity(competitionDatum);
     }
 
     @GetMapping("/find/{id}")
     @Operation(summary = "대회 ID 조회 API", description = "대회ID를 사용하여 대회 정보를 조회합니다.")
     public ResponseEntity<?> findCompetitionDataByName(@PathVariable("id") Long competitionId) {
-        Optional<CompetitionResponseDto> competitionInfo = competitionService.findCompetitionInfoById(competitionId);
-        return (competitionInfo.isEmpty()) ?
-                new ResponseEntity<>("no ID." + competitionId + " competition data", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(competitionInfo, HttpStatus.OK);
+        Optional<CompetitionResponseDto> competitionData = competitionService.findCompetitionInfoById(competitionId);
+
+        return getFindDataResponseEntity(competitionData);
     }
 
     @DeleteMapping("/delete")
     @Operation(summary = "대회 정보 삭제 API", description = "대회ID List를 통해 대회 정보를 삭제합니다.")
     public ResponseEntity<?> deleteCompetitionDataById(@RequestBody List<Long> competitionIds) {
-        return (competitionService.removeCompetitionData(competitionIds)) ?
-                new ResponseEntity<>("competition datum are removed", HttpStatus.OK) :
-                new ResponseEntity<>("competition datum are not removed", HttpStatus.BAD_REQUEST);
+        Boolean removeResult = competitionService.removeCompetitionData(competitionIds);
+
+        return getRemoveDataResponseEntity(removeResult);
     }
 
     @PutMapping("/update")
     @Operation(summary = "대회 정보 수정 API", description = "대회 정보를 업데이트합니다.")
     public ResponseEntity<?> updateCompetitionData(@RequestBody CompetitionUpdateDto competitionUpdateDto) {
-        return (competitionService.updateCompetitionData(competitionUpdateDto)) ?
-                new ResponseEntity<>("competition datum is updated", HttpStatus.OK) :
-                new ResponseEntity<>("competition datum are fail to update", HttpStatus.BAD_REQUEST);
+        boolean updateResult = competitionService.updateCompetitionData(competitionUpdateDto);
+
+        return getUpdateDataResponseEntity(updateResult);
     }
 
+
+    @Override
+    public ResponseEntity<?> getFindDataResponseEntity(Optional<?> data) {
+        return (data.isEmpty()) ?
+                new ResponseEntity<>("데이터를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(((Competition) data.get()).toDto(), HttpStatus.OK);
+    }
 }
