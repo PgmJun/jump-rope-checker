@@ -1,8 +1,8 @@
 package com.jul.jumpropetornamentchecker.service;
 
+import com.jul.jumpropetornamentchecker.csvParser.CsvParser;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.player.Player;
-import com.jul.jumpropetornamentchecker.dto.organization.OrganizationUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerRequestDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.player.PlayerUpdateDto;
@@ -10,6 +10,7 @@ import com.jul.jumpropetornamentchecker.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class PlayerService {
     private final PlayerRepository playerRepository;
     private final OrganizationService organizationService;
+    private final CsvParser csvParser;
 
     public Boolean savePlayer(PlayerRequestDto playerRequestDto) {
         boolean saveResult = true;
@@ -35,6 +37,22 @@ public class PlayerService {
             log.error(e.getMessage());
             saveResult = false;
 
+        } finally {
+            return saveResult;
+        }
+    }
+
+    public Boolean savePlayerByCsv(MultipartFile multipartFile, Long organizationId) {
+        boolean saveResult = true;
+
+        try {
+            Organization organization = organizationService.findOrganizationById(organizationId).orElseThrow(() -> new IllegalArgumentException());
+            csvParser.insertData(multipartFile, organization);
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
+            saveResult = false;
         } finally {
             return saveResult;
         }

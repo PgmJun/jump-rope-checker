@@ -11,10 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
 
 
 @RestController
@@ -25,9 +26,17 @@ public class PlayerController extends ResponseEntityCreator {
 
 
     @PostMapping("/add")
-    @Operation(summary = "선수 등록 API", description = "선수 정보를 입력하여 선수를 등록합니다.")
+    @Operation(summary = "선수 등록 API", description = "선수 정보를 입력하여 선수 데이터를 등록합니다.")
     public ResponseEntity<?> registerPlayer(@RequestBody PlayerRequestDto playerRequestDto) {
         Boolean saveResult = playerService.savePlayer(playerRequestDto);
+
+        return getSaveDataResponseEntity(saveResult);
+    }
+
+    @PostMapping("/add/csv")
+    @Operation(summary = "CSV 파일 선수 등록 API", description = "CSV 파일을 사용하여 선수 데이터를 등록합니다.")
+    public ResponseEntity<?> registerPlayers(@RequestParam(name = "playerList") MultipartFile playerDataFile, @RequestParam("orgId") Long organizationId) throws IOException {
+        Boolean saveResult = playerService.savePlayerByCsv(playerDataFile, organizationId);
 
         return getSaveDataResponseEntity(saveResult);
     }
@@ -84,7 +93,7 @@ public class PlayerController extends ResponseEntityCreator {
     public ResponseEntity<?> getFindDataResponseEntity(Optional<?> playerData) {
         return (playerData.isEmpty()) ?
                 new ResponseEntity<>("데이터를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(((Player)playerData.get()).toDto(), HttpStatus.OK);
+                new ResponseEntity<>(((Player) playerData.get()).toDto(), HttpStatus.OK);
     }
 
 }
