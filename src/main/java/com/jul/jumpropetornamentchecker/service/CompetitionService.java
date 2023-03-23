@@ -24,6 +24,7 @@ public class CompetitionService {
             competitionRepository.save(competitionDto.to());
             return true;
         } catch (Exception e) {
+            log.error(e.getMessage());
             return false;
         }
     }
@@ -56,6 +57,7 @@ public class CompetitionService {
             competitionIds.forEach(id -> competitionRepository.deleteById(id));
             return true;
         } catch (Exception e) {
+            log.error(e.getMessage());
             return false;
         }
     }
@@ -66,6 +68,8 @@ public class CompetitionService {
             competitionData.changeData(competitionUpdateData);
             return true;
         } catch (Exception e) {
+            log.error(e.getMessage());
+            e.printStackTrace();
             return false;
         }
     }
