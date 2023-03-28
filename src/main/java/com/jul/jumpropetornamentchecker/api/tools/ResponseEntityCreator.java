@@ -9,13 +9,13 @@ import java.util.Optional;
 public abstract class ResponseEntityCreator {
 
 
-    public ResponseEntity<?> getFindDatumResponseEntity(List<?> playerDatum) {
-        return (playerDatum.isEmpty()) ?
+    public ResponseEntity<?> getFindDatumResponseEntity(List<?> findDatum) {
+        return (findDatum.isEmpty()) ?
                 new ResponseEntity<>("데이터를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
-                new ResponseEntity<>(playerDatum, HttpStatus.OK);
+                new ResponseEntity<>(findDatum, HttpStatus.OK);
     }
 
-    public abstract ResponseEntity<?> getFindDataResponseEntity(Optional<?> data);
+    public abstract ResponseEntity<?> getFindDataResponseEntity(Optional<?> findData);
 
     public ResponseEntity<?> getSaveDataResponseEntity(boolean saveResult) {
         return (saveResult) ?

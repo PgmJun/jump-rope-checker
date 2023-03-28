@@ -2,6 +2,7 @@ package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
 import com.jul.jumpropetornamentchecker.domain.event.Event;
+import com.jul.jumpropetornamentchecker.dto.event.EventResponseDto;
 import com.jul.jumpropetornamentchecker.service.EventService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -30,6 +32,13 @@ public class EventController extends ResponseEntityCreator {
     public ResponseEntity<?> findEventDataById(@PathVariable Long id) {
         Optional<Event> eventData = eventService.findEventDataById(id);
         return getFindDataResponseEntity(eventData);
+    }
+
+    @GetMapping("find/all")
+    @Operation(summary = "종목 전체 조회 API", description = "모든 단체 정보를 조회합니다.")
+    public ResponseEntity<?> findAllEventData() {
+        List<EventResponseDto> eventDatum = eventService.findAllEventData();
+        return getFindDatumResponseEntity(eventDatum);
     }
 
     @Override
