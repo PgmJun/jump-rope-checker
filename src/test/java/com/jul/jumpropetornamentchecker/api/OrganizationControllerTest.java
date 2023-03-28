@@ -78,8 +78,8 @@ class OrganizationControllerTest {
         String orgIdJson = objectMapper.writeValueAsString(testOrgData.orgId());
 
         mockMvc.perform(delete("/organization/delete")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(orgIdJson))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(orgIdJson))
                 .andExpect(status().isBadRequest())
                 .andDo(print());
     }

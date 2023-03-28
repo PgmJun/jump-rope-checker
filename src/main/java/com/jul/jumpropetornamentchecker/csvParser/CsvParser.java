@@ -29,10 +29,10 @@ public class CsvParser {
     private final EntityManager em;
 
     public void insertData(MultipartFile file, Organization organization) throws IOException, CsvValidationException {
-        fileUpload(file, organization);
+        fileUploadDB(file, organization);
     }
 
-    private void fileUpload(MultipartFile file, Organization organization) throws IllegalStateException, IOException, CsvValidationException {
+    private void fileUploadDB(MultipartFile file, Organization organization) throws IllegalStateException, IOException, CsvValidationException {
 
         /* 서버에 저장할 파일 경로와 파일명 설정 */
 
@@ -43,6 +43,7 @@ public class CsvParser {
         FileCopyUtils.copy(file.getBytes(), uploadFile);
 
         readPlayerData(organization);
+        deleteFile(uploadFile);
     }
 
     private void readPlayerData(Organization organization) {
@@ -72,10 +73,16 @@ public class CsvParser {
                 }
             } while (readData != null);
 
+
+
         } catch (IOException e) {
             log.error(e.getMessage());
         } catch (EntityExistsException | CsvValidationException e) {
             log.error(e.getMessage());
         }
+    }
+
+    private void deleteFile(File file) {
+        file.delete();
     }
 }
