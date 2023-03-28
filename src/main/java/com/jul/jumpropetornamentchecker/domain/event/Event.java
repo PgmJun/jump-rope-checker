@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.domain.event;
 
+import com.jul.jumpropetornamentchecker.dto.event.EventResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,6 +28,14 @@ public class Event {
                 .eventId(eventData.getEventId())
                 .eventName(eventData.getEventName())
                 .isGroupEvent(eventData.getIsGroupGame())
+                .build();
+    }
+
+    public EventResponseDto toDto() {
+        return EventResponseDto.builder()
+                .eventId(eventId)
+                .eventName(eventName)
+                .isGroupGame(isGroupEvent)
                 .build();
     }
 }

@@ -1,11 +1,14 @@
 package com.jul.jumpropetornamentchecker.service;
 
+import com.jul.jumpropetornamentchecker.domain.event.Event;
 import com.jul.jumpropetornamentchecker.domain.event.EventData;
 import com.jul.jumpropetornamentchecker.dto.event.EventResponseDto;
 import com.jul.jumpropetornamentchecker.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 import static com.jul.jumpropetornamentchecker.domain.event.EventData.*;
 
@@ -28,7 +31,8 @@ public class EventService {
 
     }
 
-    public void findEventDataById(Long id) {
-
+    public Optional<Event> findEventDataById(Long id) {
+        Optional<Event> eventData = eventRepository.findById(id);
+        return eventData;
     }
 }
