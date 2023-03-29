@@ -75,6 +75,7 @@ public class Competition {
 
     public void changeData(CompetitionUpdateDto updateData) {
         this.competitionName = updateData.competitionName();
+        this.recordingSheetName = updateData.recordingSheetName();
         this.competitionHost = updateData.competitionHost();
         this.hostEmail = updateData.hostEmail();
         this.hostTel = updateData.hostTel();

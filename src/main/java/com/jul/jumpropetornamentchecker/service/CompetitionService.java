@@ -71,10 +71,12 @@ public class CompetitionService {
         try {
             Competition competitionData = competitionRepository.findByCompetitionId(competitionUpdateData.competitionId()).orElseThrow();
             competitionData.changeData(competitionUpdateData);
+            competitionRepository.save(competitionData);
+
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             updateResult = false;
+
         } finally {
             return updateResult;
         }
