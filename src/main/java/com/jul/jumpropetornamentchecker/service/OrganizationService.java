@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-@Transactional
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
 
@@ -66,13 +65,13 @@ public class OrganizationService {
         }
     }
 
+    @Transactional
     public Boolean updateOrganizationData(OrganizationUpdateDto organizationUpdateDto) {
         Boolean updateResult = true;
 
         try {
             Organization organizationData = organizationRepository.findById(organizationUpdateDto.orgId()).orElseThrow();
             organizationData.changeData(organizationUpdateDto);
-            organizationRepository.save(organizationData);
 
         } catch (Exception e) {
             log.error(e.getMessage());
