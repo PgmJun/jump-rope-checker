@@ -72,9 +72,12 @@ public class OrganizationService {
         try {
             Organization organizationData = organizationRepository.findById(organizationUpdateDto.orgId()).orElseThrow();
             organizationData.changeData(organizationUpdateDto);
+            organizationRepository.save(organizationData);
+
         } catch (Exception e) {
             log.error(e.getMessage());
             updateResult = false;
+
         } finally {
             return updateResult;
         }
