@@ -1,7 +1,6 @@
 package com.jul.jumpropetornamentchecker.domain;
 
 import com.jul.jumpropetornamentchecker.domain.event.Event;
-import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
 import com.jul.jumpropetornamentchecker.dto.competitionEvent.CmptEventResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

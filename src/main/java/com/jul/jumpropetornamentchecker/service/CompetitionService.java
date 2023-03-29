@@ -5,6 +5,7 @@ import com.jul.jumpropetornamentchecker.dto.competition.CompetitionRequestDto;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionUpdateDto;
 import com.jul.jumpropetornamentchecker.repository.CompetitionRepository;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CompetitionService {
     private final CompetitionRepository competitionRepository;
+    private final CompetitionEventService cmptEventService;
 
     public Boolean saveCompetition(CompetitionRequestDto competitionDto) {
+        boolean saveResult = true;
         try {
-            competitionRepository.save(competitionDto.to());
-            return true;
+            Competition savedCompetition = competitionRepository.saveAndFlush(competitionDto.to());
+            cmptEventService.saveDefaultCompetitionEventData(savedCompetition);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return false;
+            saveResult = false;
+        } finally {
+            return saveResult;
         }
     }
 
