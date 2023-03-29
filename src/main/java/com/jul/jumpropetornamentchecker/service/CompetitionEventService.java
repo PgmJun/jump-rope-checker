@@ -31,7 +31,7 @@ public class CompetitionEventService {
                 competitionEventRepository.save(CompetitionEvent.builder()
                         .competition(competition)
                         .event(event)
-                        .isProceed(false)
+                        .isProceed(Boolean.FALSE)
                         .partPoint(0)
                         .fstPrizeStandard(0)
                         .sndPrizeStandard(0)
@@ -40,7 +40,6 @@ public class CompetitionEventService {
             });
 
         } catch (Exception e) {
-            e.printStackTrace();
             log.error(e.getMessage());
         }
     }

@@ -56,6 +56,7 @@ public class CompetitionEvent {
                 .cmptEventId(cmptEventId)
                 .competitionName(competition.getCompetitionName())
                 .eventName(event.getEventName())
+                .isProceed(isProceed)
                 .partPoint(partPoint)
                 .fstPrizeStandard(fstPrizeStandard)
                 .sndPrizeStandard(sndPrizeStandard)
