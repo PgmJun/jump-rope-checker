@@ -5,6 +5,7 @@ import com.jul.jumpropetornamentchecker.dto.competition.CompetitionRequestDto;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionUpdateDto;
 import com.jul.jumpropetornamentchecker.repository.CompetitionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,15 +67,17 @@ public class CompetitionService {
         }
     }
 
+    @Transactional
     public boolean updateCompetitionData(CompetitionUpdateDto competitionUpdateData) {
         boolean updateResult = true;
         try {
             Competition competitionData = competitionRepository.findByCompetitionId(competitionUpdateData.competitionId()).orElseThrow();
             competitionData.changeData(competitionUpdateData);
+
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             updateResult = false;
+
         } finally {
             return updateResult;
         }
