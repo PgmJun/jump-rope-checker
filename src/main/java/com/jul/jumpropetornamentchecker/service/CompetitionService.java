@@ -18,14 +18,18 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CompetitionService {
     private final CompetitionRepository competitionRepository;
+    private final CompetitionEventService cmptEventService;
 
     public Boolean saveCompetition(CompetitionRequestDto competitionDto) {
+        boolean saveResult = true;
         try {
-            competitionRepository.save(competitionDto.to());
-            return true;
+            Competition savedCompetition = competitionRepository.saveAndFlush(competitionDto.to());
+            cmptEventService.saveDefaultCompetitionEventData(savedCompetition);
         } catch (Exception e) {
             log.error(e.getMessage());
-            return false;
+            saveResult = false;
+        } finally {
+            return saveResult;
         }
     }
 
@@ -63,14 +67,16 @@ public class CompetitionService {
     }
 
     public boolean updateCompetitionData(CompetitionUpdateDto competitionUpdateData) {
+        boolean updateResult = true;
         try {
             Competition competitionData = competitionRepository.findByCompetitionId(competitionUpdateData.competitionId()).orElseThrow();
             competitionData.changeData(competitionUpdateData);
-            return true;
         } catch (Exception e) {
             log.error(e.getMessage());
             e.printStackTrace();
-            return false;
+            updateResult = false;
+        } finally {
+            return updateResult;
         }
     }
 }
