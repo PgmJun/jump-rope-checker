@@ -8,6 +8,7 @@ import com.jul.jumpropetornamentchecker.dto.competitionEvent.CompetitionEventRes
 import com.jul.jumpropetornamentchecker.dto.competitionEvent.CompetitionEventUpdateDto;
 import com.jul.jumpropetornamentchecker.repository.CompetitionEventRepository;
 import com.jul.jumpropetornamentchecker.repository.CompetitionRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -55,13 +56,13 @@ public class CompetitionEventService {
         return competitionEventResponseDatum;
     }
 
+    @Transactional
     public boolean updateCompetitionEventData(List<CompetitionEventUpdateDto> competitionEventUpdateDtos) {
         boolean updateResult = true;
         try {
             for (CompetitionEventUpdateDto updateDto : competitionEventUpdateDtos) {
                 CompetitionEvent competitionEvent = competitionEventRepository.findById(updateDto.cmptEventId()).orElseThrow(() -> new IllegalArgumentException("입력받은 cmptEventId " + updateDto.cmptEventId() + "가 존재하지 않거나 잘못되었습니다."));
                 competitionEvent.changeData(updateDto);
-                competitionEventRepository.save(competitionEvent);
             }
         } catch (Exception e) {
             log.error(e.getMessage());
