@@ -1,0 +1,48 @@
+spring:
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    devtools:
+      restart:
+        enabled: true
+
+    jpa:
+      database-platform: org.hibernate.dialect.MySQL8Dialect
+      open-in-view: false
+      show-sql: true
+      hibernate:
+        format_sql: true
+        ddl-auto: update
+        naming:
+          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  springdoc:
+    default-consumes-media-type: application/json
+    default-produces-media-type: application/json
+    # Package to include
+    packagesToScan: com.jul.jumpropetornamentchecker.api
+    swagger-ui:
+      path: /swagger-ui.html
+      disable-swagger-default-url: true
+      display-query-params-without-oauth2: true
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+
+server:
+  port: 8080
