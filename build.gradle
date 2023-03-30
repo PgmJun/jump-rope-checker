@@ -29,6 +29,10 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
 
+    // aws secrets manager
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
+
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
