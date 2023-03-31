@@ -1,9 +1,14 @@
 package com.jul.jumpropetornamentchecker.service;
 
+import com.jul.jumpropetornamentchecker.domain.department.Department;
+import com.jul.jumpropetornamentchecker.dto.attend.department.DepartmentResponseDto;
 import com.jul.jumpropetornamentchecker.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.jul.jumpropetornamentchecker.domain.department.DepartmentType.getAllDepartmentData;
 
@@ -24,5 +29,13 @@ public class DepartmentService {
         } finally {
             return saveResult;
         }
+    }
+
+    public List<DepartmentResponseDto> findAllDepartmentData() {
+        List<Department> departmentDatum = departmentRepository.findAll();
+
+        return departmentDatum.stream()
+                .map(Department::toDto)
+                .collect(Collectors.toList());
     }
 }

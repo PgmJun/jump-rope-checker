@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.domain.department;
 
+import com.jul.jumpropetornamentchecker.dto.attend.department.DepartmentResponseDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,6 +26,13 @@ public class Department {
         return Department.builder()
                 .departId(departmentType.getDepartId())
                 .departName(departmentType.getDepartName())
+                .build();
+    }
+
+    public DepartmentResponseDto toDto() {
+        return DepartmentResponseDto.builder()
+                .departId(departId)
+                .departName(departName)
                 .build();
     }
 }
