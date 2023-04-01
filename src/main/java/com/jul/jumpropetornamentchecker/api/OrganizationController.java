@@ -49,7 +49,7 @@ public class OrganizationController extends ResponseEntityCreator {
     @GetMapping("/find/{id}")
     @Operation(summary = "단체 ID 조회 API", description = "ID를 통해 단체 정보를 조회합니다.")
     public ResponseEntity<?> findOrganizationDataById(@PathVariable Long id) {
-        Optional<Organization> organizationData = organizationService.findOrganizationById(id);
+        Optional<OrganizationResponseDto> organizationData = organizationService.findOrganizationById(id);
 
         return getFindDataResponseEntity(organizationData);
     }

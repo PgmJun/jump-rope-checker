@@ -50,8 +50,11 @@ public class OrganizationService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<Organization> findOrganizationById(Long id) {
-        return organizationRepository.findById(id);
+    public Optional<OrganizationResponseDto> findOrganizationById(Long id) {
+        Optional<Organization> organizationData = organizationRepository.findById(id);
+
+        return organizationData
+                .map(Organization::toDto);
     }
 
     public Boolean removeOrganizationData(List<Long> organizationIds) {
