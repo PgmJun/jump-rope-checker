@@ -39,6 +39,21 @@ public class CompetitionEvent {
     private int partPoint;
 
     @Column
+    private int firstGrandPrizePoint;
+
+    @Column
+    private int secondGrandPrizePoint;
+
+    @Column
+    private int thirdGrandPrizePoint;
+
+    @Column
+    private int fourthGrandPrizePoint;
+
+    @Column
+    private int fifthGrandPrizePoint;
+
+    @Column
     @NotNull
     private int fstPrizeStandard;
 
@@ -58,6 +73,11 @@ public class CompetitionEvent {
                 .eventName(event.getEventName())
                 .isProceed(isProceed)
                 .partPoint(partPoint)
+                .firstGrandPrizePoint(firstGrandPrizePoint)
+                .secondGrandPrizePoint(secondGrandPrizePoint)
+                .thirdGrandPrizePoint(thirdGrandPrizePoint)
+                .fourthGrandPrizePoint(fourthGrandPrizePoint)
+                .fifthGrandPrizePoint(fifthGrandPrizePoint)
                 .fstPrizeStandard(fstPrizeStandard)
                 .sndPrizeStandard(sndPrizeStandard)
                 .trdPrizeStandard(trdPrizeStandard)
@@ -67,6 +87,11 @@ public class CompetitionEvent {
     public void changeData(CompetitionEventUpdateDto updateDto) {
         this.isProceed = updateDto.isProceed();
         this.partPoint = updateDto.partPoint();
+        this.firstGrandPrizePoint = updateDto.firstGrandPrizePoint();
+        this.secondGrandPrizePoint = updateDto.secondGrandPrizePoint();
+        this.thirdGrandPrizePoint = updateDto.thirdGrandPrizePoint();
+        this.fourthGrandPrizePoint = updateDto.fourthGrandPrizePoint();
+        this.fifthGrandPrizePoint = updateDto.fifthGrandPrizePoint();
         this.fstPrizeStandard = updateDto.fstPrizeStandard();
         this.sndPrizeStandard = updateDto.sndPrizeStandard();
         this.trdPrizeStandard = updateDto.trdPrizeStandard();
