@@ -28,17 +28,19 @@ public enum DepartmentType {
         this.departName = departName;
     }
 
-    public static DepartmentType findDepartmentTypeByName(String departName) {
+    public static Department findDepartmentByName(String departName) {
         return Arrays.stream(values())
                 .filter(d -> d.departName.equals(departName))
                 .findAny()
+                .map(Department::from)
                 .orElseThrow(() -> new IllegalArgumentException("departName의 값이 존재하지 않거나 잘못 입력되었습니다."));
     }
 
-    public static DepartmentType findDepartmentTypeById(Long departId) {
+    public static Department findDepartmentById(Long departId) {
         return Arrays.stream(values())
                 .filter(d -> d.departId.equals(departId))
                 .findAny()
+                .map(Department::from)
                 .orElseThrow(() -> new IllegalArgumentException("departId의 값이 존재하지 않거나 잘못 입력되었습니다."));
     }
 
