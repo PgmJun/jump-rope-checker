@@ -2,15 +2,14 @@ package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionAttendService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -37,6 +36,14 @@ public class CompetitionAttendController extends ResponseEntityCreator {
     }
 
  */
+
+    @GetMapping("/find")
+    @Operation
+    public ResponseEntity<?> findAttendDataByOrganizationId(@RequestParam(name = "orgId") Long orgId) {
+        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendService.findPlayersByOrganizationId(orgId);
+
+        return getFindDatumResponseEntity(cmptAttendDatum);
+    }
 
 
     @Override

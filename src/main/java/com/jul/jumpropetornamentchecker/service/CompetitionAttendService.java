@@ -6,11 +6,15 @@ import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
 import com.jul.jumpropetornamentchecker.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -45,6 +49,19 @@ public class CompetitionAttendService {
         } finally {
             return saveResult;
         }
+    }
+
+    public List<CompetitionAttendResponseDto> findPlayersByOrganizationId(Long orgId) {
+
+        Organization organization = organizationRepository.findById(orgId).orElseThrow();
+        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendRepository.findByOrganization(organization)
+                .stream()
+                .map(CompetitionAttend::toDto)
+                .collect(Collectors.toList());
+
+        return cmptAttendDatum;
+
+
     }
 
 /*
