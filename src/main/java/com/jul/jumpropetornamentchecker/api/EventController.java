@@ -20,9 +20,9 @@ public class EventController extends ResponseEntityCreator {
 
     private final EventService eventService;
 
-    @PostMapping("/save")
-    @Operation(summary = "종목 리셋 및 재등 API", description = "종목 데이터에서 종목을 끌어와 DB를 리셋 후 저장합니다.")
-    public ResponseEntity<?> saveEventData() {
+    @PostMapping("/renew")
+    @Operation(summary = "종목 갱신 API", description = "종목 데이터를 새로 가져와 DB를 갱신합니다.")
+    public ResponseEntity<?> renewEventData() {
         boolean saveResult = eventService.resetAndSaveEventData();
         return getSaveDataResponseEntity(saveResult);
     }
