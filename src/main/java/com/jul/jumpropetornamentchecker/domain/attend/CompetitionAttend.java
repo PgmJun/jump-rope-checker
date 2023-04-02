@@ -4,6 +4,7 @@ import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -62,6 +63,19 @@ public class CompetitionAttend {
                 .playerGender(Gender.findByType(cmptAttendRequestDto.getPlayerGender()))
                 .playerBirth(cmptAttendRequestDto.getPlayerBirth())
                 .playerTel(cmptAttendRequestDto.getPlayerTel())
+                .build();
+    }
+
+    public CompetitionAttendResponseDto toDto() {
+        return CompetitionAttendResponseDto.builder()
+                .cmptAttendId(cmptAttendId)
+                .departmentName(department.getDepartName())
+                .competitionName(competition.getCompetitionName())
+                .organizationName(organization.getOrgName())
+                .playerName(playerName)
+                .playerGender(playerGender.name())
+                .playerBirth(playerBirth)
+                .playerTel(playerTel)
                 .build();
     }
 }
