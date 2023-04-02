@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.service;
 
 import com.jul.jumpropetornamentchecker.domain.department.Department;
+import com.jul.jumpropetornamentchecker.domain.department.DepartmentType;
 import com.jul.jumpropetornamentchecker.dto.attend.department.DepartmentResponseDto;
 import com.jul.jumpropetornamentchecker.repository.DepartmentRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class DepartmentService {
         boolean saveResult = true;
         try {
             departmentRepository.deleteAll();
-            getAllDepartmentData().forEach(department -> departmentRepository.save(department));
+            departmentRepository.saveAll(getAllDepartmentData());//체크
         } catch (Exception e) {
             log.error(e.getMessage());
             saveResult = false;
@@ -37,5 +38,9 @@ public class DepartmentService {
         return departmentDatum.stream()
                 .map(Department::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public Department findByDepartmentId(Long departmentId) {
+        return DepartmentType.findDepartmentById(departmentId);
     }
 }
