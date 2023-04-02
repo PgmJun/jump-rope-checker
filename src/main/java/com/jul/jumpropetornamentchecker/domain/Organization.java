@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
-@Table(name = "organization")
+@Table
 public class Organization {
 
     @Id
@@ -37,7 +37,6 @@ public class Organization {
     @NotNull
     private String orgLeaderName;
 
-    @Column(name = "leaderTel")
     private String leaderTel;
 
     @Builder

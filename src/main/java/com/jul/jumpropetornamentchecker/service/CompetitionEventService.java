@@ -2,7 +2,6 @@ package com.jul.jumpropetornamentchecker.service;
 
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
-import com.jul.jumpropetornamentchecker.domain.event.Event;
 import com.jul.jumpropetornamentchecker.domain.event.EventData;
 import com.jul.jumpropetornamentchecker.dto.competitionEvent.CompetitionEventResponseDto;
 import com.jul.jumpropetornamentchecker.dto.competitionEvent.CompetitionEventUpdateDto;
@@ -33,6 +32,11 @@ public class CompetitionEventService {
                         .event(event)
                         .isProceed(Boolean.FALSE)
                         .partPoint(0)
+                        .firstGrandPrizePoint(0)
+                        .secondGrandPrizePoint(0)
+                        .thirdGrandPrizePoint(0)
+                        .fourthGrandPrizePoint(0)
+                        .fifthGrandPrizePoint(0)
                         .fstPrizeStandard(0)
                         .sndPrizeStandard(0)
                         .trdPrizeStandard(0)
