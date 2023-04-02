@@ -1,21 +1,24 @@
 spring:
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/jrchecker?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: 1234
+    url: ${MYSQL_URL}
+    username: ${MYSQL_USERNAME}
+    password: ${MYSQL_PASSWORD}
+    devtools:
+      restart:
+        enabled: true
 
-  jpa:
-    database-platform: org.hibernate.dialect.MySQL8Dialect
-    open-in-view: false
-    show-sql: true
-    hibernate:
-      format_sql: true
-      ddl-auto: create
-      naming:
-        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
+    jpa:
+      database-platform: org.hibernate.dialect.MySQL8Dialect
+      open-in-view: false
+      show-sql: true
+      hibernate:
+        format_sql: true
+        ddl-auto: update
+        naming:
+          implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+          physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
   mvc:
     pathmatch:
@@ -42,4 +45,4 @@ logging:
               BasicBinder: TRACE
 
 server:
-  port: 8082
+  port: 8080

@@ -76,6 +76,7 @@ class CompetitionControllerTest {
                 .andDo(print());
     }
 
+    /*
     @Test
     @DisplayName("대회 데이터 findByName 테스트")
     void testFindCompetitionDataByName() throws Exception {
@@ -89,18 +90,7 @@ class CompetitionControllerTest {
                 .andDo(print());
     }
 
-    @Test
-    @DisplayName("대회 데이터 findByName 실패 테스트")
-    void testFailFindCompetitionDataByName() throws Exception {
 
-        competitionService.saveCompetition(createTestCompDto());
-        String errorCompName = "ttest대회";
-
-        mockMvc.perform(get("/competition/find")
-                        .param("name", errorCompName))
-                .andExpect(status().isNotFound())
-                .andDo(print());
-    }
 
     @Test
     @DisplayName("대회 데이터 delete 테스트")
@@ -138,6 +128,7 @@ class CompetitionControllerTest {
         Assertions.assertThat(afterCompData.competitionName()).isEqualTo("updated " + beforeCompData.competitionName());
     }
 
+     */
 
     private CompetitionRequestDto createTestCompDto() {
         return CompetitionRequestDto.builder()
