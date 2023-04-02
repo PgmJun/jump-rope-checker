@@ -4,6 +4,10 @@ plugins {
     id 'io.spring.dependency-management' version '1.1.0'
 }
 
+jar {
+    enabled = false
+}
+
 group = 'com.jul'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
@@ -25,12 +29,18 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4'
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
 
+    // aws secrets manager
+    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.1'
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
+
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+
 }
 
 tasks.named('test') {
