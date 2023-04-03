@@ -8,6 +8,7 @@ import com.jul.jumpropetornamentchecker.service.CompetitionEventService;
 import com.jul.jumpropetornamentchecker.service.CompetitionService;
 import com.jul.jumpropetornamentchecker.service.EventService;
 import com.jul.jumpropetornamentchecker.service.OrganizationService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,13 +31,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class FormCreator {
 
-    private static final String SAVE_FILE_PATH = System.getProperty("user.dir") + "/src/main/java/com/jul/jumpropetornamentchecker/csvParser/form/form.xls";
     private final CompetitionService cmptService;
     private final OrganizationService orgService;
     private final CompetitionEventService cmptEventService;
     private final EventService eventService;
 
-    public Boolean createForm(Long cmptId, Long orgId) {
+    public void createForm(HttpServletResponse response, Long cmptId, Long orgId) {
         boolean createResult = true;
         try {
             List<CompetitionEventResponseDto> competitionEventDatum = getCompetitionEventDatum(cmptId)
@@ -190,19 +192,23 @@ public class FormCreator {
             // ===================== 예시 데이터 입력/> =====================
 
             // ===================== <파일 생성 =====================
-            File file = new File(SAVE_FILE_PATH);
-            FileOutputStream fos = null;
-            fos = new FileOutputStream(file);
-            workbook.write(fos);
             // ===================== 파일 생성/> =====================
 
+            //파일명은 URLEncoder로 감싸주는게 좋다.
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(getCompetitionAttendFormTitle(cmptId)+" 양식", "UTF-8")+".xls");
+
+
+            OutputStream tempFile = response.getOutputStream();
+            workbook.write(tempFile);
+            tempFile.close();
+
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+
             if (workbook != null) workbook.close();
-            if (fos != null) fos.close();
         } catch (Exception e) {
             log.error(e.getMessage());
-            createResult = false;
-        } finally {
-            return createResult;
         }
 
     }
