@@ -38,7 +38,7 @@ public class CompetitionAttendService {
             Organization organization = organizationRepository.findById(cmptAttendRequestDto.getOrgId()).orElseThrow();
 
             CompetitionAttend competitionAttend = CompetitionAttend.from(competition, department, organization, cmptAttendRequestDto);
-            CompetitionAttend savedCmptAttend = cmptAttendRepository.saveAndFlush(competitionAttend);
+            CompetitionAttend savedCmptAttend = cmptAttendRepository.save(competitionAttend);
 
             eventAttendService.saveEventAttendData(savedCmptAttend, cmptAttendRequestDto);
 
