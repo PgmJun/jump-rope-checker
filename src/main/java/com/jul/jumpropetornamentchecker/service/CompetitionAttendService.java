@@ -16,12 +16,15 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,8 +32,6 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class CompetitionAttendService {
-
-    private static final String EXCEL_FILE_PATH = System.getProperty("user.dir") + "/src/main/java/com/jul/jumpropetornamentchecker/csvParser/form/form.xls";
 
     private final CompetitionAttendRepository cmptAttendRepository;
     private final OrganizationRepository organizationRepository;
@@ -83,15 +84,7 @@ public class CompetitionAttendService {
     public boolean createCompetitionAttendForm(HttpServletResponse response, Long cmptId, Long orgId) {
         boolean createFromResult = true;
         try {
-            formCreator.createForm(cmptId, orgId);
-
-            File file = new File(EXCEL_FILE_PATH);
-            InputStream inputStream = new FileInputStream(file);
-            assert inputStream != null;
-
-            StreamUtils.copy(inputStream, response.getOutputStream());
-            response.flushBuffer();
-            inputStream.close();
+            formCreator.createForm(response, cmptId, orgId);
 
         } catch (Exception e) {
             log.error(e.getMessage());
