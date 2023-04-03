@@ -8,12 +8,20 @@ import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
-import com.jul.jumpropetornamentchecker.repository.*;
+import com.jul.jumpropetornamentchecker.repository.CompetitionAttendRepository;
+import com.jul.jumpropetornamentchecker.repository.CompetitionRepository;
+import com.jul.jumpropetornamentchecker.repository.DepartmentRepository;
+import com.jul.jumpropetornamentchecker.repository.OrganizationRepository;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StreamUtils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +29,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 public class CompetitionAttendService {
+
+    private static final String EXCEL_FILE_PATH = System.getProperty("user.dir") + "/src/main/java/com/jul/jumpropetornamentchecker/csvParser/form/form.xls";
+
     private final CompetitionAttendRepository cmptAttendRepository;
     private final OrganizationRepository organizationRepository;
     private final CompetitionRepository competitionRepository;
@@ -69,8 +80,26 @@ public class CompetitionAttendService {
 //        }
 //    }
 
-    public void createCompetitionAttendForm(Long cmptId, Long orgId) {
-        formCreator.createForm(cmptId,orgId);
+    public boolean createCompetitionAttendForm(HttpServletResponse response, Long cmptId, Long orgId) {
+        boolean createFromResult = true;
+        try {
+            formCreator.createForm(cmptId, orgId);
+
+            File file = new File(EXCEL_FILE_PATH);
+            InputStream inputStream = new FileInputStream(file);
+            assert inputStream != null;
+
+            StreamUtils.copy(inputStream, response.getOutputStream());
+            response.flushBuffer();
+            inputStream.close();
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            createFromResult = false;
+        } finally {
+            return createFromResult;
+        }
+
     }
 
     public List<CompetitionAttendResponseDto> findPlayersByOrgIdAndCmptId(Long orgId, Long cmptId) {
