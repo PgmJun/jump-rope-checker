@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.service;
 
 import com.jul.jumpropetornamentchecker.csvParser.CsvParser;
+import com.jul.jumpropetornamentchecker.csvParser.FormCreator;
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
@@ -12,6 +13,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,6 +28,7 @@ public class CompetitionAttendService {
     private final DepartmentRepository departmentRepository;
     private final EventAttendService eventAttendService;
     private final CsvParser csvParser;
+    private final FormCreator formCreator;
 
 
     @Transactional
@@ -51,6 +54,26 @@ public class CompetitionAttendService {
         }
     }
 
+//    public Boolean savePlayerByCsv(MultipartFile multipartFile, Long organizationId) {
+//        boolean saveResult = true;
+//
+//        try {
+//            Organization organization = organizationRepository.findById(organizationId).orElseThrow(() -> new IllegalArgumentException());
+//            csvParser.insertData(multipartFile, organization);
+//
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//            e.printStackTrace();
+//            saveResult = false;
+//        } finally {
+//            return saveResult;
+//        }
+//    }
+
+    public void createCompetitionAttendForm(Long cmptId, Long orgId) {
+        formCreator.createForm(cmptId,orgId);
+    }
+
     public List<CompetitionAttendResponseDto> findPlayersByOrganizationId(Long orgId) {
 
         Organization organization = organizationRepository.findById(orgId).orElseThrow();
@@ -63,24 +86,5 @@ public class CompetitionAttendService {
 
 
     }
-
-/*
-    public Boolean savePlayerByCsv(MultipartFile multipartFile, Long organizationId) {
-        boolean saveResult = true;
-
-        try {
-            Organization organization = organizationService.findOrganizationById(organizationId).orElseThrow(() -> new IllegalArgumentException());
-            csvParser.insertData(multipartFile, organization);
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-            saveResult = false;
-        } finally {
-            return saveResult;
-        }
-    }
-
- */
 
 }

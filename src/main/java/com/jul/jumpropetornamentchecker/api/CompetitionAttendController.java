@@ -8,7 +8,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,16 +28,23 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
         return getSaveDataResponseEntity(saveResult);
     }
-/*
+
+    @GetMapping("/create/csv")
+    @Operation(summary = "CSV 파일 선수 등록 API", description = "대회ID, 기관ID를 사용하여 대회 신청서 양식을 생성합니다.")
+    public ResponseEntity<?> createPlayerAttendForm(@RequestParam(name = "cmptId") Long cmptId, @RequestParam("orgId") Long orgId) throws IOException {
+        cmptAttendService.createCompetitionAttendForm(cmptId, orgId);
+
+        return getSaveDataResponseEntity(true);
+    }
+    /*
     @PostMapping("/add/csv")
     @Operation(summary = "CSV 파일 선수 등록 API", description = "대회ID, 기관ID와 CSV 파일을 사용하여 선수 데이터를 등록합니다.")
     public ResponseEntity<?> registerPlayerByCsvFile(@RequestParam(name = "playerList") MultipartFile playerDataFile, @RequestParam("orgId") Long organizationId) throws IOException {
-        Boolean saveResult = playerService.savePlayerByCsv(playerDataFile, organizationId);
+        Boolean saveResult = cmptAttendService.savePlayerByCsv(playerDataFile, organizationId);
 
         return getSaveDataResponseEntity(saveResult);
     }
-
- */
+*/
 
     @GetMapping("/find")
     @Operation
