@@ -13,7 +13,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,17 +73,16 @@ public class CompetitionAttendService {
         formCreator.createForm(cmptId,orgId);
     }
 
-    public List<CompetitionAttendResponseDto> findPlayersByOrganizationId(Long orgId) {
+    public List<CompetitionAttendResponseDto> findPlayersByOrgIdAndCmptId(Long orgId, Long cmptId) {
 
         Organization organization = organizationRepository.findById(orgId).orElseThrow();
-        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendRepository.findByOrganization(organization)
+        Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow();
+        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendRepository.findByOrganizationAndCompetition(organization, competition)
                 .stream()
                 .map(CompetitionAttend::toDto)
                 .collect(Collectors.toList());
 
         return cmptAttendDatum;
-
-
     }
 
 }

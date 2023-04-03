@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.repository;
 
+import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import org.aspectj.weaver.ast.Or;
@@ -9,6 +10,6 @@ import java.util.List;
 
 public interface CompetitionAttendRepository extends JpaRepository<CompetitionAttend, Long> {
 
-    List<CompetitionAttend> findByOrganization(Organization organization);
+    List<CompetitionAttend> findByOrganizationAndCompetition(Organization organization, Competition competition);
 
 }
