@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.service;
 
 import com.jul.jumpropetornamentchecker.csvParser.CsvParser;
+import com.jul.jumpropetornamentchecker.csvParser.FormCreator;
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
@@ -26,6 +27,7 @@ public class CompetitionAttendService {
     private final DepartmentRepository departmentRepository;
     private final EventAttendService eventAttendService;
     private final CsvParser csvParser;
+    private final FormCreator formCreator;
 
 
     @Transactional
@@ -38,7 +40,7 @@ public class CompetitionAttendService {
             Organization organization = organizationRepository.findById(cmptAttendRequestDto.getOrgId()).orElseThrow();
 
             CompetitionAttend competitionAttend = CompetitionAttend.from(competition, department, organization, cmptAttendRequestDto);
-            CompetitionAttend savedCmptAttend = cmptAttendRepository.saveAndFlush(competitionAttend);
+            CompetitionAttend savedCmptAttend = cmptAttendRepository.save(competitionAttend);
 
             eventAttendService.saveEventAttendData(savedCmptAttend, cmptAttendRequestDto);
 
@@ -51,36 +53,36 @@ public class CompetitionAttendService {
         }
     }
 
-    public List<CompetitionAttendResponseDto> findPlayersByOrganizationId(Long orgId) {
+//    public Boolean savePlayerByCsv(MultipartFile multipartFile, Long organizationId) {
+//        boolean saveResult = true;
+//
+//        try {
+//            Organization organization = organizationRepository.findById(organizationId).orElseThrow(() -> new IllegalArgumentException());
+//            csvParser.insertData(multipartFile, organization);
+//
+//        } catch (Exception e) {
+//            log.error(e.getMessage());
+//            e.printStackTrace();
+//            saveResult = false;
+//        } finally {
+//            return saveResult;
+//        }
+//    }
 
-        Organization organization = organizationRepository.findById(orgId).orElseThrow();
-        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendRepository.findByOrganization(organization)
+    public void createCompetitionAttendForm(Long cmptId, Long orgId) {
+        formCreator.createForm(cmptId,orgId);
+    }
+
+    public List<CompetitionAttendResponseDto> findPlayersByOrgIdAndCmptId(Long orgId, Long cmptId) {
+
+        Organization organization = organizationRepository.findById(orgId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 기관ID입니다."));
+        Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
+        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendRepository.findByOrganizationAndCompetition(organization, competition)
                 .stream()
                 .map(CompetitionAttend::toDto)
                 .collect(Collectors.toList());
 
         return cmptAttendDatum;
-
-
     }
-
-/*
-    public Boolean savePlayerByCsv(MultipartFile multipartFile, Long organizationId) {
-        boolean saveResult = true;
-
-        try {
-            Organization organization = organizationService.findOrganizationById(organizationId).orElseThrow(() -> new IllegalArgumentException());
-            csvParser.insertData(multipartFile, organization);
-
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            e.printStackTrace();
-            saveResult = false;
-        } finally {
-            return saveResult;
-        }
-    }
-
- */
 
 }

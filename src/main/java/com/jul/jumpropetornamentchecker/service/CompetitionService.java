@@ -24,7 +24,7 @@ public class CompetitionService {
     public Boolean saveCompetition(CompetitionRequestDto competitionDto) {
         boolean saveResult = true;
         try {
-            Competition savedCompetition = competitionRepository.saveAndFlush(competitionDto.to());
+            Competition savedCompetition = competitionRepository.save(competitionDto.to());
             cmptEventService.saveDefaultCompetitionEventData(savedCompetition);
         } catch (Exception e) {
             log.error(e.getMessage());

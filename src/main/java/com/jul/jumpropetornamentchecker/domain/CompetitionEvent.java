@@ -71,6 +71,7 @@ public class CompetitionEvent {
                 .cmptEventId(cmptEventId)
                 .competitionName(competition.getCompetitionName())
                 .eventName(event.getEventName())
+                .eventId(event.getEventId())
                 .isProceed(isProceed)
                 .partPoint(partPoint)
                 .firstGrandPrizePoint(firstGrandPrizePoint)

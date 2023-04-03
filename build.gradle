@@ -33,6 +33,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.1'
     implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
 
+    // excel create
+    implementation 'org.apache.poi:poi:4.1.2'
+
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

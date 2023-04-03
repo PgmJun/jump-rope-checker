@@ -58,7 +58,7 @@
 //        Boolean saveResult = cmptAttendService.saveSinglePlayer(competitionAttendRequestDto);
 //        Assertions.assertThat(saveResult).isTrue();
 //
-//        List<CompetitionAttendResponseDto> playersByOrganizationId = cmptAttendService.findPlayersByOrganizationId(1L);
+//        List<CompetitionAttendResponseDto> playersByOrganizationId = cmptAttendService.findPlayersByOrgIdAndCmptId(1L, 1L);
 //        Assertions.assertThat(playersByOrganizationId.isEmpty()).isFalse();
 //    }
 //
