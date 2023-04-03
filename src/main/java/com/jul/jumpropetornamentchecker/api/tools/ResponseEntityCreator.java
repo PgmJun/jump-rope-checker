@@ -23,6 +23,12 @@ public abstract class ResponseEntityCreator {
                 new ResponseEntity<>("데이터 등록에 실패하였습니다.", HttpStatus.BAD_REQUEST);
     }
 
+    public ResponseEntity<?> createCompetitionAttendFormResponseEntity(boolean createResult) {
+        return (createResult) ?
+                new ResponseEntity<>("대회 신청서가 정상적으로 생성되었습니다.", HttpStatus.OK) :
+                new ResponseEntity<>("대회 신청서 생성에 실패하였습니다.", HttpStatus.BAD_REQUEST);
+    }
+
     public ResponseEntity<?> getUpdateDataResponseEntity(boolean updateResult) {
         return (updateResult) ?
                 new ResponseEntity<>("데이터가 갱신되었습니다.", HttpStatus.OK) :

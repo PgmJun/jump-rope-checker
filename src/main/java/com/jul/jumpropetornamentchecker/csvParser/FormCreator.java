@@ -34,8 +34,8 @@ public class FormCreator {
     private final CompetitionEventService cmptEventService;
     private final EventService eventService;
 
-    public void createForm(Long cmptId, Long orgId) {
-
+    public Boolean createForm(Long cmptId, Long orgId) {
+        boolean createResult = true;
         try {
             List<CompetitionEventResponseDto> competitionEventDatum = getCompetitionEventDatum(cmptId)
                     .stream()
@@ -200,8 +200,9 @@ public class FormCreator {
             if (fos != null) fos.close();
         } catch (Exception e) {
             log.error(e.getMessage());
+            createResult = false;
         } finally {
-
+            return createResult;
         }
 
     }
