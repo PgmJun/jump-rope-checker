@@ -1,8 +1,8 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
-import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionAttendService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,9 +49,9 @@ public class CompetitionAttendController extends ResponseEntityCreator {
     @GetMapping("/find/player")
     @Operation(summary = "참가 선수 조회 API", description = "대회ID, 단체ID를 사용하여 대회 참가 선수를 조회합니다.")
     public ResponseEntity<?> findAttendDataByOrganizationId(@RequestParam(name = "orgId") Long orgId, @RequestParam(name = "cmptId") Long cmptId) {
-        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendService.findPlayersByOrgIdAndCmptId(orgId, cmptId);
+        List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = cmptAttendService.findPlayersByOrgIdAndCmptId(orgId, cmptId);
 
-        return getFindDatumResponseEntity(cmptAttendDatum);
+        return getFindDatumResponseEntity(cmptAttendPlayerDatum);
     }
 
     @GetMapping("/find/cmpt/{cmptId}")

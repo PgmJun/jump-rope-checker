@@ -3,9 +3,12 @@ package com.jul.jumpropetornamentchecker.service;
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
+import com.jul.jumpropetornamentchecker.domain.attend.EventAttend;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
+import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendResponseDto;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.excel.FormCreator;
@@ -94,16 +97,23 @@ public class CompetitionAttendService {
 
     }
 
-    public List<CompetitionAttendResponseDto> findPlayersByOrgIdAndCmptId(Long orgId, Long cmptId) {
+    public List<CompetitionAttendPlayerResponseDto> findPlayersByOrgIdAndCmptId(Long orgId, Long cmptId) {
+
+        List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = new ArrayList<>();
 
         Organization organization = organizationRepository.findById(orgId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 기관ID입니다."));
         Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
-        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendRepository.findByOrganizationAndCompetition(organization, competition)
-                .stream()
-                .map(CompetitionAttend::toDto)
-                .collect(Collectors.toList());
 
-        return cmptAttendDatum;
+        List<CompetitionAttend> cmptAttendDatum = cmptAttendRepository.findByOrganizationAndCompetition(organization, competition);
+
+        for (CompetitionAttend competitionAttend : cmptAttendDatum) {
+            for (EventAttendResponseDto eventAttendResponseDto : eventAttendService.findEventAttendByCmptAttend(competitionAttend)) {
+                CompetitionAttendPlayerResponseDto data = CompetitionAttendPlayerResponseDto.from(competitionAttend.toDto(), eventAttendResponseDto);
+                cmptAttendPlayerDatum.add(data);
+            }
+        }
+
+        return cmptAttendPlayerDatum;
     }
 
     public List<OrganizationResponseDto> findOrganizationsByCmptId(Long cmptId) {
