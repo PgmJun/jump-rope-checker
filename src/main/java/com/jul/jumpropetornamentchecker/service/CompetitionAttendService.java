@@ -1,7 +1,7 @@
 package com.jul.jumpropetornamentchecker.service;
 
-import com.jul.jumpropetornamentchecker.csvParser.CsvParser;
-import com.jul.jumpropetornamentchecker.csvParser.FormCreator;
+import com.jul.jumpropetornamentchecker.excel.FormParser;
+import com.jul.jumpropetornamentchecker.excel.FormCreator;
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
@@ -16,15 +16,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StreamUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,7 +32,7 @@ public class CompetitionAttendService {
     private final CompetitionRepository competitionRepository;
     private final DepartmentRepository departmentRepository;
     private final EventAttendService eventAttendService;
-    private final CsvParser csvParser;
+    private final FormParser formParser;
     private final FormCreator formCreator;
 
 
@@ -65,21 +59,21 @@ public class CompetitionAttendService {
         }
     }
 
-//    public Boolean savePlayerByCsv(MultipartFile multipartFile, Long organizationId) {
-//        boolean saveResult = true;
-//
-//        try {
-//            Organization organization = organizationRepository.findById(organizationId).orElseThrow(() -> new IllegalArgumentException());
-//            csvParser.insertData(multipartFile, organization);
-//
-//        } catch (Exception e) {
-//            log.error(e.getMessage());
-//            e.printStackTrace();
-//            saveResult = false;
-//        } finally {
-//            return saveResult;
-//        }
-//    }
+    @Transactional
+    public Boolean savePlayerByAttendForm(MultipartFile attendForm) {
+        boolean saveResult = true;
+
+        try {
+            List<CompetitionAttendRequestDto> competitionAttendRequestDtos = formParser.parseFormData(attendForm);
+            competitionAttendRequestDtos.forEach(dto -> saveSinglePlayer(dto));
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            saveResult = false;
+        } finally {
+            return saveResult;
+        }
+    }
 
     public boolean createCompetitionAttendForm(HttpServletResponse response, Long cmptId, Long orgId) {
         boolean createFromResult = true;
