@@ -6,7 +6,9 @@ import java.util.List;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
+@Setter
 public class CompetitionAttendRequestDto {
 
     private Long cmptId;

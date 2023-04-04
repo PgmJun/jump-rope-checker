@@ -57,7 +57,6 @@ public class CompetitionAttendService {
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             saveResult = false;
         } finally {
             return saveResult;
