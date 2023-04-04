@@ -62,13 +62,14 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         return getFindDatumResponseEntity(cmptAttendPlayerDatum);
     }
 
-    @GetMapping("/find/cmpt/{cmptId}")
+    @GetMapping("/find/org/{cmptId}")
     @Operation(summary = "참가 단체 조회 API", description = "대회ID를 사용하여 대회 참가 단체를 조회합니다.")
-    public ResponseEntity<?> findAttendDataByCmptId(@PathVariable Long cmptId) {
+    public ResponseEntity<?> findAttendOrganizationDataByCmptId(@PathVariable Long cmptId) {
         List<OrganizationResponseDto> organizationDatum = cmptAttendService.findOrganizationsByCmptId(cmptId);
 
         return getFindDatumResponseEntity(organizationDatum);
     }
+    
 
     @Override
     public ResponseEntity<?> getFindDataResponseEntity(Optional<?> findData) {
