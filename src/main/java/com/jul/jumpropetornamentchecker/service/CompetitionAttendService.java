@@ -1,13 +1,16 @@
 package com.jul.jumpropetornamentchecker.service;
 
-import com.jul.jumpropetornamentchecker.excel.FormParser;
-import com.jul.jumpropetornamentchecker.excel.FormCreator;
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
-import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
+import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
+import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendResponseDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
+import com.jul.jumpropetornamentchecker.excel.FormCreator;
+import com.jul.jumpropetornamentchecker.excel.FormParser;
 import com.jul.jumpropetornamentchecker.repository.CompetitionAttendRepository;
 import com.jul.jumpropetornamentchecker.repository.CompetitionRepository;
 import com.jul.jumpropetornamentchecker.repository.DepartmentRepository;
@@ -19,8 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -89,16 +94,66 @@ public class CompetitionAttendService {
 
     }
 
-    public List<CompetitionAttendResponseDto> findPlayersByOrgIdAndCmptId(Long orgId, Long cmptId) {
+    public List<CompetitionAttendPlayerResponseDto> findPlayersByOrgIdAndCmptId(Long orgId, Long cmptId) {
+
+        List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = new ArrayList<>();
 
         Organization organization = organizationRepository.findById(orgId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 기관ID입니다."));
         Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
-        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendRepository.findByOrganizationAndCompetition(organization, competition)
-                .stream()
-                .map(CompetitionAttend::toDto)
-                .collect(Collectors.toList());
 
-        return cmptAttendDatum;
+        List<CompetitionAttend> cmptAttendDatum = cmptAttendRepository.findByOrganizationAndCompetition(organization, competition);
+
+        for (CompetitionAttend competitionAttend : cmptAttendDatum) {
+            for (EventAttendResponseDto eventAttendResponseDto : eventAttendService.findEventAttendByCmptAttend(competitionAttend)) {
+                CompetitionAttendPlayerResponseDto data = CompetitionAttendPlayerResponseDto.from(competitionAttend.toDto(), eventAttendResponseDto);
+                cmptAttendPlayerDatum.add(data);
+            }
+        }
+
+        return cmptAttendPlayerDatum;
     }
 
+
+    public List<CompetitionAttendPlayerResponseDto> findPlayersByCmptId(Long cmptId) {
+
+        List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = new ArrayList<>();
+
+        Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
+
+        List<CompetitionAttend> cmptAttendDatum = cmptAttendRepository.findByCompetition(competition);
+
+        for (CompetitionAttend competitionAttend : cmptAttendDatum) {
+            for (EventAttendResponseDto eventAttendResponseDto : eventAttendService.findEventAttendByCmptAttend(competitionAttend)) {
+                CompetitionAttendPlayerResponseDto data = CompetitionAttendPlayerResponseDto.from(competitionAttend.toDto(), eventAttendResponseDto);
+                cmptAttendPlayerDatum.add(data);
+            }
+        }
+
+        return cmptAttendPlayerDatum;
+    }
+
+    public List<EventAttendPlayerResponseDto> findEventAttendPlayerDataByCmptAttendId(Long cmptAttendId) {
+
+        List<EventAttendPlayerResponseDto> eventAttendPlayerDatum = new ArrayList<>();
+
+        CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회참가ID입니다."));
+        for (EventAttendResponseDto eventAttendResponseDto : eventAttendService.findEventAttendByCmptAttend(competitionAttend)) {
+            EventAttendPlayerResponseDto data = EventAttendPlayerResponseDto.from(competitionAttend.toDto(), eventAttendResponseDto);
+            eventAttendPlayerDatum.add(data);
+        }
+
+        return eventAttendPlayerDatum;
+    }
+
+    public List<OrganizationResponseDto> findOrganizationsByCmptId(Long cmptId) {
+        Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
+
+        List<CompetitionAttend> competitionAttendDatum = cmptAttendRepository.findByCompetition(competition);
+        Set<OrganizationResponseDto> competitionResponseDtoSet = new HashSet<>();
+
+        competitionAttendDatum.forEach(data -> competitionResponseDtoSet.add(data.getOrganization().toDto()));
+
+        return new ArrayList<>(competitionResponseDtoSet);
+
+    }
 }

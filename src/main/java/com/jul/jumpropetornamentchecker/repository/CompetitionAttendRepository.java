@@ -11,5 +11,9 @@ import java.util.List;
 public interface CompetitionAttendRepository extends JpaRepository<CompetitionAttend, Long> {
 
     List<CompetitionAttend> findByOrganizationAndCompetition(Organization organization, Competition competition);
+    List<CompetitionAttend> findByCompetition(Competition competition);
 
 }
+
+
+

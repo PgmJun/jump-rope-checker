@@ -2,6 +2,8 @@ package com.jul.jumpropetornamentchecker.domain.attend;
 
 import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
+import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,11 +22,11 @@ public class EventAttend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventAttendId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "cmptEventId")
     private CompetitionEvent competitionEvent;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "departId")
     private Department department;
 
@@ -37,4 +39,15 @@ public class EventAttend {
 
     @Column
     private int cnt;
+
+
+
+    public EventAttendResponseDto toDto() {
+        return EventAttendResponseDto.builder()
+                .eventAttendId(eventAttendId)
+                .cmptEventId(competitionEvent.getCmptEventId())
+                .cmptEventName(competitionEvent.getEvent().getEventName())
+                .grade(grade)
+                .cnt(cnt).build();
+    }
 }

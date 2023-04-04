@@ -1,8 +1,10 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
-import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
+import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionAttendService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,18 +41,42 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
     @PostMapping("/add/form")
     @Operation(summary = "엑셀 파일 선수 등록 API", description = "엑셀 파일을 사용하여 선수 데이터를 등록합니다.")
-    public ResponseEntity<?> registerPlayerByCsvFile(@RequestParam(name = "attendForm") MultipartFile attendForm) {
+    public ResponseEntity<?> registerPlayerByExcelFile(@RequestParam(name = "attendForm") MultipartFile attendForm) {
         boolean saveResult = cmptAttendService.savePlayerByAttendForm(attendForm);
         return getSaveDataResponseEntity(saveResult);
     }
 
 
-    @GetMapping("/find")
-    @Operation(summary = "참가 선수 찾기 API", description = "대회ID, 기관ID를 사용하여 대회 참가 선수를 조회합니다.")
-    public ResponseEntity<?> findAttendDataByOrganizationId(@RequestParam(name = "orgId") Long orgId, @RequestParam(name = "cmptId") Long cmptId) {
-        List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendService.findPlayersByOrgIdAndCmptId(orgId, cmptId);
+    @GetMapping("/find/player")
+    @Operation(summary = "참가 선수 조회 API", description = "대회ID, 단체ID를 사용하여 대회 참가 선수를 조회합니다.")
+    public ResponseEntity<?> findAttendDataByOrgIdAndCmptId(@RequestParam(name = "orgId") Long orgId, @RequestParam(name = "cmptId") Long cmptId) {
+        List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = cmptAttendService.findPlayersByOrgIdAndCmptId(orgId, cmptId);
 
-        return getFindDatumResponseEntity(cmptAttendDatum);
+        return getFindDatumResponseEntity(cmptAttendPlayerDatum);
+    }
+
+    @GetMapping("/find/player/cmpt/{cmptId}")
+    @Operation(summary = "참가 선수 조회 API", description = "대회ID를 사용하여 대회 참가 선수를 조회합니다.")
+    public ResponseEntity<?> findAttendDataByOrgId(@PathVariable(name = "cmptId") Long cmptId) {
+        List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = cmptAttendService.findPlayersByCmptId(cmptId);
+
+        return getFindDatumResponseEntity(cmptAttendPlayerDatum);
+    }
+
+    @GetMapping("/find/org/{cmptId}")
+    @Operation(summary = "참가 단체 조회 API", description = "대회ID를 사용하여 대회 참가 단체를 조회합니다.")
+    public ResponseEntity<?> findAttendOrganizationDataByCmptId(@PathVariable Long cmptId) {
+        List<OrganizationResponseDto> organizationDatum = cmptAttendService.findOrganizationsByCmptId(cmptId);
+
+        return getFindDatumResponseEntity(organizationDatum);
+    }
+
+    @GetMapping("/find/attendEvent/{cmptAttendId}")
+    @Operation(summary = "선수의 참가 종목 정보 조회 API", description = "대회참가ID를 사용하여 참가선수의 참가종목 별 데이터를 조회합니다")
+    public ResponseEntity<?> findCompetitionEventDataByCmptAttendId(@PathVariable Long cmptAttendId) {
+        List<EventAttendPlayerResponseDto> eventAttendPlayerDatum = cmptAttendService.findEventAttendPlayerDataByCmptAttendId(cmptAttendId);
+
+        return getFindDatumResponseEntity(eventAttendPlayerDatum);
     }
 
 
