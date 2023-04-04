@@ -40,7 +40,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
     @PostMapping("/add/form")
     @Operation(summary = "엑셀 파일 선수 등록 API", description = "엑셀 파일을 사용하여 선수 데이터를 등록합니다.")
-    public ResponseEntity<?> registerPlayerByCsvFile(@RequestParam(name = "attendForm") MultipartFile attendForm) {
+    public ResponseEntity<?> registerPlayerByExcelFile(@RequestParam(name = "attendForm") MultipartFile attendForm) {
         boolean saveResult = cmptAttendService.savePlayerByAttendForm(attendForm);
         return getSaveDataResponseEntity(saveResult);
     }
@@ -48,7 +48,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
     @GetMapping("/find/player")
     @Operation(summary = "참가 선수 조회 API", description = "대회ID, 단체ID를 사용하여 대회 참가 선수를 조회합니다.")
-    public ResponseEntity<?> findAttendDataByOrganizationId(@RequestParam(name = "orgId") Long orgId, @RequestParam(name = "cmptId") Long cmptId) {
+    public ResponseEntity<?> findAttendDataByOrgIdAndCmptId(@RequestParam(name = "orgId") Long orgId, @RequestParam(name = "cmptId") Long cmptId) {
         List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = cmptAttendService.findPlayersByOrgIdAndCmptId(orgId, cmptId);
 
         return getFindDatumResponseEntity(cmptAttendPlayerDatum);
