@@ -1,4 +1,4 @@
-package com.jul.jumpropetornamentchecker.csvParser;
+package com.jul.jumpropetornamentchecker.excel;
 
 import com.jul.jumpropetornamentchecker.domain.event.Event;
 import com.jul.jumpropetornamentchecker.dto.competition.CompetitionResponseDto;
@@ -18,8 +18,6 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;

@@ -7,13 +7,11 @@ import com.jul.jumpropetornamentchecker.service.CompetitionAttendService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,19 +36,18 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         boolean competitionAttendForm = cmptAttendService.createCompetitionAttendForm(response, cmptId, orgId);
         return createCompetitionAttendFormResponseEntity(competitionAttendForm);
     }
-    /*
-    @PostMapping("/add/csv")
-    @Operation(summary = "CSV 파일 선수 등록 API", description = "대회ID, 기관ID와 CSV 파일을 사용하여 선수 데이터를 등록합니다.")
-    public ResponseEntity<?> registerPlayerByCsvFile(@RequestParam(name = "playerList") MultipartFile playerDataFile, @RequestParam("orgId") Long organizationId) throws IOException {
-        Boolean saveResult = cmptAttendService.savePlayerByCsv(playerDataFile, organizationId);
 
+    @PostMapping("/add/form")
+    @Operation(summary = "엑셀 파일 선수 등록 API", description = "엑셀 파일을 사용하여 선수 데이터를 등록합니다.")
+    public ResponseEntity<?> registerPlayerByCsvFile(@RequestParam(name = "attendForm") MultipartFile attendForm) {
+        boolean saveResult = cmptAttendService.savePlayerByAttendForm(attendForm);
         return getSaveDataResponseEntity(saveResult);
     }
-*/
+
 
     @GetMapping("/find")
     @Operation(summary = "참가 선수 찾기 API", description = "대회ID, 기관ID를 사용하여 대회 참가 선수를 조회합니다.")
-    public ResponseEntity<?> findAttendDataByOrganizationId(@RequestParam(name = "orgId") Long orgId, @RequestParam(name = "cmptId") Long cmptId)  {
+    public ResponseEntity<?> findAttendDataByOrganizationId(@RequestParam(name = "orgId") Long orgId, @RequestParam(name = "cmptId") Long cmptId) {
         List<CompetitionAttendResponseDto> cmptAttendDatum = cmptAttendService.findPlayersByOrgIdAndCmptId(orgId, cmptId);
 
         return getFindDatumResponseEntity(cmptAttendDatum);

@@ -1,8 +1,6 @@
 package com.jul.jumpropetornamentchecker.dto.attend;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
 import java.util.List;
 
@@ -19,4 +17,18 @@ public class CompetitionAttendRequestDto {
     private String playerGender;
     private String playerBirth;
     private String playerTel;
+
+    @Override
+    public String toString() {
+        return "CompetitionAttendRequestDto{" +
+                "cmptId=" + cmptId +
+                ", orgId=" + orgId +
+                ", cmptEventIds=" + cmptEventIds +
+                ", departId=" + departId +
+                ", playerName='" + playerName + '\'' +
+                ", playerGender='" + playerGender + '\'' +
+                ", playerBirth='" + playerBirth + '\'' +
+                ", playerTel='" + playerTel + '\'' +
+                '}';
+    }
 }

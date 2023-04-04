@@ -24,15 +24,15 @@ public class CompetitionAttend {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cmptAttendId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "competitionId")
     private Competition competition;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "orgId")
     private Organization organization;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "departId")
     private Department department;
 
