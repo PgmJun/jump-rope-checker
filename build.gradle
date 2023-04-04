@@ -34,7 +34,10 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
 
     // excel create
-    implementation 'org.apache.poi:poi:4.1.2'
+    implementation 'org.apache.poi:poi:5.2.2'
+
+    // json
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.2'
 
 
     compileOnly 'org.projectlombok:lombok'
