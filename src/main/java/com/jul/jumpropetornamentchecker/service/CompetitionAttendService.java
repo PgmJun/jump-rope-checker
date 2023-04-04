@@ -116,6 +116,25 @@ public class CompetitionAttendService {
         return cmptAttendPlayerDatum;
     }
 
+
+    public List<CompetitionAttendPlayerResponseDto> findPlayersByCmptId(Long cmptId) {
+
+        List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = new ArrayList<>();
+
+        Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
+
+        List<CompetitionAttend> cmptAttendDatum = cmptAttendRepository.findByCompetition(competition);
+
+        for (CompetitionAttend competitionAttend : cmptAttendDatum) {
+            for (EventAttendResponseDto eventAttendResponseDto : eventAttendService.findEventAttendByCmptAttend(competitionAttend)) {
+                CompetitionAttendPlayerResponseDto data = CompetitionAttendPlayerResponseDto.from(competitionAttend.toDto(), eventAttendResponseDto);
+                cmptAttendPlayerDatum.add(data);
+            }
+        }
+
+        return cmptAttendPlayerDatum;
+    }
+
     public List<OrganizationResponseDto> findOrganizationsByCmptId(Long cmptId) {
         Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
         List<CompetitionAttend> competitionAttendDatum = cmptAttendRepository.findByCompetition(competition);
