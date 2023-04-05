@@ -17,4 +17,9 @@ public interface EventAttendRepository extends JpaRepository<EventAttend, Long> 
     @Modifying(clearAutomatically = true)
     @Query("DELETE FROM EventAttend e WHERE e.competitionAttend = ?1")
     void deleteByCompetitionAttend(CompetitionAttend competitionAttend);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE EventAttend e SET e.grade = ?3, e.cnt = ?4 WHERE e.competitionAttend = ?1 AND e.eventAttendId = ?2")
+    void updatePlayerEventScore(CompetitionAttend competitionAttend, Long cmptEventId, int grade, int count);
 }
