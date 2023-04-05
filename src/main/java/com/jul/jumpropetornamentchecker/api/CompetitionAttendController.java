@@ -19,7 +19,7 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping(value = "/attend")
+@RequestMapping(value = "/attend", produces = "application/json; charset=UTF8")
 @RequiredArgsConstructor
 public class CompetitionAttendController extends ResponseEntityCreator {
     private final CompetitionAttendService cmptAttendService;
@@ -32,7 +32,15 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         return getSaveDataResponseEntity(saveResult);
     }
 
-    @GetMapping(value = "/create/form", produces = "application/vnd.ms-excel; charset=UTF8")
+    @DeleteMapping("/delete/player/{cmptAttendId}")
+    @Operation(summary = "참가 정보 삭제 API", description = "대회참가ID를 사용하여 참가 선수 데이터를 삭제합니다.")
+    public ResponseEntity<?> deletePlayerByCmptAttendId(@PathVariable Long cmptAttendId) {
+        Boolean removeResult = cmptAttendService.removePlayerByCmptAttendId(cmptAttendId);
+
+        return getRemoveDataResponseEntity(removeResult);
+    }
+
+    @GetMapping("/create/form")
     @Operation(summary = "CSV 파일 선수 등록 신청서 요청 API", description = "대회ID, 기관ID를 사용하여 대회 신청서 양식을 요청합니다.")
     public ResponseEntity<?> createPlayerAttendForm(HttpServletResponse response, @RequestParam(name = "cmptId") Long cmptId, @RequestParam("orgId") Long orgId) throws IOException {
         boolean competitionAttendForm = cmptAttendService.createCompetitionAttendForm(response, cmptId, orgId);
