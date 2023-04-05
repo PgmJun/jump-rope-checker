@@ -73,7 +73,7 @@ public class CompetitionAttend {
                 .competitionName(competition.getCompetitionName())
                 .organizationName(organization.getOrgName())
                 .playerName(playerName)
-                .playerGender(playerGender.name())
+                .playerGender(playerGender.getType())
                 .playerBirth(playerBirth)
                 .playerTel(playerTel)
                 .build();

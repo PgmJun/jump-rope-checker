@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 public class EventAttendService {
 
     private final EventAttendRepository eventAttendRepository;
-    private final DepartmentRepository departmentRepository;
     private final CompetitionEventRepository competitionEventRepository;
     private final CompetitionAttendRepository cmptAttendRepository;
 
@@ -33,12 +32,9 @@ public class EventAttendService {
 
     public void saveEventAttendData(CompetitionAttend competitionAttend, CompetitionAttendRequestDto cmptAttendRequestDto) {
 
-        Department department = departmentRepository.findById(cmptAttendRequestDto.getDepartId()).orElseThrow();
-
         for (Long cmptEventId : cmptAttendRequestDto.getCmptEventIds()) {
             EventAttend eventAttendData = EventAttend.builder()
                     .competitionAttend(competitionAttend)
-                    .department(department)
                     .competitionEvent(competitionEventRepository.findById(cmptEventId).orElseThrow())
                     .grade(0)
                     .cnt(0)
