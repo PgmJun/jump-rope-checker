@@ -26,10 +26,6 @@ public class EventAttend {
     @JoinColumn(name = "cmptEventId")
     private CompetitionEvent competitionEvent;
 
-    @OneToOne
-    @JoinColumn(name = "departId")
-    private Department department;
-
     @ManyToOne
     @JoinColumn(name = "cmptAttendId")
     private CompetitionAttend competitionAttend;

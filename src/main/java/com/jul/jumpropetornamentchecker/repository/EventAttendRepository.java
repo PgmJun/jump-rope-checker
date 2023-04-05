@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.repository;
 
+import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.attend.EventAttend;
 import jakarta.transaction.Transactional;
@@ -22,4 +23,6 @@ public interface EventAttendRepository extends JpaRepository<EventAttend, Long> 
     @Modifying(clearAutomatically = true)
     @Query("UPDATE EventAttend e SET e.grade = ?3, e.cnt = ?4 WHERE e.competitionAttend = ?1 AND e.eventAttendId = ?2")
     void updatePlayerEventScore(CompetitionAttend competitionAttend, Long cmptEventId, int grade, int count);
+
+    List<EventAttend> findByCompetitionEvent(CompetitionEvent competitionEvent);
 }

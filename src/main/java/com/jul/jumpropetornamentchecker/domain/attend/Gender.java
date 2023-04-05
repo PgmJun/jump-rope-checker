@@ -1,7 +1,10 @@
 package com.jul.jumpropetornamentchecker.domain.attend;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
+@Getter
 public enum Gender {
     MALE("남"), FEMALE("여");
 
