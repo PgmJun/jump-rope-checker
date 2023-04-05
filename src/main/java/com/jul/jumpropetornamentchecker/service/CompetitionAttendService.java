@@ -11,10 +11,7 @@ import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendRespon
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.excel.FormCreator;
 import com.jul.jumpropetornamentchecker.excel.FormParser;
-import com.jul.jumpropetornamentchecker.repository.CompetitionAttendRepository;
-import com.jul.jumpropetornamentchecker.repository.CompetitionRepository;
-import com.jul.jumpropetornamentchecker.repository.DepartmentRepository;
-import com.jul.jumpropetornamentchecker.repository.OrganizationRepository;
+import com.jul.jumpropetornamentchecker.repository.*;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +34,7 @@ public class CompetitionAttendService {
     private final CompetitionRepository competitionRepository;
     private final DepartmentRepository departmentRepository;
     private final EventAttendService eventAttendService;
+    private final EventAttendRepository eventAttendRepository;
     private final FormParser formParser;
     private final FormCreator formCreator;
 
@@ -154,5 +152,19 @@ public class CompetitionAttendService {
 
         return new ArrayList<>(competitionResponseDtoSet);
 
+    }
+
+    public Boolean removePlayerByCmptAttendId(Long cmptAttendId) {
+        boolean removeResult = true;
+        try {
+            CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회참가ID입니다."));
+            eventAttendRepository.deleteByCompetitionAttend(competitionAttend);
+            cmptAttendRepository.delete(competitionAttend);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            removeResult = false;
+        } finally {
+            return removeResult;
+        }
     }
 }

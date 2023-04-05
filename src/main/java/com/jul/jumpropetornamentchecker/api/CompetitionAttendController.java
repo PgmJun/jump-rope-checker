@@ -4,8 +4,10 @@ import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
+import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.service.CompetitionAttendService;
+import com.jul.jumpropetornamentchecker.service.EventAttendService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +21,11 @@ import java.util.Optional;
 
 
 @RestController
-@RequestMapping(value = "/attend")
+@RequestMapping(value = "/attend", produces = "application/json; charset=UTF8")
 @RequiredArgsConstructor
 public class CompetitionAttendController extends ResponseEntityCreator {
     private final CompetitionAttendService cmptAttendService;
+    private final EventAttendService eventAttendService;
 
     @PostMapping(value = "/add/single", produces = "application/json; charset=UTF8")
     @Operation(summary = "단일 선수 등록 API", description = "대회ID, 기관ID를 통해 선수 데이터를 등록합니다.")
@@ -32,7 +35,15 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         return getSaveDataResponseEntity(saveResult);
     }
 
-    @GetMapping(value = "/create/form", produces = "application/vnd.ms-excel; charset=UTF8")
+    @DeleteMapping("/delete/player/{cmptAttendId}")
+    @Operation(summary = "참가 정보 삭제 API", description = "대회참가ID를 사용하여 참가 선수 데이터를 삭제합니다.")
+    public ResponseEntity<?> deletePlayerByCmptAttendId(@PathVariable Long cmptAttendId) {
+        Boolean removeResult = cmptAttendService.removePlayerByCmptAttendId(cmptAttendId);
+
+        return getRemoveDataResponseEntity(removeResult);
+    }
+
+    @GetMapping("/create/form")
     @Operation(summary = "CSV 파일 선수 등록 신청서 요청 API", description = "대회ID, 기관ID를 사용하여 대회 신청서 양식을 요청합니다.")
     public ResponseEntity<?> createPlayerAttendForm(HttpServletResponse response, @RequestParam(name = "cmptId") Long cmptId, @RequestParam("orgId") Long orgId) throws IOException {
         boolean competitionAttendForm = cmptAttendService.createCompetitionAttendForm(response, cmptId, orgId);
@@ -72,11 +83,19 @@ public class CompetitionAttendController extends ResponseEntityCreator {
     }
 
     @GetMapping("/find/attendEvent/{cmptAttendId}")
-    @Operation(summary = "선수의 참가 종목 정보 조회 API", description = "대회참가ID를 사용하여 참가선수의 참가종목 별 데이터를 조회합니다")
+    @Operation(summary = "선수의 참가 종목 정보 조회 API", description = "대회참가ID를 사용하여 참가선수의 참가종목 별 데이터를 조회합니다.")
     public ResponseEntity<?> findCompetitionEventDataByCmptAttendId(@PathVariable Long cmptAttendId) {
         List<EventAttendPlayerResponseDto> eventAttendPlayerDatum = cmptAttendService.findEventAttendPlayerDataByCmptAttendId(cmptAttendId);
 
         return getFindDatumResponseEntity(eventAttendPlayerDatum);
+    }
+
+    @PutMapping("/update/eventScore/{cmptAttendId}")
+    @Operation(summary = "선수의 참가 종목 점수 갱신 API", description = "대회참가ID와 대회종목ID를 사용하여 참가선수의 참가종목 점수를 갱신합니다.")
+    public ResponseEntity<?> updatePlayerEventScore(@PathVariable(name = "cmptAttendId") Long cmptAttendId, @RequestBody EventAttendUpdateDto updateData) {
+        Boolean updateResult = eventAttendService.updatePlayerEventScoreByCompetitionAttendId(cmptAttendId, updateData);
+
+        return getUpdateDataResponseEntity(updateResult);
     }
 
 
