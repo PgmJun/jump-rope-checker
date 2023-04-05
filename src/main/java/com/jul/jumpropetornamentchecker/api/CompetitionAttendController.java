@@ -59,7 +59,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
 
     @GetMapping("/find/player")
-    @Operation(summary = "참가 선수 조회 API", description = "대회ID, 단체ID를 사용하여 대회 참가 선수를 조회합니다.")
+    @Operation(summary = "단체별 대회 참가 선수 조회 API", description = "대회ID, 단체ID를 사용하여 대회 참가 선수를 조회합니다.")
     public ResponseEntity<?> findAttendDataByOrgIdAndCmptId(@RequestParam(name = "orgId") Long orgId, @RequestParam(name = "cmptId") Long cmptId) {
         List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = cmptAttendService.findPlayersByOrgIdAndCmptId(orgId, cmptId);
 
@@ -67,15 +67,24 @@ public class CompetitionAttendController extends ResponseEntityCreator {
     }
 
     @GetMapping("/find/player/cmpt/{cmptId}")
-    @Operation(summary = "참가 선수 조회 API", description = "대회ID를 사용하여 대회 참가 선수를 조회합니다.")
+    @Operation(summary = "대회 참가 선수 조회 API", description = "대회ID를 사용하여 대회 참가 선수를 조회합니다.")
     public ResponseEntity<?> findAttendDataByOrgId(@PathVariable(name = "cmptId") Long cmptId) {
         List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = cmptAttendService.findPlayersByCmptId(cmptId);
 
         return getFindDatumResponseEntity(cmptAttendPlayerDatum);
     }
 
+    @GetMapping("/find/player/cmptEvent/{cmptEventId}")
+    @Operation(summary = "대회 종목 참가 선수 조회 API", description = "대회종목ID를 사용하여 대회종목에 참가하는 선수 데이터를 조회합니다.")
+    public ResponseEntity<?> findCmptEventAttendPlayerData(@PathVariable Long cmptEventId) {
+        List<EventAttendPlayerResponseDto> cmptAttendPlayerDatum = cmptAttendService.findCmptEventAttendPlayersByCmptEventId(cmptEventId);
+
+        return getFindDatumResponseEntity(cmptAttendPlayerDatum);
+    }
+
+
     @GetMapping("/find/org/{cmptId}")
-    @Operation(summary = "참가 단체 조회 API", description = "대회ID를 사용하여 대회 참가 단체를 조회합니다.")
+    @Operation(summary = "대회 참가 단체 조회 API", description = "대회ID를 사용하여 대회 참가 단체를 조회합니다.")
     public ResponseEntity<?> findAttendOrganizationDataByCmptId(@PathVariable Long cmptId) {
         List<OrganizationResponseDto> organizationDatum = cmptAttendService.findOrganizationsByCmptId(cmptId);
 
