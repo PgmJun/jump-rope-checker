@@ -110,7 +110,6 @@ public class FormParser {
             return cmptAttendRequestDtos;
         } catch (Exception e) {
             log.error(e.getMessage());
-            e.printStackTrace();
             return null;
         }
     }
