@@ -56,6 +56,24 @@ public class FormParser {
             for (int rowIdx = 8; rowIdx < rowNum; rowIdx++) {
                 // 선수 기본 정보 저장
                 currentRow = sheet.getRow(rowIdx);
+
+                // row가 비어있으면 저장 stop
+                if (currentRow == null) {
+                    break;
+                }
+                // row의 기본정보 컬럼중 빈 정보가 존재하면 저장 stop
+                boolean isEmptyValue = false;
+                for(int cellnum = 0; cellnum < 5; cellnum++) {
+                    if (currentRow.getCell(cellnum).toString().equals("")) {
+                        isEmptyValue = true;
+                        break;
+                    }
+                }
+                // 빈 컬럼이면 저장 stop
+                if (isEmptyValue) {
+                    break;
+                }
+
                 String name = currentRow.getCell(0).toString();
                 Long departId = DepartmentType.findDepartmentByName(currentRow.getCell(1).toString()).getDepartId();
                 String gender = currentRow.getCell(2).toString();
@@ -92,6 +110,7 @@ public class FormParser {
             return cmptAttendRequestDtos;
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }
