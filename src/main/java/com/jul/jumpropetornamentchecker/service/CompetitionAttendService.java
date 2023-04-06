@@ -190,6 +190,8 @@ public class CompetitionAttendService {
             Set<OrganizationResponseDto> competitionResponseDtoSet = new HashSet<>();
 
             competitionAttendDatum.forEach(data -> competitionResponseDtoSet.add(data.getOrganization().toDto()));
+            organizationDatum = new ArrayList<>(competitionResponseDtoSet);
+
         } catch (Exception e) {
             log.error(e.getMessage());
         }
