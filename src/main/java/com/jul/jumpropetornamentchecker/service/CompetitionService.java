@@ -50,11 +50,8 @@ public class CompetitionService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<CompetitionResponseDto> findCompetitionInfoById(Long competitionId) {
-        return competitionRepository.findByCompetitionId(competitionId)
-                .stream()
-                .map(Competition::toDto)
-                .findAny();
+    public Optional<Competition> findCompetitionInfoById(Long competitionId) {
+        return competitionRepository.findByCompetitionId(competitionId);
     }
 
     public Boolean removeCompetitionData(List<Long> competitionIds) {
