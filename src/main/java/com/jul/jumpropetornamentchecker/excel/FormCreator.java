@@ -212,7 +212,10 @@ public class FormCreator {
     }
 
     private String getCompetitionAttendFormTitle(Long cmptId) {
-        CompetitionResponseDto cmptDto = cmptService.findCompetitionInfoById(cmptId).orElseThrow();
+        CompetitionResponseDto cmptDto = cmptService.findCompetitionInfoById(cmptId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."))
+                .toDto();
+
         return cmptDto.competitionName() + " 참가 신청서";
     }
 
