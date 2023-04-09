@@ -12,7 +12,6 @@ public class EventAttendResponseDto {
     private Long eventAttendId;
     private Long cmptEventId;
     private String cmptEventName;
-    private int grade;
-    private int cnt;
+    private int score;
 
 }

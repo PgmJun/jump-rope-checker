@@ -36,8 +36,7 @@ public class EventAttendService {
             EventAttend eventAttendData = EventAttend.builder()
                     .competitionAttend(competitionAttend)
                     .competitionEvent(competitionEventRepository.findById(cmptEventId).orElseThrow())
-                    .grade(0)
-                    .cnt(0)
+                    .score(0)
                     .build();
 
             eventAttendRepository.save(eventAttendData);
@@ -49,12 +48,12 @@ public class EventAttendService {
         return cmptAttendDatum.stream().map(EventAttend::toDto).collect(Collectors.toList());
     }
 
-    public Boolean updatePlayerEventScoreByCompetitionAttendId(Long cmptAttendId, EventAttendUpdateDto updateData) {
+    public Boolean updatePlayerEventScoreByCompetitionAttendId(String cmptAttendId, EventAttendUpdateDto updateData) {
         boolean updateResult = true;
 
         try {
             CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회참가ID입니다."));
-            eventAttendRepository.updatePlayerEventScore(competitionAttend, updateData.getCmptEventId(), updateData.getGrade(), updateData.getCount());
+            eventAttendRepository.updatePlayerEventScore(competitionAttend, updateData.getCmptEventId(), updateData.getScore());
         } catch (Exception e) {
             log.error(e.getMessage());
             updateResult = false;

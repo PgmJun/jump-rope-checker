@@ -20,13 +20,11 @@ public class CompetitionAttendPlayerResponseDto {
     private String playerAffiliation;
     private Long eventAttendId;
     private String eventName;
-    private int grade;
-    private int count;
+    private int score;
 
     public static CompetitionAttendPlayerResponseDto from(CompetitionAttendResponseDto cmptAttendResponseDto, EventAttendResponseDto eventAttendResponseDto) {
         return CompetitionAttendPlayerResponseDto.builder()
-                .grade(eventAttendResponseDto.getGrade())
-                .count(eventAttendResponseDto.getCnt())
+                .score(eventAttendResponseDto.getScore())
                 .eventName(eventAttendResponseDto.getCmptEventName())
                 .eventAttendId(eventAttendResponseDto.getEventAttendId())
                 .cmptAttendId(cmptAttendResponseDto.getCmptAttendId())

@@ -21,8 +21,8 @@ public interface EventAttendRepository extends JpaRepository<EventAttend, Long> 
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE EventAttend e SET e.grade = ?3, e.cnt = ?4 WHERE e.competitionAttend = ?1 AND e.eventAttendId = ?2")
-    void updatePlayerEventScore(CompetitionAttend competitionAttend, Long cmptEventId, int grade, int count);
+    @Query("UPDATE EventAttend e SET e.score = ?3 WHERE e.competitionAttend = ?1 AND e.eventAttendId = ?2")
+    void updatePlayerEventScore(CompetitionAttend competitionAttend, Long cmptEventId, int score);
 
     List<EventAttend> findByCompetitionEvent(CompetitionEvent competitionEvent);
 }

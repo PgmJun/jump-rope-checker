@@ -149,7 +149,7 @@ public class CompetitionAttendService {
         return cmptAttendPlayerDatum;
     }
 
-    public List<EventAttendPlayerResponseDto> findEventAttendPlayerDataByCmptAttendId(Long cmptAttendId) {
+    public List<EventAttendPlayerResponseDto> findEventAttendPlayerDataByCmptAttendId(String cmptAttendId) {
 
         List<EventAttendPlayerResponseDto> eventAttendPlayerDatum = new ArrayList<>();
 
@@ -208,7 +208,7 @@ public class CompetitionAttendService {
     }
 
     @Transactional
-    public Boolean removePlayerByCmptAttendId(Long cmptAttendId) {
+    public Boolean removePlayerByCmptAttendId(String cmptAttendId) {
 
         boolean removeResult = true;
 

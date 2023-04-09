@@ -37,7 +37,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
     @DeleteMapping("/delete/player/{cmptAttendId}")
     @Operation(summary = "참가 정보 삭제 API", description = "대회참가ID를 사용하여 참가 선수 데이터를 삭제합니다.")
-    public ResponseEntity<?> deletePlayerByCmptAttendId(@PathVariable Long cmptAttendId) {
+    public ResponseEntity<?> deletePlayerByCmptAttendId(@PathVariable String cmptAttendId) {
         Boolean removeResult = cmptAttendService.removePlayerByCmptAttendId(cmptAttendId);
 
         return getRemoveDataResponseEntity(removeResult);
@@ -101,7 +101,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
     @GetMapping("/find/attendEvent/{cmptAttendId}")
     @Operation(summary = "선수의 참가 종목 정보 조회 API", description = "대회참가ID를 사용하여 참가선수의 참가종목 별 데이터를 조회합니다.")
-    public ResponseEntity<?> findCompetitionEventDataByCmptAttendId(@PathVariable Long cmptAttendId) {
+    public ResponseEntity<?> findCompetitionEventDataByCmptAttendId(@PathVariable String cmptAttendId) {
         List<EventAttendPlayerResponseDto> eventAttendPlayerDatum = cmptAttendService.findEventAttendPlayerDataByCmptAttendId(cmptAttendId);
 
         return getFindDatumResponseEntity(eventAttendPlayerDatum);
@@ -109,7 +109,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
     @PatchMapping("/update/eventScore/{cmptAttendId}")
     @Operation(summary = "선수의 참가 종목 점수 갱신 API", description = "대회참가ID와 대회종목ID를 사용하여 참가선수의 참가종목 점수를 갱신합니다.")
-    public ResponseEntity<?> updatePlayerEventScore(@PathVariable(name = "cmptAttendId") Long cmptAttendId, @RequestBody EventAttendUpdateDto updateData) {
+    public ResponseEntity<?> updatePlayerEventScore(@PathVariable(name = "cmptAttendId") String cmptAttendId, @RequestBody EventAttendUpdateDto updateData) {
         Boolean updateResult = eventAttendService.updatePlayerEventScoreByCompetitionAttendId(cmptAttendId, updateData);
 
         return getUpdateDataResponseEntity(updateResult);
