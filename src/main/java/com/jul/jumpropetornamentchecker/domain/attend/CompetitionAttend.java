@@ -21,8 +21,7 @@ import lombok.NoArgsConstructor;
 public class CompetitionAttend {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cmptAttendId;
+    private String cmptAttendId;
 
     @ManyToOne
     @JoinColumn(name = "competitionId")
@@ -53,9 +52,13 @@ public class CompetitionAttend {
     @NotNull
     private String playerTel;
 
+    @Column
+    private String playerAffiliation; //선수 소속 (상장 출력용 소속)
+
 
     public static CompetitionAttend from(Competition competition, Department department, Organization organization, CompetitionAttendRequestDto cmptAttendRequestDto) {
         return CompetitionAttend.builder()
+                .cmptAttendId(competition.getCompetitionId() + "-" + department.getDepartId() + "-" + competition.getPlayerNumber())
                 .competition(competition)
                 .department(department)
                 .organization(organization)
@@ -63,6 +66,7 @@ public class CompetitionAttend {
                 .playerGender(Gender.findByType(cmptAttendRequestDto.getPlayerGender()))
                 .playerBirth(cmptAttendRequestDto.getPlayerBirth())
                 .playerTel(cmptAttendRequestDto.getPlayerTel())
+                .playerAffiliation(cmptAttendRequestDto.getPlayerAffiliation())
                 .build();
     }
 
@@ -76,6 +80,7 @@ public class CompetitionAttend {
                 .playerGender(playerGender.getType())
                 .playerBirth(playerBirth)
                 .playerTel(playerTel)
+                .playerAffiliation(playerAffiliation)
                 .build();
     }
 }

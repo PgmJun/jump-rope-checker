@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class CompetitionAttendPlayerResponseDto {
-    private Long cmptAttendId;
+    private String cmptAttendId;
     private String departmentName;
     private String organizationName;
     private String competitionName;
@@ -17,6 +17,7 @@ public class CompetitionAttendPlayerResponseDto {
     private String playerName;
     private String playerGender;
     private String playerTel;
+    private String playerAffiliation;
     private Long eventAttendId;
     private String eventName;
     private int grade;
@@ -36,6 +37,7 @@ public class CompetitionAttendPlayerResponseDto {
                 .playerName(cmptAttendResponseDto.getPlayerName())
                 .playerGender(cmptAttendResponseDto.getPlayerGender())
                 .playerTel(cmptAttendResponseDto.getPlayerTel())
+                .playerAffiliation(cmptAttendResponseDto.getPlayerAffiliation())
                 .build();
     }
 }

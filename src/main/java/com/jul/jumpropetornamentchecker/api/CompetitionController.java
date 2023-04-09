@@ -62,7 +62,7 @@ public class CompetitionController extends ResponseEntityCreator {
         return getRemoveDataResponseEntity(removeResult);
     }
 
-    @PutMapping("/update")
+    @PatchMapping("/update")
     @Operation(summary = "대회 정보 수정 API", description = "대회 정보를 업데이트합니다.")
     public ResponseEntity<?> updateCompetitionData(@RequestBody CompetitionUpdateDto competitionUpdateDto) {
         boolean updateResult = competitionService.updateCompetitionData(competitionUpdateDto);

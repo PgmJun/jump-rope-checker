@@ -6,7 +6,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class CompetitionAttendResponseDto {
-    private Long cmptAttendId;
+    private String cmptAttendId;
     private String departmentName;
     private String organizationName;
     private String competitionName;
@@ -14,4 +14,5 @@ public class CompetitionAttendResponseDto {
     private String playerName;
     private String playerGender;
     private String playerTel;
+    private String playerAffiliation;
 }

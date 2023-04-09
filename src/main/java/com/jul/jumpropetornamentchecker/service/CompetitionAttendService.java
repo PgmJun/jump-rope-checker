@@ -51,6 +51,12 @@ public class CompetitionAttendService {
             Department department = departmentRepository.findById(cmptAttendRequestDto.getDepartId()).orElseThrow();
             Organization organization = organizationRepository.findById(cmptAttendRequestDto.getOrgId()).orElseThrow();
 
+            //선수 소속이 입력되지 않으면 선수의 참가 기관명 입력
+            String playerAffilication = cmptAttendRequestDto.getPlayerAffiliation();
+            if (playerAffilication.isBlank()) {
+                cmptAttendRequestDto.setPlayerAffiliation(organization.getOrgName());
+            }
+
             CompetitionAttend competitionAttend = CompetitionAttend.from(competition, department, organization, cmptAttendRequestDto);
             CompetitionAttend savedCmptAttend = cmptAttendRepository.save(competitionAttend);
 
@@ -58,6 +64,7 @@ public class CompetitionAttendService {
 
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
             saveResult = false;
         } finally {
             return saveResult;
@@ -200,6 +207,7 @@ public class CompetitionAttendService {
 
     }
 
+    @Transactional
     public Boolean removePlayerByCmptAttendId(Long cmptAttendId) {
 
         boolean removeResult = true;
@@ -208,6 +216,32 @@ public class CompetitionAttendService {
             CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회참가ID입니다."));
             eventAttendRepository.deleteByCompetitionAttend(competitionAttend);
             cmptAttendRepository.delete(competitionAttend);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            removeResult = false;
+        } finally {
+            return removeResult;
+        }
+    }
+
+    @Transactional
+    public Boolean removePlayerByCmptIdAndOrgId(Long cmptId, Long orgId) {
+
+        boolean removeResult = true;
+
+        try {
+
+            Organization organization = organizationRepository.findById(orgId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 기관ID입니다."));
+            Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
+
+            List<CompetitionAttend> cmptAttendDatum = cmptAttendRepository.findByOrganizationAndCompetition(organization, competition);
+
+
+            cmptAttendDatum.forEach(cmptAttendData -> {
+                eventAttendRepository.deleteByCompetitionAttend(cmptAttendData);
+                cmptAttendRepository.delete(cmptAttendData);
+            });
+
         } catch (Exception e) {
             log.error(e.getMessage());
             removeResult = false;

@@ -19,6 +19,7 @@ public class CompetitionAttendRequestDto {
     private String playerGender;
     private String playerBirth;
     private String playerTel;
+    private String playerAffiliation;
 
     @Override
     public String toString() {
