@@ -53,7 +53,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
     @GetMapping("/create/form")
     @Operation(summary = "CSV 파일 선수 등록 신청서 요청 API", description = "대회ID, 기관ID를 사용하여 대회 신청서 양식을 요청합니다.")
-    public ResponseEntity<?> createPlayerAttendForm(HttpServletResponse response, @RequestParam(name = "cmptId") Long cmptId, @RequestParam("orgId") Long orgId) throws IOException {
+    public ResponseEntity<?> createPlayerAttendForm(HttpServletResponse response, @RequestParam(name = "cmptId") Long cmptId, @RequestParam("orgId") Long orgId) {
         boolean competitionAttendForm = cmptAttendService.createCompetitionAttendForm(response, cmptId, orgId);
         return createCompetitionAttendFormResponseEntity(competitionAttendForm);
     }
