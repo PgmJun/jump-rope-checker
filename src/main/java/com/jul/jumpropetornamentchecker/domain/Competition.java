@@ -49,6 +49,9 @@ public class Competition {
     @NotNull
     private LocalDateTime competitionEndDate;
 
+    @Column
+    private int attendPlayer = 0;
+
     @Builder
     public Competition(String competitionName, String recordingSheetName, String competitionHost, String hostEmail, String hostTel, LocalDateTime competitionStartDate, LocalDateTime competitionEndDate) {
         this.competitionName = competitionName;
@@ -81,5 +84,9 @@ public class Competition {
         this.hostTel = updateData.hostTel();
         this.competitionStartDate = updateData.competitionStartDate();
         this.competitionEndDate = updateData.competitionEndDate();
+    }
+
+    public int getPlayerNumber() {
+        return ++attendPlayer;
     }
 }

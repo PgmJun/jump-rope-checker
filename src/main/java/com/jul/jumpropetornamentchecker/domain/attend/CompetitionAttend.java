@@ -21,8 +21,7 @@ import lombok.NoArgsConstructor;
 public class CompetitionAttend {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cmptAttendId;
+    private String cmptAttendId;
 
     @ManyToOne
     @JoinColumn(name = "competitionId")
@@ -59,6 +58,7 @@ public class CompetitionAttend {
 
     public static CompetitionAttend from(Competition competition, Department department, Organization organization, CompetitionAttendRequestDto cmptAttendRequestDto) {
         return CompetitionAttend.builder()
+                .cmptAttendId(competition.getCompetitionId() + "-" + department.getDepartId() + "-" + competition.getPlayerNumber())
                 .competition(competition)
                 .department(department)
                 .organization(organization)

@@ -9,7 +9,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class EventAttendPlayerResponseDto {
-    private Long cmptAttendId;
+    private String cmptAttendId;
     private String departmentName;
     private String organizationName;
     private String competitionName;
