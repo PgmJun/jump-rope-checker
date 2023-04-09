@@ -1,8 +1,6 @@
 package com.jul.jumpropetornamentchecker.domain.attend;
 
 import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
-import com.jul.jumpropetornamentchecker.domain.department.Department;
-import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,11 +29,7 @@ public class EventAttend {
     private CompetitionAttend competitionAttend;
 
     @Column
-    private int grade;
-
-    @Column
-    private int cnt;
-
+    private int score;
 
 
     public EventAttendResponseDto toDto() {
@@ -43,7 +37,7 @@ public class EventAttend {
                 .eventAttendId(eventAttendId)
                 .cmptEventId(competitionEvent.getCmptEventId())
                 .cmptEventName(competitionEvent.getEvent().getEventName())
-                .grade(grade)
-                .cnt(cnt).build();
+                .score(score)
+                .build();
     }
 }

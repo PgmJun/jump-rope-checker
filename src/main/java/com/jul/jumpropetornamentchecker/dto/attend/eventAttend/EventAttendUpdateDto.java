@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 public class EventAttendUpdateDto {
 
     private Long cmptEventId;
-    private int grade;
-    private int count;
+    private int score;
 }
