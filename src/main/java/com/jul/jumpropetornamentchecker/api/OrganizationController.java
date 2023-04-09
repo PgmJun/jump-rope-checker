@@ -62,7 +62,7 @@ public class OrganizationController extends ResponseEntityCreator {
         return getRemoveDataResponseEntity(removeResult);
     }
 
-    @PutMapping("/update")
+    @PatchMapping("/update")
     @Operation(summary = "단체 정보 수정 API", description = "단체 정보를 업데이트합니다.")
     public ResponseEntity<?> updateOrganizationData(@RequestBody OrganizationUpdateDto organizationUpdateDto) {
         Boolean updateResult = organizationService.updateOrganizationData(organizationUpdateDto);

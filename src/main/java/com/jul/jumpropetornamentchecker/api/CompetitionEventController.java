@@ -25,7 +25,7 @@ public class CompetitionEventController extends ResponseEntityCreator {
         return getFindDatumResponseEntity(competitionEventDatum);
     }
 
-    @PutMapping("/update")
+    @PatchMapping("/update")
     @Operation(summary = "대회종목 데이터 수정 API", description = "대회종목Id를 사용하여 대회종목 정보를 수정한다.")
     public ResponseEntity<?> updateCompetitionEventData(@RequestBody List<CompetitionEventUpdateDto> competitionEventUpdateDtos) {
         boolean updateResult = cmptEventService.updateCompetitionEventData(competitionEventUpdateDtos);

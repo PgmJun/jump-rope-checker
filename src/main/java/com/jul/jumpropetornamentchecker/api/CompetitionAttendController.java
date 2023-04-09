@@ -107,7 +107,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         return getFindDatumResponseEntity(eventAttendPlayerDatum);
     }
 
-    @PutMapping("/update/eventScore/{cmptAttendId}")
+    @PatchMapping("/update/eventScore/{cmptAttendId}")
     @Operation(summary = "선수의 참가 종목 점수 갱신 API", description = "대회참가ID와 대회종목ID를 사용하여 참가선수의 참가종목 점수를 갱신합니다.")
     public ResponseEntity<?> updatePlayerEventScore(@PathVariable(name = "cmptAttendId") Long cmptAttendId, @RequestBody EventAttendUpdateDto updateData) {
         Boolean updateResult = eventAttendService.updatePlayerEventScoreByCompetitionAttendId(cmptAttendId, updateData);
