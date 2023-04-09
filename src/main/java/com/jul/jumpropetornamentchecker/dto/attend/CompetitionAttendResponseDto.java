@@ -14,4 +14,5 @@ public class CompetitionAttendResponseDto {
     private String playerName;
     private String playerGender;
     private String playerTel;
+    private String playerAffiliation;
 }

@@ -51,6 +51,12 @@ public class CompetitionAttendService {
             Department department = departmentRepository.findById(cmptAttendRequestDto.getDepartId()).orElseThrow();
             Organization organization = organizationRepository.findById(cmptAttendRequestDto.getOrgId()).orElseThrow();
 
+            //선수 소속이 입력되지 않으면 선수의 참가 기관명 입력
+            String playerAffilication = cmptAttendRequestDto.getPlayerAffiliation();
+            if(playerAffilication.isBlank()){
+                cmptAttendRequestDto.setPlayerAffiliation(organization.getOrgName());
+            }
+
             CompetitionAttend competitionAttend = CompetitionAttend.from(competition, department, organization, cmptAttendRequestDto);
             CompetitionAttend savedCmptAttend = cmptAttendRepository.save(competitionAttend);
 
