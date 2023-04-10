@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
     private final CompetitionAttendService cmptAttendService;
     private final EventAttendService eventAttendService;
 
-    @PostMapping(value = "/add/single", produces = "application/json; charset=UTF8")
+    @PostMapping(value = "/add/single")
     @Operation(summary = "단일 선수 등록 API", description = "대회ID, 기관ID를 통해 선수 데이터를 등록합니다.")
     public ResponseEntity<?> registerSinglePlayer(@RequestBody CompetitionAttendRequestDto cmptAttendRequestDto) {
         Boolean saveResult = cmptAttendService.saveSinglePlayer(cmptAttendRequestDto);

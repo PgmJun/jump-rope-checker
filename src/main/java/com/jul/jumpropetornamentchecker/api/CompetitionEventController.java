@@ -20,8 +20,8 @@ public class CompetitionEventController extends ResponseEntityCreator {
 
     @GetMapping("/find/{competitionId}")
     @Operation(summary = "대회종목 대회ID로 조회 API", description = "대회ID를 사용하여 대회 종목을 조회힌다.")
-    public ResponseEntity<?> findCompetitionEventDataByCompetitionId(@PathVariable Long competitionId) {
-        List<CompetitionEventResponseDto> competitionEventDatum = cmptEventService.findCompetitionEventDataByCompetitionId(competitionId);
+    public ResponseEntity<?> findCompetitionEventDataByCompetitionId(@PathVariable Long competitionId, @RequestParam(name = "type") String type) {
+        List<CompetitionEventResponseDto> competitionEventDatum = cmptEventService.findCompetitionEventDataByCompetitionId(competitionId, type);
         return getFindDatumResponseEntity(competitionEventDatum);
     }
 

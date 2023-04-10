@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,14 +49,22 @@ public class CompetitionEventService {
         }
     }
 
-    public List<CompetitionEventResponseDto> findCompetitionEventDataByCompetitionId(Long competitionId) {
+    public List<CompetitionEventResponseDto> findCompetitionEventDataByCompetitionId(Long competitionId, String type) {
         Competition competitionData = competitionRepository.findByCompetitionId(competitionId).orElseThrow(IllegalArgumentException::new);
         List<CompetitionEvent> competitionEventDatum = competitionEventRepository.findCompetitionEventByCompetition(competitionData);
+        List<CompetitionEventResponseDto> competitionEventResponseDatum = new ArrayList<>();
 
-        List<CompetitionEventResponseDto> competitionEventResponseDatum = competitionEventDatum.stream()
-                .filter(competitionEventData -> competitionEventData.getIsProceed())
-                .map(CompetitionEvent::toDto)
-                .collect(Collectors.toList());
+        if (type.equals("PROCEED")) {
+            competitionEventResponseDatum = competitionEventDatum.stream()
+                    .filter(competitionEventData -> competitionEventData.getIsProceed())
+                    .map(CompetitionEvent::toDto)
+                    .collect(Collectors.toList());
+
+        } else if (type.equals("ALL")) {
+            competitionEventResponseDatum = competitionEventDatum.stream()
+                    .map(CompetitionEvent::toDto)
+                    .collect(Collectors.toList());
+        }
 
         return competitionEventResponseDatum;
     }

@@ -35,9 +35,8 @@ public class FormCreator {
     private final EventService eventService;
 
     public void createForm(HttpServletResponse response, Long cmptId, Long orgId) {
-        boolean createResult = true;
         try {
-            List<CompetitionEventResponseDto> competitionEventDatum = getCompetitionEventDatum(cmptId)
+            List<CompetitionEventResponseDto> competitionEventDatum = getCompetitionEventDatum(cmptId, "PROCEED")
                     .stream()
                     .collect(Collectors.toList());
 
@@ -223,8 +222,8 @@ public class FormCreator {
         return orgDto.orgName();
     }
 
-    private List<CompetitionEventResponseDto> getCompetitionEventDatum(Long cmptId) {
-        return cmptEventService.findCompetitionEventDataByCompetitionId(cmptId);
+    private List<CompetitionEventResponseDto> getCompetitionEventDatum(Long cmptId, String type) {
+        return cmptEventService.findCompetitionEventDataByCompetitionId(cmptId, type);
     }
 
 }
