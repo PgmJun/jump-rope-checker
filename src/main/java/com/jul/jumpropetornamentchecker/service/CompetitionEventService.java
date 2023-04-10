@@ -53,6 +53,7 @@ public class CompetitionEventService {
         List<CompetitionEvent> competitionEventDatum = competitionEventRepository.findCompetitionEventByCompetition(competitionData);
 
         List<CompetitionEventResponseDto> competitionEventResponseDatum = competitionEventDatum.stream()
+                .filter(competitionEventData -> competitionEventData.getIsProceed())
                 .map(CompetitionEvent::toDto)
                 .collect(Collectors.toList());
 

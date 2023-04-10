@@ -39,7 +39,6 @@ public class FormCreator {
         try {
             List<CompetitionEventResponseDto> competitionEventDatum = getCompetitionEventDatum(cmptId)
                     .stream()
-                    .filter(c -> c.isProceed())
                     .collect(Collectors.toList());
 
             HSSFWorkbook workbook = new HSSFWorkbook();
