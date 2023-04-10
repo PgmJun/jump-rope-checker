@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.service;
 
 
+import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.attend.EventAttend;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
@@ -53,7 +54,8 @@ public class EventAttendService {
 
         try {
             CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회참가ID입니다."));
-            eventAttendRepository.updatePlayerEventScore(competitionAttend, updateData.getCmptEventId(), updateData.getScore());
+            CompetitionEvent competitionEvent = competitionEventRepository.findById(updateData.getCmptEventId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회종목ID입니다."));
+            eventAttendRepository.updatePlayerEventScore(competitionAttend, competitionEvent, updateData.getScore());
         } catch (Exception e) {
             log.error(e.getMessage());
             updateResult = false;
