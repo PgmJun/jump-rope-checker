@@ -28,13 +28,16 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class FormCreator {
+    protected static final int PLAYER_DEFAULT_INFO_COUNT = 6;
 
     private final CompetitionService cmptService;
     private final OrganizationService orgService;
     private final CompetitionEventService cmptEventService;
     private final EventService eventService;
 
-    public void createForm(HttpServletResponse response, Long cmptId, Long orgId) {
+    public boolean createForm(HttpServletResponse response, Long cmptId, Long orgId) {
+        boolean createResult = true;
+
         try {
             List<CompetitionEventResponseDto> competitionEventDatum = getCompetitionEventDatum(cmptId, "PROCEED")
                     .stream()
@@ -46,7 +49,7 @@ public class FormCreator {
             Row row = null;
             Cell cell = null;
             int rowNo = 0; // 행 갯수
-            int columnSize = 5 + competitionEventDatum.size();
+            int columnSize = PLAYER_DEFAULT_INFO_COUNT + competitionEventDatum.size();
 
             //타이틀용 폰트
             HSSFFont titleFont = workbook.createFont();
@@ -119,7 +122,7 @@ public class FormCreator {
             // ===================== <종목정보 입력 =====================
 
             // 단체전 / 개인전 구분 정보 입력
-            ArrayList<String> eventIsGroupData = new ArrayList<>(List.of("구분", "-", "-", "-", "-"));
+            ArrayList<String> eventIsGroupData = new ArrayList<>(List.of("구분", "-", "-", "-", "-", "-"));
             competitionEventDatum.forEach(ce -> {
                 Event event = eventService.findEventDataById(ce.eventId()).orElseThrow();
                 if (event.getIsGroupEvent()) {
@@ -137,7 +140,7 @@ public class FormCreator {
             }
 
             //대회 종목 번호 입력
-            ArrayList<String> eventIds = new ArrayList<>(List.of("대회종목번호", "-", "-", "-", "-"));
+            ArrayList<String> eventIds = new ArrayList<>(List.of("대회종목번호", "-", "-", "-", "-", "-"));
             competitionEventDatum.forEach(ce -> eventIds.add(ce.cmptEventId().toString()));
 
             row = sheet.createRow(rowNo++);
@@ -159,7 +162,7 @@ public class FormCreator {
             cellStyle_Table_Center.setBorderRight(BorderStyle.THIN); //테두리 오른쪽
             cellStyle_Table_Center.setAlignment(HorizontalAlignment.CENTER);
 
-            ArrayList<String> tableData = new ArrayList<>(List.of("선수명", "참가부", "성별", "생년월일", "연락처"));
+            ArrayList<String> tableData = new ArrayList<>(List.of("선수명", "참가부", "성별", "생년월일", "연락처", "소속"));
             competitionEventDatum.forEach(ce -> tableData.add(ce.eventName()));
 
             row = sheet.createRow(rowNo++);
@@ -171,8 +174,8 @@ public class FormCreator {
             // ===================== 테이블 생성/> =====================
 
             // ===================== <예시 데이터 입력 =====================
-            ArrayList<String> exampleData = new ArrayList<>(List.of("ex) 홍길동", "1", "남", "2000-01-01", "010-1234-1234"));
-            for(int i = 0; i < columnSize-5;i++){
+            ArrayList<String> exampleData = new ArrayList<>(List.of("ex) 홍길동", "초등1", "남", "2014-01-01", "010-1234-1234","대회초등학교"));
+            for(int i = 0; i < columnSize-PLAYER_DEFAULT_INFO_COUNT;i++){
                 if (i % 2 == 0) {
                     exampleData.add("o");
                 }
@@ -205,6 +208,9 @@ public class FormCreator {
             if (workbook != null) workbook.close();
         } catch (Exception e) {
             log.error(e.getMessage());
+            createResult = false;
+        } finally {
+            return createResult;
         }
 
     }

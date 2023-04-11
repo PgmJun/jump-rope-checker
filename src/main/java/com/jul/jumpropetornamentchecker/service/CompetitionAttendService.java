@@ -91,11 +91,10 @@ public class CompetitionAttendService {
         boolean createFromResult = true;
 
         try {
-            formCreator.createForm(response, cmptId, orgId);
+            createFromResult = formCreator.createForm(response, cmptId, orgId);
 
         } catch (Exception e) {
             log.error(e.getMessage());
-            createFromResult = false;
         } finally {
             return createFromResult;
         }
