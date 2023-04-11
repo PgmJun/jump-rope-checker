@@ -55,7 +55,7 @@ public class CompetitionController extends ResponseEntityCreator {
 
 
     @DeleteMapping("/delete/{cmptId}")
-    @Operation(summary = "대회 정보 삭제 API", description = "대회ID List를 통해 대회 정보를 삭제합니다.")
+    @Operation(summary = "대회 정보 삭제 API", description = "대회ID를 통해 대회 정보를 삭제합니다.")
     public ResponseEntity<?> deleteCompetitionDataById(@PathVariable Long cmptId) {
         Boolean removeResult = competitionService.removeCompetitionData(cmptId);
 
