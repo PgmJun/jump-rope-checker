@@ -1,9 +1,12 @@
 package com.jul.jumpropetornamentchecker.service;
 
 import com.jul.jumpropetornamentchecker.domain.Organization;
+import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationRequestDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationUpdateDto;
+import com.jul.jumpropetornamentchecker.repository.CompetitionAttendRepository;
+import com.jul.jumpropetornamentchecker.repository.EventAttendRepository;
 import com.jul.jumpropetornamentchecker.repository.OrganizationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class OrganizationService {
     private final OrganizationRepository organizationRepository;
+    private final CompetitionAttendRepository cmptAttendRepository;
+    private final EventAttendRepository eventAttendRepository;
 
     public Boolean saveOrganization(OrganizationRequestDto requestDto) {
         Boolean registerResult = true;
@@ -57,12 +62,25 @@ public class OrganizationService {
                 .map(Organization::toDto);
     }
 
-    public Boolean removeOrganizationData(List<Long> organizationIds) {
+    @Transactional
+    public Boolean removeOrganizationData(Long orgId) {
         Boolean deleteResult = true;
         try {
-            organizationIds.forEach(id -> organizationRepository.deleteByOrgId(id));
+            Organization organization = organizationRepository.findById(orgId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 단체ID입니다."));
+
+            //대회참가 CompetitionAttend 삭제
+            //종목참가 EventAttend 삭제
+            List<CompetitionAttend> cmptAttends = cmptAttendRepository.findByOrganization(organization);
+            cmptAttends.forEach(c -> {
+                eventAttendRepository.deleteByCompetitionAttend(c);
+                cmptAttendRepository.delete(c);
+            });
+
+            //단체 Organization 삭제
+            organizationRepository.deleteByOrgId(orgId);
         } catch (Exception e) {
             log.error(e.getMessage());
+            deleteResult = false;
         } finally {
             return deleteResult;
         }

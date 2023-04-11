@@ -54,10 +54,10 @@ public class OrganizationController extends ResponseEntityCreator {
         return getFindDataResponseEntity(organizationData);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{orgId}")
     @Operation(summary = "단체 정보 삭제 API", description = "단체의 Id를 통해 단체 정보를 삭제합니다.")
-    public ResponseEntity<?> deleteOrganizationDatumById(@RequestBody List<Long> organizationIds) {
-        Boolean removeResult = organizationService.removeOrganizationData(organizationIds);
+    public ResponseEntity<?> deleteOrganizationDatumById(@PathVariable Long orgId) {
+        Boolean removeResult = organizationService.removeOrganizationData(orgId);
 
         return getRemoveDataResponseEntity(removeResult);
     }
