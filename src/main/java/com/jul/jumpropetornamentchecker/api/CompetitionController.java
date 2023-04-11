@@ -45,7 +45,7 @@ public class CompetitionController extends ResponseEntityCreator {
         return getFindDataResponseEntity(competitionData);
     }
 
-    @GetMapping(value = "/find")
+    @GetMapping("/find")
     @Operation(summary = "대회 이름 조회 API", description = "대회명을 사용하여 대회 정보를 조회합니다.")
     public ResponseEntity<?> findCompetitionDataByName(@RequestParam("name") String competitionName) {
         List<CompetitionResponseDto> competitionDatum = competitionService.findCompetitionInfoByName(competitionName);
@@ -54,10 +54,10 @@ public class CompetitionController extends ResponseEntityCreator {
     }
 
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{cmptId}")
     @Operation(summary = "대회 정보 삭제 API", description = "대회ID List를 통해 대회 정보를 삭제합니다.")
-    public ResponseEntity<?> deleteCompetitionDataById(@RequestBody List<Long> competitionIds) {
-        Boolean removeResult = competitionService.removeCompetitionData(competitionIds);
+    public ResponseEntity<?> deleteCompetitionDataById(@PathVariable Long cmptId) {
+        Boolean removeResult = competitionService.removeCompetitionData(cmptId);
 
         return getRemoveDataResponseEntity(removeResult);
     }
