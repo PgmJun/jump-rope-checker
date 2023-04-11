@@ -2,6 +2,7 @@ package com.jul.jumpropetornamentchecker.repository;
 
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -19,9 +20,7 @@ public interface CompetitionRepository extends JpaRepository<Competition, Long> 
 
     List<Competition> findAll();
 
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     void deleteById(Long competitionId);
-
-
-
 
 }
