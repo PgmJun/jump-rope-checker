@@ -32,6 +32,7 @@ public class CompetitionAttendRequestDto {
                 ", playerGender='" + playerGender + '\'' +
                 ", playerBirth='" + playerBirth + '\'' +
                 ", playerTel='" + playerTel + '\'' +
+                ", playerAffiliation='" + playerAffiliation + '\'' +
                 '}';
     }
 }

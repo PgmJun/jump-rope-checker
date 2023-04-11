@@ -14,7 +14,7 @@ public interface CompetitionEventRepository extends JpaRepository<CompetitionEve
     List<CompetitionEvent> findCompetitionEventByCompetition(Competition competition);
 
     @Transactional
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM CompetitionEvent c WHERE c.competition = ?1")
     void deleteByCompetition(Competition competition);
 }
