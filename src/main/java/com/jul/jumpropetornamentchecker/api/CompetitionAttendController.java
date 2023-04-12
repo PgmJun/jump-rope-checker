@@ -1,6 +1,7 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
+import com.jul.jumpropetornamentchecker.domain.attend.NumberTag;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
@@ -112,6 +113,14 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         Boolean updateResult = eventAttendService.updatePlayerEventScoreByCompetitionAttendId(cmptAttendId, updateData);
 
         return getUpdateDataResponseEntity(updateResult);
+    }
+
+    @GetMapping("/numberTags/{cmptId}")
+    @Operation
+    public ResponseEntity<?> getNumberTagOnCompetition(@PathVariable Long cmptId) {
+        List<NumberTag> numberTagDatum = cmptAttendService.makeNumberTagOnCompetition(cmptId);
+
+        return getFindDatumResponseEntity(numberTagDatum);
     }
 
 

@@ -5,6 +5,7 @@ import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.attend.EventAttend;
+import com.jul.jumpropetornamentchecker.domain.attend.NumberTag;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
@@ -247,5 +248,26 @@ public class CompetitionAttendService {
         } finally {
             return removeResult;
         }
+    }
+
+    public List<NumberTag> makeNumberTagOnCompetition(Long cmptId) {
+        List<NumberTag> numberTagDatum = new ArrayList<>();
+
+        Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
+        List<CompetitionAttend> cmptAttendDatum = cmptAttendRepository.findByCompetition(competition);
+
+        cmptAttendDatum.forEach(cmptAttendData -> {
+            String[] splitedCmptAttendId = cmptAttendData.getCmptAttendId().split("-");
+            String seperatedCmptAttendId = String.join("-", splitedCmptAttendId[1], splitedCmptAttendId[2]);
+
+            numberTagDatum.add(NumberTag.builder()
+                    .seperatedCmptAttendId(seperatedCmptAttendId)
+                    .playerName(cmptAttendData.getPlayerName())
+                    .departName(cmptAttendData.getDepartment().getDepartName())
+                    .orgName(cmptAttendData.getOrganization().getOrgName())
+                    .build());
+        });
+
+        return numberTagDatum;
     }
 }
