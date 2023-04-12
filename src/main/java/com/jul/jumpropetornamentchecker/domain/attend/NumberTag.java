@@ -10,4 +10,5 @@ public class NumberTag {
     private String playerName; //선수명
     private String departName; //부서명
     private String orgName; //기관명
+    private String playerGender; //선수 성별
 }

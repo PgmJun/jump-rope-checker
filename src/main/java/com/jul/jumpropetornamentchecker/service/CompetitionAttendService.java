@@ -262,6 +262,7 @@ public class CompetitionAttendService {
 
             numberTagDatum.add(NumberTag.builder()
                     .seperatedCmptAttendId(seperatedCmptAttendId)
+                    .playerGender(cmptAttendData.getPlayerGender().getType())
                     .playerName(cmptAttendData.getPlayerName())
                     .departName(cmptAttendData.getDepartment().getDepartName())
                     .orgName(cmptAttendData.getOrganization().getOrgName())
