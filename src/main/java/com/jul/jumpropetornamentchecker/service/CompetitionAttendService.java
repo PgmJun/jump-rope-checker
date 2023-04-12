@@ -60,7 +60,7 @@ public class CompetitionAttendService {
             CompetitionAttend competitionAttend = CompetitionAttend.from(competition, department, organization, cmptAttendRequestDto);
             CompetitionAttend savedCmptAttend = cmptAttendRepository.save(competitionAttend);
 
-            eventAttendService.saveEventAttendData(savedCmptAttend, cmptAttendRequestDto);
+            eventAttendService.saveEventAttendData(competition, savedCmptAttend, cmptAttendRequestDto);
 
         } catch (Exception e) {
             log.error(e.getMessage());

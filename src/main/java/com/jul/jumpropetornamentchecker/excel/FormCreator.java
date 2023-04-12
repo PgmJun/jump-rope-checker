@@ -75,15 +75,15 @@ public class FormCreator {
             cellStyle_subTitle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
             //컬럼 사이즈 조절
-            for(int i = 0; i < columnSize; i++) {
+            for (int i = 0; i < columnSize; i++) {
                 sheet.setColumnWidth(i, (sheet.getColumnWidth(i)) + (short) 1024);
             }
 
             cellStyle_Title.setFont(titleFont); // cellStyle에 font를 적용
-            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnSize-1)); //첫행, 마지막행, 첫열, 마지막열( 0번째 행의 0~8번째 컬럼을 병합한다)
+            sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnSize - 1)); //첫행, 마지막행, 첫열, 마지막열( 0번째 행의 0~8번째 컬럼을 병합한다)
 
             cellStyle_subTitle.setFont(subTitleFont);
-            sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnSize-1));
+            sheet.addMergedRegion(new CellRangeAddress(1, 1, 0, columnSize - 1));
 
             // ===================== <타이틀 생성 =====================
             row = sheet.createRow(rowNo++); //행 객체 추가
@@ -124,7 +124,7 @@ public class FormCreator {
             // 단체전 / 개인전 구분 정보 입력
             ArrayList<String> eventIsGroupData = new ArrayList<>(List.of("구분", "-", "-", "-", "-", "-"));
             competitionEventDatum.forEach(ce -> {
-                Event event = eventService.findEventDataById(ce.eventId()).orElseThrow();
+                Event event = eventService.findEventDataById(ce.getEventId()).orElseThrow();
                 if (event.getIsGroupEvent()) {
                     eventIsGroupData.add("단체전");
                 } else if (!event.getIsGroupEvent()) {
@@ -141,7 +141,7 @@ public class FormCreator {
 
             //대회 종목 번호 입력
             ArrayList<String> eventIds = new ArrayList<>(List.of("대회종목번호", "-", "-", "-", "-", "-"));
-            competitionEventDatum.forEach(ce -> eventIds.add(ce.cmptEventId().toString()));
+            competitionEventDatum.forEach(ce -> eventIds.add(ce.getCmptEventId().toString()));
 
             row = sheet.createRow(rowNo++);
             for (int i = 0; i < eventIds.size(); i++) {
@@ -163,7 +163,7 @@ public class FormCreator {
             cellStyle_Table_Center.setAlignment(HorizontalAlignment.CENTER);
 
             ArrayList<String> tableData = new ArrayList<>(List.of("선수명", "참가부", "성별", "생년월일", "연락처", "소속"));
-            competitionEventDatum.forEach(ce -> tableData.add(ce.eventName()));
+            competitionEventDatum.forEach(ce -> tableData.add(ce.getEventName()));
 
             row = sheet.createRow(rowNo++);
             for (int i = 0; i < tableData.size(); i++) {
@@ -174,8 +174,8 @@ public class FormCreator {
             // ===================== 테이블 생성/> =====================
 
             // ===================== <예시 데이터 입력 =====================
-            ArrayList<String> exampleData = new ArrayList<>(List.of("ex) 홍길동", "초등1", "남", "2014-01-01", "010-1234-1234","대회초등학교"));
-            for(int i = 0; i < columnSize-PLAYER_DEFAULT_INFO_COUNT;i++){
+            ArrayList<String> exampleData = new ArrayList<>(List.of("ex) 홍길동", "초등1", "남", "2014-01-01", "010-1234-1234", "대회초등학교"));
+            for (int i = 0; i < columnSize - PLAYER_DEFAULT_INFO_COUNT; i++) {
                 if (i % 2 == 0) {
                     exampleData.add("o");
                 }
@@ -195,7 +195,7 @@ public class FormCreator {
 
             //파일명은 URLEncoder로 감싸주는게 좋다.
             response.setContentType("application/vnd.ms-excel");
-            response.setHeader("Content-Disposition", "attachment;filename="+ URLEncoder.encode(getCompetitionAttendFormTitle(cmptId)+" 양식", "UTF-8")+".xls");
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(getCompetitionAttendFormTitle(cmptId) + " 양식", "UTF-8") + ".xls");
 
 
             OutputStream tempFile = response.getOutputStream();

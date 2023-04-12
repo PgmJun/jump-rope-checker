@@ -1,5 +1,6 @@
 package com.jul.jumpropetornamentchecker.domain.attend;
 
+import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendResponseDto;
 import jakarta.persistence.*;
@@ -28,8 +29,16 @@ public class EventAttend {
     @JoinColumn(name = "cmptAttendId")
     private CompetitionAttend competitionAttend;
 
+    @ManyToOne
+    @JoinColumn(name = "competitionId")
+    private Competition  competition;
+
     @Column
-    private int score;
+    private int score; // 줄넘기 점수 or 갯수
+
+    @Column
+    private int grade; // 대회종목 수상내역 기록 - 금(3),은(2),동(1)
+
 
 
     public EventAttendResponseDto toDto() {
@@ -38,6 +47,7 @@ public class EventAttend {
                 .cmptEventId(competitionEvent.getCmptEventId())
                 .cmptEventName(competitionEvent.getEvent().getEventName())
                 .score(score)
+                .grade(grade)
                 .build();
     }
 }
