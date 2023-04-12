@@ -15,12 +15,14 @@ public interface CompetitionAttendRepository extends JpaRepository<CompetitionAt
     List<CompetitionAttend> findByOrganizationAndCompetition(Organization organization, Competition competition);
 
     List<CompetitionAttend> findByCompetition(Competition competition);
+    List<CompetitionAttend> findByOrganization(Organization organization);
 
     @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Query("DELETE FROM CompetitionAttend c WHERE c.competition = ?1")
     void deleteByCompetition(Competition competition);
 
+    @Transactional
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     void delete(CompetitionAttend competitionAttend);
 
