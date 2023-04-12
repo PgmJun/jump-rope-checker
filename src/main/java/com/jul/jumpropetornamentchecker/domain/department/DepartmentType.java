@@ -15,8 +15,8 @@ public enum DepartmentType {
     ELEMENTARY4(4L, "초등4"),
     ELEMENTARY5(5L, "초등5"),
     ELEMENTARY6(6L, "초등6"),
-    MIDDLE(7L, "중고등부"),
-    HIGH(8L, "일반부");
+    MIDDLEHIGH(7L, "중고등부"),
+    COMMON(8L, "일반부");
 
 
     private Long departId;
