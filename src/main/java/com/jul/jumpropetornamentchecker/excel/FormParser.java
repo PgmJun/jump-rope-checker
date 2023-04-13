@@ -41,10 +41,10 @@ public class FormParser {
 
             // 대회ID 얻기
             currentRow = sheet.getRow(3);
-            Long cmptId = Long.parseLong(currentRow.getCell(1).toString().replace(".0",""));
+            Long cmptId = Long.parseLong(currentRow.getCell(1).toString().replace(".0", ""));
             // 기관ID 얻기
             currentRow = sheet.getRow(4);
-            Long orgId = Long.parseLong(currentRow.getCell(1).toString().replace(".0",""));
+            Long orgId = Long.parseLong(currentRow.getCell(1).toString().replace(".0", ""));
 
             // 대회종목ID 얻기
             ArrayList<Long> cmptEventIds = new ArrayList<>();
@@ -55,7 +55,7 @@ public class FormParser {
 
             // 등록 유저 데이터 생성
             List<CompetitionAttendRequestDto> cmptAttendRequestDtos = new ArrayList<>();
-            for (int rowIdx = 8; rowIdx < rowNum+1; rowIdx++) {
+            for (int rowIdx = 8; rowIdx < rowNum + 1; rowIdx++) {
                 // 선수 기본 정보 저장
                 currentRow = sheet.getRow(rowIdx);
 
@@ -64,7 +64,7 @@ public class FormParser {
                     break;
                 }
                 // row의 기본정보 컬럼중 빈 정보가 존재하면 저장 stop, 소속 정보는 빈값이면 ""로 변경처리(아래코드에서)
-                for(int cellnum = 0; cellnum < PLAYER_DEFAULT_INFO_COUNT-1; cellnum++) {
+                for (int cellnum = 0; cellnum < PLAYER_DEFAULT_INFO_COUNT - 1; cellnum++) {
                     // 빈 컬럼 존재시 예외처리
                     if (currentRow.getCell(cellnum).toString().isBlank()) {
                         throw new IllegalArgumentException("입력되지 않은 데이터가 존재합니다. 신청서를 확인해주세요.");
@@ -77,7 +77,8 @@ public class FormParser {
                 String birth = currentRow.getCell(3).toString();
                 String tel = currentRow.getCell(4).toString();
                 String affiliation = "";
-                if(!currentRow.getCell(5).toString().isBlank()) {
+                if (currentRow.getCell(5) != null) {
+                    log.info(cmptId + "번 대회 / " + orgId + "번 기관 / " + name + " => 소속이 공백으로 입력되어, 기관명이 소속명으로 입력됩니다.");
                     affiliation = currentRow.getCell(5).toString();
                 }
 
