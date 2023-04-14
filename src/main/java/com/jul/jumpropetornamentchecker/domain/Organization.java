@@ -25,7 +25,6 @@ public class Organization {
     private String orgName;
 
     @Column(name = "organizationEmail")
-    @NotNull
     @Email
     private String orgEmail;
 
