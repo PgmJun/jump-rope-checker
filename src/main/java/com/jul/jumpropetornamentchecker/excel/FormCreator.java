@@ -174,7 +174,7 @@ public class FormCreator {
             // ===================== 테이블 생성/> =====================
 
             // ===================== <예시 데이터 입력 =====================
-            ArrayList<String> exampleData = new ArrayList<>(List.of("ex) 홍길동", "초등1", "남", "2014-01-01", "010-1234-1234", "대회초등학교"));
+            ArrayList<String> exampleData = new ArrayList<>(List.of("ex) 홍길동", "초1", "남", "2014-01-01", "010-1234-1234", "대회초등학교"));
             for (int i = 0; i < columnSize - PLAYER_DEFAULT_INFO_COUNT; i++) {
                 if (i % 2 == 0) {
                     exampleData.add("o");

@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 @Getter
 public enum DepartmentType {
     KINDER(0L, "유치부"),
-    ELEMENTARY1(1L, "초등1"),
-    ELEMENTARY2(2L, "초등2"),
-    ELEMENTARY3(3L, "초등3"),
-    ELEMENTARY4(4L, "초등4"),
-    ELEMENTARY5(5L, "초등5"),
-    ELEMENTARY6(6L, "초등6"),
+    ELEMENTARY1(1L, "초1"),
+    ELEMENTARY2(2L, "초2"),
+    ELEMENTARY3(3L, "초3"),
+    ELEMENTARY4(4L, "초4"),
+    ELEMENTARY5(5L, "초5"),
+    ELEMENTARY6(6L, "초6"),
     MIDDLEHIGH(7L, "중고등부"),
     COMMON(8L, "일반부");
 
