@@ -57,7 +57,7 @@ public class CompetitionEvent {
     @Column
     private int kinderTrdStandard;
 
-    //초등1부 금상,은상,동상 기준
+    //초1 금상,은상,동상 기준
     @Column
     private int e1FstStandard;
 
@@ -67,7 +67,7 @@ public class CompetitionEvent {
     @Column
     private int e1TrdStandard;
 
-    //초등3부 금상,은상,동상 기준
+    //초3 금상,은상,동상 기준
     @Column
     private int e2FstStandard;
 
@@ -77,7 +77,7 @@ public class CompetitionEvent {
     @Column
     private int e2TrdStandard;
 
-    //초등3부 금상,은상,동상 기준
+    //초3 금상,은상,동상 기준
     @Column
     private int e3FstStandard;
 
@@ -87,7 +87,7 @@ public class CompetitionEvent {
     @Column
     private int e3TrdStandard;
 
-    //초등4부 금상,은상,동상 기준
+    //초4 금상,은상,동상 기준
     @Column
     private int e4FstStandard;
 
@@ -97,7 +97,7 @@ public class CompetitionEvent {
     @Column
     private int e4TrdStandard;
 
-    //초등5부 금상,은상,동상 기준
+    //초5 금상,은상,동상 기준
     @Column
     private int e5FstStandard;
 
@@ -107,7 +107,7 @@ public class CompetitionEvent {
     @Column
     private int e5TrdStandard;
 
-    //초등6부 금상,은상,동상 기준
+    //초6 금상,은상,동상 기준
     @Column
     private int e6FstStandard;
 
