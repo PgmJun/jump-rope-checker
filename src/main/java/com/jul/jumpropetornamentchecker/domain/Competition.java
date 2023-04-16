@@ -34,7 +34,6 @@ public class Competition {
     private String competitionHost;
 
     @Column
-    @Email
     private String hostEmail;
 
     @Column
