@@ -49,7 +49,6 @@ public class CompetitionAttend {
     private String playerBirth;
 
     @Column
-    @NotNull
     private String playerTel;
 
     @Column
