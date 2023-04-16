@@ -48,9 +48,9 @@ public class CompetitionAttendService {
         boolean saveResult = true;
 
         try {
-            Competition competition = competitionRepository.findByCompetitionId(cmptAttendRequestDto.getCmptId()).orElseThrow();
-            Department department = departmentRepository.findById(cmptAttendRequestDto.getDepartId()).orElseThrow();
-            Organization organization = organizationRepository.findById(cmptAttendRequestDto.getOrgId()).orElseThrow();
+            Competition competition = competitionRepository.findByCompetitionId(cmptAttendRequestDto.getCmptId()).orElseThrow(() -> new IllegalArgumentException("잘못되었거나 존재하지 않는 대회 번호입니다."));
+            Department department = departmentRepository.findById(cmptAttendRequestDto.getDepartId()).orElseThrow(() -> new IllegalArgumentException("잘못되었거나 존재하지 않는 참가부 번호입니다."));
+            Organization organization = organizationRepository.findById(cmptAttendRequestDto.getOrgId()).orElseThrow(() -> new IllegalArgumentException("잘못되었거나 존재하지 않는 기관 번호입니다."));
 
             //선수 소속이 입력되지 않으면 선수의 참가 기관명 입력
             String playerAffilication = cmptAttendRequestDto.getPlayerAffiliation();
