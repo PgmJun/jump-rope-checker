@@ -81,7 +81,17 @@ public class FormParser {
                 Long departId = DepartmentType.findDepartmentByName(currentRow.getCell(1).toString()).getDepartId();
                 String gender = currentRow.getCell(2).toString();
                 String birth = currentRow.getCell(3).toString();
-                String tel = currentRow.getCell(4).toString();
+                String tel = "";
+                if(currentRow.getCell(4) != null) {
+                    if(!currentRow.getCell(4).toString().isBlank()) { //공백으로 이뤄져있지 않으면
+                        tel = currentRow.getCell(4).toString(); //소속값 사용
+                    } else { //빈값이거나 공백으로 이루어져 있으면 참가기관명으로 입력되도록 소속값을 ""로 초기화
+                        log.info(cmptId + "번 대회 / " + orgId + "번 기관 / " + name + " => 연락처가 공백으로 입력되어, 공백 처리됩니다.");
+                    }
+                } else { //빈값이거나 공백으로 이루어져 있으면 참가기관명으로 입력되도록 소속값을 ""로 초기화
+                    log.info(cmptId + "번 대회 / " + orgId + "번 기관 / " + name + " => 연락처가 공백으로 입력되어, 공백 처리됩니다.");
+                }
+
                 String affiliation = "";
                 //소속값 검증
                 if (currentRow.getCell(5) != null) { //빈값이 아니고
