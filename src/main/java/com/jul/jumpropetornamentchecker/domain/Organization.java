@@ -25,17 +25,16 @@ public class Organization {
     private String orgName;
 
     @Column(name = "organizationEmail")
-    @Email
     private String orgEmail;
 
     @Column(name = "organizationTel")
-    @NotNull
     private String orgTel;
 
     @Column(name = "organizationLeaderName")
     @NotNull
     private String orgLeaderName;
 
+    @Column
     private String leaderTel;
 
     @Builder
