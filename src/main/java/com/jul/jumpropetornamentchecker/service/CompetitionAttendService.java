@@ -5,10 +5,12 @@ import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.attend.EventAttend;
+import com.jul.jumpropetornamentchecker.domain.attend.Gender;
 import com.jul.jumpropetornamentchecker.domain.attend.NumberTag;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendResponseDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
@@ -270,5 +272,30 @@ public class CompetitionAttendService {
         });
 
         return numberTagDatum;
+    }
+
+    public boolean updatePlayer(String cmptAttendId, CompetitionAttendUpdateDto updateDto) {
+        boolean updateResult = true;
+
+        try {
+            Department department = departmentRepository.findById(updateDto.getDepartId()).orElseThrow();
+            Gender gender = Gender.findByType(updateDto.getPlayerGender());
+
+            cmptAttendRepository.updateByCmptAttendIdAndUpdateDto(
+                    cmptAttendId,
+                    department,
+                    gender,
+                    updateDto.getPlayerName(),
+                    updateDto.getPlayerTel(),
+                    updateDto.getPlayerBirth(),
+                    updateDto.getPlayerAffiliation());
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            updateResult = false;
+
+        } finally {
+            return updateResult;
+        }
     }
 }
