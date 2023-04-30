@@ -4,6 +4,7 @@ import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
 import com.jul.jumpropetornamentchecker.domain.attend.NumberTag;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
@@ -41,6 +42,14 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         Boolean removeResult = cmptAttendService.removePlayerByCmptAttendId(cmptAttendId);
 
         return getRemoveDataResponseEntity(removeResult);
+    }
+
+    @PatchMapping("/update/player/{cmptAttendId}")
+    @Operation(summary = "선수 정보 수정 API", description = "대회참가ID를 사용하여 참가 선수 데이터를 수정합니다.")
+    public ResponseEntity<?> updatePlayerByCmptAttendId(@PathVariable String cmptAttendId, @RequestBody CompetitionAttendUpdateDto updateDto) {
+        boolean updateResult = cmptAttendService.updatePlayer(cmptAttendId, updateDto);
+
+        return getUpdateDataResponseEntity(updateResult);
     }
 
     @DeleteMapping("/delete/players")
