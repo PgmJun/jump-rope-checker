@@ -10,6 +10,7 @@ import com.jul.jumpropetornamentchecker.domain.attend.NumberTag;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendResponseDto;
@@ -24,10 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -297,5 +295,20 @@ public class CompetitionAttendService {
         } finally {
             return updateResult;
         }
+    }
+
+    public Optional<CompetitionAttend> findSinglePlayerByCmptAttendId(String cmptAttendId) {
+
+        Optional<CompetitionAttend> cmptAttendPlayerData = Optional.empty();
+
+        try {
+            CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회참가ID입니다."));
+            cmptAttendPlayerData = Optional.ofNullable(competitionAttend);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        return cmptAttendPlayerData;
+
     }
 }
