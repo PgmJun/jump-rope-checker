@@ -278,6 +278,37 @@ public class CompetitionAttendService {
         try {
             Department department = departmentRepository.findById(updateDto.getDepartId()).orElseThrow();
             Gender gender = Gender.findByType(updateDto.getPlayerGender());
+            CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow();
+            Competition competition = competitionAttend.getCompetition();
+
+            List<EventAttend> beforeEventAttends = eventAttendRepository.findByCompetitionAttend(competitionAttend);
+            List<Long> newCmptEventIds = updateDto.getCmptEventIds();
+
+
+            for (EventAttend eventAttend : beforeEventAttends) {
+                // 새로운 대회종목 데이터에 기존 종목 데이터가 포함되어 있으면 새로운 대회종목 데이터에서 빼기
+                if(newCmptEventIds.contains(eventAttend.getCompetitionEvent().getCmptEventId())){
+                    newCmptEventIds.remove(eventAttend.getCompetitionEvent().getCmptEventId());
+                    continue;
+                }
+                // 이전 대회 종목 중, 새로운 대회 종목에 포함되어있지 않은 데이터 삭제
+                eventAttendRepository.delete(eventAttend);
+            }
+
+            // 새로운 대회 종목 추가
+            for (Long newCmptEventId : newCmptEventIds) {
+                EventAttend eventAttendData = EventAttend.builder()
+                        .competitionAttend(competitionAttend)
+                        .competitionEvent(cmptEventRepository.findById(newCmptEventId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회종목ID입니다.")))
+                        .competition(competition)
+                        .score(0)
+                        .grade(0)
+                        .isPrinted(false)
+                        .build();
+
+                eventAttendRepository.save(eventAttendData);
+            }
+
 
             cmptAttendRepository.updateByCmptAttendIdAndUpdateDto(
                     cmptAttendId,
