@@ -39,6 +39,7 @@ public class EventAttendService {
                     .competition(competition)
                     .score(0)
                     .grade(0)
+                    .isPrinted(false)
                     .build();
 
             eventAttendRepository.save(eventAttendData);

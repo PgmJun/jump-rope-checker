@@ -5,10 +5,13 @@ import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
 import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.attend.EventAttend;
+import com.jul.jumpropetornamentchecker.domain.attend.Gender;
 import com.jul.jumpropetornamentchecker.domain.attend.NumberTag;
 import com.jul.jumpropetornamentchecker.domain.department.Department;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendResponseDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
@@ -22,10 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -38,6 +38,7 @@ public class CompetitionAttendService {
     private final DepartmentRepository departmentRepository;
     private final EventAttendService eventAttendService;
     private final CompetitionEventRepository cmptEventRepository;
+    private final CompetitionEventService cmptEventService;
     private final EventAttendRepository eventAttendRepository;
     private final FormParser formParser;
     private final FormCreator formCreator;
@@ -48,9 +49,9 @@ public class CompetitionAttendService {
         boolean saveResult = true;
 
         try {
-            Competition competition = competitionRepository.findByCompetitionId(cmptAttendRequestDto.getCmptId()).orElseThrow();
-            Department department = departmentRepository.findById(cmptAttendRequestDto.getDepartId()).orElseThrow();
-            Organization organization = organizationRepository.findById(cmptAttendRequestDto.getOrgId()).orElseThrow();
+            Competition competition = competitionRepository.findByCompetitionId(cmptAttendRequestDto.getCmptId()).orElseThrow(() -> new IllegalArgumentException("잘못되었거나 존재하지 않는 대회 번호입니다."));
+            Department department = departmentRepository.findById(cmptAttendRequestDto.getDepartId()).orElseThrow(() -> new IllegalArgumentException("잘못되었거나 존재하지 않는 참가부 번호입니다."));
+            Organization organization = organizationRepository.findById(cmptAttendRequestDto.getOrgId()).orElseThrow(() -> new IllegalArgumentException("잘못되었거나 존재하지 않는 기관 번호입니다."));
 
             //선수 소속이 입력되지 않으면 선수의 참가 기관명 입력
             String playerAffilication = cmptAttendRequestDto.getPlayerAffiliation();
@@ -270,5 +271,83 @@ public class CompetitionAttendService {
         });
 
         return numberTagDatum;
+    }
+
+    public boolean updatePlayer(String cmptAttendId, CompetitionAttendUpdateDto updateDto) {
+        boolean updateResult = true;
+
+        try {
+            Department department = departmentRepository.findById(updateDto.getDepartId()).orElseThrow();
+            Gender gender = Gender.findByType(updateDto.getPlayerGender());
+            CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow();
+            Competition competition = competitionAttend.getCompetition();
+
+            List<EventAttend> beforeEventAttends = eventAttendRepository.findByCompetitionAttend(competitionAttend);
+            List<Long> newCmptEventIds = updateDto.getCmptEventIds();
+
+
+            for (EventAttend eventAttend : beforeEventAttends) {
+                // 새로운 대회종목 데이터에 기존 종목 데이터가 포함되어 있으면 새로운 대회종목 데이터에서 빼기
+                if(newCmptEventIds.contains(eventAttend.getCompetitionEvent().getCmptEventId())){
+                    newCmptEventIds.remove(eventAttend.getCompetitionEvent().getCmptEventId());
+                    continue;
+                }
+                // 이전 대회 종목 중, 새로운 대회 종목에 포함되어있지 않은 데이터 삭제
+                eventAttendRepository.delete(eventAttend);
+            }
+
+            // 새로운 대회 종목 추가
+            for (Long newCmptEventId : newCmptEventIds) {
+                EventAttend eventAttendData = EventAttend.builder()
+                        .competitionAttend(competitionAttend)
+                        .competitionEvent(cmptEventRepository.findById(newCmptEventId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회종목ID입니다.")))
+                        .competition(competition)
+                        .score(0)
+                        .grade(0)
+                        .isPrinted(false)
+                        .build();
+
+                eventAttendRepository.save(eventAttendData);
+            }
+
+
+            cmptAttendRepository.updateByCmptAttendIdAndUpdateDto(
+                    cmptAttendId,
+                    department,
+                    gender,
+                    updateDto.getPlayerName(),
+                    updateDto.getPlayerTel(),
+                    updateDto.getPlayerBirth(),
+                    updateDto.getPlayerAffiliation());
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            updateResult = false;
+
+        } finally {
+            return updateResult;
+        }
+    }
+
+    public Optional<CompetitionAttendResponseDto> findSinglePlayerByCmptAttendId(String cmptAttendId) {
+
+        Optional<CompetitionAttendResponseDto> cmptAttendPlayerUpdateData = Optional.empty();
+
+        try {
+            CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회참가ID입니다."));
+            List<EventAttend> eventAttendDatum = eventAttendRepository.findByCompetitionAttend(competitionAttend);
+            List<Long> cmptEventIds = new ArrayList<>();
+            for (EventAttend eventAttendData : eventAttendDatum) {
+                cmptEventIds.add(eventAttendData.getCompetitionEvent().getCmptEventId());
+            }
+
+            cmptAttendPlayerUpdateData = Optional.ofNullable(competitionAttend.toDto(cmptEventIds));
+
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+
+        return cmptAttendPlayerUpdateData;
+
     }
 }

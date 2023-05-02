@@ -14,5 +14,6 @@ public class EventAttendResponseDto {
     private String cmptEventName;
     private int score;
     private int grade;
+    private boolean isPrinted;
 
 }

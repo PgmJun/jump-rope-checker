@@ -23,6 +23,7 @@ import static com.jul.jumpropetornamentchecker.excel.FormCreator.PLAYER_DEFAULT_
 @RequiredArgsConstructor
 @Transactional
 public class FormParser {
+    private boolean isLastLow = false;
 
     public List<CompetitionAttendRequestDto> parseFormData(MultipartFile form) {
         return parse(form);
@@ -55,7 +56,8 @@ public class FormParser {
 
             // 등록 유저 데이터 생성
             List<CompetitionAttendRequestDto> cmptAttendRequestDtos = new ArrayList<>();
-            for (int rowIdx = 8; rowIdx < rowNum + 1; rowIdx++) {
+
+            for (int rowIdx = 8; rowIdx <= rowNum; rowIdx++) {
                 // 선수 기본 정보 저장
                 currentRow = sheet.getRow(rowIdx);
 
@@ -64,22 +66,42 @@ public class FormParser {
                     break;
                 }
                 // row의 기본정보 컬럼중 빈 정보가 존재하면 저장 stop, 소속 정보는 빈값이면 ""로 변경처리(아래코드에서)
-                for (int cellnum = 0; cellnum < PLAYER_DEFAULT_INFO_COUNT - 1; cellnum++) {
+                // 맨앞에 있는 선수명/참가부/성별 만 null 불가능이기 때문에 PLAYER_DEFAULT_INFO_COUNT - 3
+                for (int cellnum = 0; cellnum < PLAYER_DEFAULT_INFO_COUNT - 3; cellnum++) {
                     // 빈 컬럼 존재시 예외처리
-                    if (currentRow.getCell(cellnum).toString().isBlank()) {
-                        throw new IllegalArgumentException("입력되지 않은 데이터가 존재합니다. 신청서를 확인해주세요.");
+                    if (currentRow.getCell(cellnum) == null) {
+                        isLastLow = true;
+                        break;
                     }
                 }
+
+                if(isLastLow) break;
 
                 String name = currentRow.getCell(0).toString();
                 Long departId = DepartmentType.findDepartmentByName(currentRow.getCell(1).toString()).getDepartId();
                 String gender = currentRow.getCell(2).toString();
                 String birth = currentRow.getCell(3).toString();
-                String tel = currentRow.getCell(4).toString();
+                String tel = "";
+                if(currentRow.getCell(4) != null) {
+                    if(!currentRow.getCell(4).toString().isBlank()) { //공백으로 이뤄져있지 않으면
+                        tel = currentRow.getCell(4).toString(); //소속값 사용
+                    } else { //빈값이거나 공백으로 이루어져 있으면 참가기관명으로 입력되도록 소속값을 ""로 초기화
+                        log.info(cmptId + "번 대회 / " + orgId + "번 기관 / " + name + " => 연락처가 공백으로 입력되어, 공백 처리됩니다.");
+                    }
+                } else { //빈값이거나 공백으로 이루어져 있으면 참가기관명으로 입력되도록 소속값을 ""로 초기화
+                    log.info(cmptId + "번 대회 / " + orgId + "번 기관 / " + name + " => 연락처가 공백으로 입력되어, 공백 처리됩니다.");
+                }
+
                 String affiliation = "";
-                if (currentRow.getCell(5) != null) {
+                //소속값 검증
+                if (currentRow.getCell(5) != null) { //빈값이 아니고
+                    if(!currentRow.getCell(5).toString().isBlank()) { //공백으로 이뤄져있지 않으면
+                        affiliation = currentRow.getCell(5).toString(); //소속값 사용
+                    } else { //빈값이거나 공백으로 이루어져 있으면 참가기관명으로 입력되도록 소속값을 ""로 초기화
+                        log.info(cmptId + "번 대회 / " + orgId + "번 기관 / " + name + " => 소속이 공백으로 입력되어, 기관명이 소속명으로 입력됩니다.");
+                    }
+                } else { //빈값이거나 공백으로 이루어져 있으면 참가기관명으로 입력되도록 소속값을 ""로 초기화
                     log.info(cmptId + "번 대회 / " + orgId + "번 기관 / " + name + " => 소속이 공백으로 입력되어, 기관명이 소속명으로 입력됩니다.");
-                    affiliation = currentRow.getCell(5).toString();
                 }
 
 
@@ -88,7 +110,10 @@ public class FormParser {
                 for (int cellIdx = PLAYER_DEFAULT_INFO_COUNT; cellIdx < currentRow.getLastCellNum(); cellIdx++) {
                     currentCell = currentRow.getCell(cellIdx);
                     // 미신청 종목 continue처리
-                    if (currentCell.toString().isBlank()) {
+                    if (currentCell == null) { //종목이 null이면 넘기기
+                        continue;
+                    }
+                    if (currentCell.toString().isBlank()) { //종목이 null은 아니지만 공백으로 이뤄져있어도 넘기기
                         continue;
                     }
                     //신청 종목 추가
@@ -107,13 +132,14 @@ public class FormParser {
                         .playerBirth(birth)
                         .playerAffiliation(affiliation)
                         .build();
-
+                System.out.println(cmptAttendData.toString());
                 cmptAttendRequestDtos.add(cmptAttendData);
             }
             if (wb != null) wb.close();
             return cmptAttendRequestDtos;
         } catch (Exception e) {
             log.error(e.getMessage());
+            e.printStackTrace();
             return null;
         }
     }

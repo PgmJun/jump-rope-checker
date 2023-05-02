@@ -39,6 +39,9 @@ public class EventAttend {
     @Column
     private int grade; // 대회종목 수상내역 기록 - 금(3),은(2),동(1)
 
+    @Column
+    private boolean isPrinted; // 출력 여부
+
 
 
     public EventAttendResponseDto toDto() {
@@ -48,6 +51,11 @@ public class EventAttend {
                 .cmptEventName(competitionEvent.getEvent().getEventName())
                 .score(score)
                 .grade(grade)
+                .isPrinted(isPrinted)
                 .build();
+    }
+
+    public void changePrintState() {
+        isPrinted = Boolean.TRUE;
     }
 }

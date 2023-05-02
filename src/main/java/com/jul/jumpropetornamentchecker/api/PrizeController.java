@@ -20,11 +20,19 @@ public class PrizeController extends ResponseEntityCreator {
     private final PrizeService prizeService;
 
     @GetMapping("/{cmptId}")
-    public ResponseEntity<?> getPrizedPlayerList(@PathVariable Long cmptId) {
+    public ResponseEntity<?> getCompetitionPrizedPlayerList(@PathVariable Long cmptId) {
         List<PrizeResponseDto> competitionPrizeDatum = prizeService.getCompetitionPrizeData(cmptId);
 
         return getFindDatumResponseEntity(competitionPrizeDatum);
     }
+
+    @GetMapping("/{cmptId}/{orgId}")
+    public ResponseEntity<?> getCompetitionPrizedPlayerListByOrgId(@PathVariable Long cmptId, @PathVariable Long orgId) {
+        List<PrizeResponseDto> competitionPrizeDatum = prizeService.getCompetitionPrizeDataByOrgId(cmptId, orgId);
+
+        return getFindDatumResponseEntity(competitionPrizeDatum);
+    }
+
 
     @Override
     public ResponseEntity<?> getFindDataResponseEntity(Optional<?> findData) {
