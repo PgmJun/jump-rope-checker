@@ -10,4 +10,5 @@ public class PrizeResponseDto {
     private String grade;
     private String playerAffiliation;
     private String playerName;
+    private boolean isPrinted;
 }
