@@ -28,7 +28,6 @@ public class PrizeService {
     public static final String THIRD_PRIZE_GRADE_NAME = "3위";
 
 
-    @Transactional
     public List<PrizeResponseDto> getCompetitionPrizeData(Long cmptId) {
         List<PrizeResponseDto> prizeResponseDatum = new ArrayList<>();
         Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
@@ -36,13 +35,11 @@ public class PrizeService {
         //cmptId로 eventAttend 테이블 조회
         List<EventAttend> eventAttendDatum = eventAttendRepository.findByCompetition(competition);
 
-        //isPrinted TRUE로 변경
-        changePrintStates(eventAttendDatum);
-
         //eventAttend의 대회종목번호를 통해 대회 금은동, 123등 상 점수 조회하여 순위에 들었다면
         eventAttendDatum.forEach(eventAttendData -> {
             String playerName = eventAttendData.getCompetitionAttend().getPlayerName();
             String eventName = eventAttendData.getCompetitionEvent().getEvent().getEventName();
+            Long eventAttendId = eventAttendData.getEventAttendId();
             boolean isPrinted = eventAttendData.isPrinted();
 
             // 단체전이면 단체명을 소속에 입력, 아니라면 소속명을 소속에 입력
@@ -50,13 +47,13 @@ public class PrizeService {
 
             switch (eventAttendData.getGrade()) {
                 case FIRST_PRIZE_GRADE:
-                    prizeResponseDatum.add(makePrizeData(playerName, affiliation, eventName, FIRST_PRIZE_GRADE_NAME, isPrinted));
+                    prizeResponseDatum.add(makePrizeData(eventAttendId, playerName, affiliation, eventName, FIRST_PRIZE_GRADE_NAME, isPrinted));
                     break;
                 case SECOND_PRIZE_GRADE:
-                    prizeResponseDatum.add(makePrizeData(playerName, affiliation, eventName, SECOND_PRIZE_GRADE_NAME, isPrinted));
+                    prizeResponseDatum.add(makePrizeData(eventAttendId, playerName, affiliation, eventName, SECOND_PRIZE_GRADE_NAME, isPrinted));
                     break;
                 case THIRD_PRIZE_GRADE:
-                    prizeResponseDatum.add(makePrizeData(playerName, affiliation, eventName, THIRD_PRIZE_GRADE_NAME, isPrinted));
+                    prizeResponseDatum.add(makePrizeData(eventAttendId, playerName, affiliation, eventName, THIRD_PRIZE_GRADE_NAME, isPrinted));
                     break;
                 default:
                     log.info(eventAttendData.getCompetitionAttend().getCmptAttendId() + "대회참가번호 / " + eventAttendData.getCompetitionEvent().getCmptEventId() + "번 대회종목 /" + eventName + " /" + playerName + " 순위권에 해당하지 않는 데이터입니다.");
@@ -68,7 +65,6 @@ public class PrizeService {
         return prizeResponseDatum;
     }
 
-    @Transactional
     public List<PrizeResponseDto> getCompetitionPrizeDataByOrgId(Long cmptId, Long orgId) {
         List<PrizeResponseDto> prizeResponseDatum = new ArrayList<>();
         Competition competition = competitionRepository.findByCompetitionId(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
@@ -86,25 +82,23 @@ public class PrizeService {
                 continue;
             }
 
-            //isPrinted TRUE로 변경
-            changePrintState(eventAttendData);
-
             String playerName = eventAttendData.getCompetitionAttend().getPlayerName();
             String eventName = eventAttendData.getCompetitionEvent().getEvent().getEventName();
             boolean isPrinted = eventAttendData.isPrinted();
+            Long eventAttendId = eventAttendData.getEventAttendId();
 
             // 단체전이면 단체명을 소속에 입력, 아니라면 소속명을 소속에 입력
             String affiliation = getPlayerAffiliation(eventAttendData);
 
             switch (eventAttendData.getGrade()) {
                 case FIRST_PRIZE_GRADE:
-                    prizeResponseDatum.add(makePrizeData(playerName, affiliation, eventName, FIRST_PRIZE_GRADE_NAME, isPrinted));
+                    prizeResponseDatum.add(makePrizeData(eventAttendId, playerName, affiliation, eventName, FIRST_PRIZE_GRADE_NAME, isPrinted));
                     break;
                 case SECOND_PRIZE_GRADE:
-                    prizeResponseDatum.add(makePrizeData(playerName, affiliation, eventName, SECOND_PRIZE_GRADE_NAME, isPrinted));
+                    prizeResponseDatum.add(makePrizeData(eventAttendId, playerName, affiliation, eventName, SECOND_PRIZE_GRADE_NAME, isPrinted));
                     break;
                 case THIRD_PRIZE_GRADE:
-                    prizeResponseDatum.add(makePrizeData(playerName, affiliation, eventName, THIRD_PRIZE_GRADE_NAME, isPrinted));
+                    prizeResponseDatum.add(makePrizeData(eventAttendId, playerName, affiliation, eventName, THIRD_PRIZE_GRADE_NAME, isPrinted));
                     break;
                 default:
                     log.info(eventAttendData.getCompetitionAttend().getCmptAttendId() + "대회참가번호 / " + eventAttendData.getCompetitionEvent().getCmptEventId() + "번 대회종목 /" + eventName + " /" + playerName + " 순위권에 해당하지 않는 데이터입니다.");
@@ -116,13 +110,20 @@ public class PrizeService {
         return prizeResponseDatum;
     }
 
-    private void changePrintState(EventAttend eventAttendData) {
-        eventAttendData.changePrintState();
-    }
+    @Transactional
+    public boolean changePrintStates(List<Long> eventAttendIds) {
+        boolean updateResult = true;
 
-    private void changePrintStates(List<EventAttend> eventAttendDatum) {
-        for (EventAttend eventAttendData : eventAttendDatum) {
-            eventAttendData.changePrintState();
+        try {
+            for (Long eventAttendId : eventAttendIds) {
+                EventAttend eventAttend = eventAttendRepository.findById(eventAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 종목참가ID 입니다."));
+                eventAttend.changePrintState();
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            updateResult = false;
+        } finally {
+            return updateResult;
         }
     }
 
@@ -136,8 +137,9 @@ public class PrizeService {
         return affiliation;
     }
 
-    private PrizeResponseDto makePrizeData(String playerName, String playerAffiliation, String eventName, String prizeGradeName, boolean isPrinted) {
+    private PrizeResponseDto makePrizeData(Long eventAttendId, String playerName, String playerAffiliation, String eventName, String prizeGradeName, boolean isPrinted) {
         return PrizeResponseDto.builder()
+                .eventAttendId(eventAttendId)
                 .playerName(playerName)
                 .cmptName(eventName)
                 .playerAffiliation(playerAffiliation)
