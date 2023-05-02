@@ -12,6 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table
 @Getter
@@ -80,6 +82,21 @@ public class CompetitionAttend {
                 .playerBirth(playerBirth)
                 .playerTel(playerTel)
                 .playerAffiliation(playerAffiliation)
+                .build();
+    }
+
+    public CompetitionAttendResponseDto toDto(List<Long> cmptEventIds) {
+        return CompetitionAttendResponseDto.builder()
+                .cmptAttendId(cmptAttendId)
+                .departmentName(department.getDepartName())
+                .competitionName(competition.getCompetitionName())
+                .organizationName(organization.getOrgName())
+                .playerName(playerName)
+                .playerGender(playerGender.getType())
+                .playerBirth(playerBirth)
+                .playerTel(playerTel)
+                .playerAffiliation(playerAffiliation)
+                .cmptEventIds(cmptEventIds)
                 .build();
     }
 }

@@ -1,9 +1,13 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
+import com.jul.jumpropetornamentchecker.domain.Competition;
+import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.attend.NumberTag;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendRequestDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendResponseDto;
+import com.jul.jumpropetornamentchecker.dto.attend.CompetitionAttendUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendPlayerResponseDto;
 import com.jul.jumpropetornamentchecker.dto.attend.eventAttend.EventAttendUpdateDto;
 import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
@@ -12,6 +16,7 @@ import com.jul.jumpropetornamentchecker.service.EventAttendService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +46,14 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         Boolean removeResult = cmptAttendService.removePlayerByCmptAttendId(cmptAttendId);
 
         return getRemoveDataResponseEntity(removeResult);
+    }
+
+    @PatchMapping("/update/player/{cmptAttendId}")
+    @Operation(summary = "선수 정보 수정 API", description = "대회참가ID를 사용하여 참가 선수 데이터를 수정합니다.")
+    public ResponseEntity<?> updatePlayerByCmptAttendId(@PathVariable String cmptAttendId, @RequestBody CompetitionAttendUpdateDto updateDto) {
+        boolean updateResult = cmptAttendService.updatePlayer(cmptAttendId, updateDto);
+
+        return getUpdateDataResponseEntity(updateResult);
     }
 
     @DeleteMapping("/delete/players")
@@ -80,6 +93,17 @@ public class CompetitionAttendController extends ResponseEntityCreator {
         List<CompetitionAttendPlayerResponseDto> cmptAttendPlayerDatum = cmptAttendService.findPlayersByCmptId(cmptId);
 
         return getFindDatumResponseEntity(cmptAttendPlayerDatum);
+    }
+
+    @GetMapping("/find/player/{cmptAttendId}")
+    @Operation(summary = "대회 참가 선수 조회 API", description = "대회참가ID를 사용하여 대회 참가 선수를 조회합니다.")
+    public ResponseEntity<?> findSinglePlayerByCmptAttendId(@PathVariable String cmptAttendId) {
+        Optional<CompetitionAttendResponseDto> cmptSinglePlayerData = cmptAttendService.findSinglePlayerByCmptAttendId(cmptAttendId);
+
+        return (cmptSinglePlayerData.isEmpty()) ?
+                new ResponseEntity<>("데이터를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(cmptSinglePlayerData, HttpStatus.OK);
+
     }
 
     @GetMapping("/find/player/cmptEvent/{cmptEventId}")
@@ -126,6 +150,8 @@ public class CompetitionAttendController extends ResponseEntityCreator {
 
     @Override
     public ResponseEntity<?> getFindDataResponseEntity(Optional<?> findData) {
-        return null;
+        return (findData.isEmpty()) ?
+                new ResponseEntity<>("데이터를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(((CompetitionAttend) findData.get()).toDto(), HttpStatus.OK);
     }
 }
