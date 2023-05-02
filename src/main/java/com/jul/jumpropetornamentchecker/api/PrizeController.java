@@ -1,14 +1,12 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
+import com.jul.jumpropetornamentchecker.dto.prize.PrizePrintRequestDto;
 import com.jul.jumpropetornamentchecker.dto.prize.PrizeResponseDto;
 import com.jul.jumpropetornamentchecker.service.PrizeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +29,13 @@ public class PrizeController extends ResponseEntityCreator {
         List<PrizeResponseDto> competitionPrizeDatum = prizeService.getCompetitionPrizeDataByOrgId(cmptId, orgId);
 
         return getFindDatumResponseEntity(competitionPrizeDatum);
+    }
+
+    @PatchMapping("/changePrintState")
+    public ResponseEntity<?> changePrintState(@RequestBody PrizePrintRequestDto requestDto) {
+        boolean updateResult = prizeService.changePrintStates(requestDto.getEventAttendIds());
+
+        return getUpdateDataResponseEntity(updateResult);
     }
 
 
