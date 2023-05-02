@@ -6,6 +6,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class PrizeResponseDto {
+    private Long eventAttendId;
     private String cmptName;
     private String grade;
     private String playerAffiliation;
