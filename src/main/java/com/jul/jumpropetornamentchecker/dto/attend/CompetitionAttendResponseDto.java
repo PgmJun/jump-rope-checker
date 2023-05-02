@@ -10,6 +10,7 @@ import java.util.List;
 public class CompetitionAttendResponseDto {
     private String cmptAttendId;
     private String departmentName;
+    private Long departId;
     private String organizationName;
     private String competitionName;
     private String playerBirth;

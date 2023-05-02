@@ -89,6 +89,7 @@ public class CompetitionAttend {
         return CompetitionAttendResponseDto.builder()
                 .cmptAttendId(cmptAttendId)
                 .departmentName(department.getDepartName())
+                .departId(department.getDepartId())
                 .competitionName(competition.getCompetitionName())
                 .organizationName(organization.getOrgName())
                 .playerName(playerName)
