@@ -2,6 +2,7 @@ package com.jul.jumpropetornamentchecker.repository;
 
 import com.jul.jumpropetornamentchecker.domain.Competition;
 import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
+import com.jul.jumpropetornamentchecker.domain.Organization;
 import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.attend.EventAttend;
 import jakarta.transaction.Transactional;
