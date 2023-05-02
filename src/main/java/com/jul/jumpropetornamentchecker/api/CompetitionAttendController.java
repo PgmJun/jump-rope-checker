@@ -98,9 +98,12 @@ public class CompetitionAttendController extends ResponseEntityCreator {
     @GetMapping("/find/player/{cmptAttendId}")
     @Operation(summary = "대회 참가 선수 조회 API", description = "대회참가ID를 사용하여 대회 참가 선수를 조회합니다.")
     public ResponseEntity<?> findSinglePlayerByCmptAttendId(@PathVariable String cmptAttendId) {
-        Optional<CompetitionAttend> cmptAttendPlayerData = cmptAttendService.findSinglePlayerByCmptAttendId(cmptAttendId);
+        Optional<CompetitionAttendResponseDto> cmptSinglePlayerData = cmptAttendService.findSinglePlayerByCmptAttendId(cmptAttendId);
 
-        return getFindDataResponseEntity(cmptAttendPlayerData);
+        return (cmptSinglePlayerData.isEmpty()) ?
+                new ResponseEntity<>("데이터를 불러오지 못했습니다.", HttpStatus.NOT_FOUND) :
+                new ResponseEntity<>(cmptSinglePlayerData, HttpStatus.OK);
+
     }
 
     @GetMapping("/find/player/cmptEvent/{cmptEventId}")

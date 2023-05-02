@@ -38,6 +38,7 @@ public class CompetitionAttendService {
     private final DepartmentRepository departmentRepository;
     private final EventAttendService eventAttendService;
     private final CompetitionEventRepository cmptEventRepository;
+    private final CompetitionEventService cmptEventService;
     private final EventAttendRepository eventAttendRepository;
     private final FormParser formParser;
     private final FormCreator formCreator;
@@ -328,18 +329,25 @@ public class CompetitionAttendService {
         }
     }
 
-    public Optional<CompetitionAttend> findSinglePlayerByCmptAttendId(String cmptAttendId) {
+    public Optional<CompetitionAttendResponseDto> findSinglePlayerByCmptAttendId(String cmptAttendId) {
 
-        Optional<CompetitionAttend> cmptAttendPlayerData = Optional.empty();
+        Optional<CompetitionAttendResponseDto> cmptAttendPlayerUpdateData = Optional.empty();
 
         try {
             CompetitionAttend competitionAttend = cmptAttendRepository.findById(cmptAttendId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회참가ID입니다."));
-            cmptAttendPlayerData = Optional.ofNullable(competitionAttend);
+            List<EventAttend> eventAttendDatum = eventAttendRepository.findByCompetitionAttend(competitionAttend);
+            List<Long> cmptEventIds = new ArrayList<>();
+            for (EventAttend eventAttendData : eventAttendDatum) {
+                cmptEventIds.add(eventAttendData.getCompetitionEvent().getCmptEventId());
+            }
+
+            cmptAttendPlayerUpdateData = Optional.ofNullable(competitionAttend.toDto(cmptEventIds));
+
         } catch (Exception e) {
             log.error(e.getMessage());
         }
 
-        return cmptAttendPlayerData;
+        return cmptAttendPlayerUpdateData;
 
     }
 }
