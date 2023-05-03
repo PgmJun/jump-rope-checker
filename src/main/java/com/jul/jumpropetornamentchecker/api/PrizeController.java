@@ -1,9 +1,11 @@
 package com.jul.jumpropetornamentchecker.api;
 
 import com.jul.jumpropetornamentchecker.api.tools.ResponseEntityCreator;
+import com.jul.jumpropetornamentchecker.domain.OrgPrizeData;
 import com.jul.jumpropetornamentchecker.dto.prize.PrizePrintRequestDto;
 import com.jul.jumpropetornamentchecker.dto.prize.PrizeResponseDto;
 import com.jul.jumpropetornamentchecker.service.PrizeService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +38,14 @@ public class PrizeController extends ResponseEntityCreator {
         boolean updateResult = prizeService.changePrintStates(requestDto.getEventAttendIds());
 
         return getUpdateDataResponseEntity(updateResult);
+    }
+
+    @GetMapping("/org/{cmptId}")
+    @Operation(summary = "대회의 단체 성적 결과 조회 API")
+    public ResponseEntity<?> getOrganizationPrizeData(@PathVariable Long cmptId) {
+        List<OrgPrizeData> result = prizeService.getOrganizationPrizeDataByCmptId(cmptId);
+
+        return getFindDatumResponseEntity(result);
     }
 
 

@@ -1,17 +1,23 @@
 package com.jul.jumpropetornamentchecker.service;
 
 import com.jul.jumpropetornamentchecker.domain.Competition;
+import com.jul.jumpropetornamentchecker.domain.CompetitionEvent;
+import com.jul.jumpropetornamentchecker.domain.OrgPrizeData;
+import com.jul.jumpropetornamentchecker.domain.Organization;
+import com.jul.jumpropetornamentchecker.domain.attend.CompetitionAttend;
 import com.jul.jumpropetornamentchecker.domain.attend.EventAttend;
+import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto;
 import com.jul.jumpropetornamentchecker.dto.prize.PrizeResponseDto;
+import com.jul.jumpropetornamentchecker.repository.CompetitionAttendRepository;
 import com.jul.jumpropetornamentchecker.repository.CompetitionRepository;
 import com.jul.jumpropetornamentchecker.repository.EventAttendRepository;
+import com.jul.jumpropetornamentchecker.repository.OrganizationRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Slf4j
@@ -19,6 +25,9 @@ import java.util.List;
 public class PrizeService {
     private final EventAttendRepository eventAttendRepository;
     private final CompetitionRepository competitionRepository;
+    private final CompetitionAttendRepository cmptAttendRepository;
+    private final CompetitionAttendService cmptAttendService;
+    private final OrganizationRepository orgRepository;
 
     public static final int FIRST_PRIZE_GRADE = 3;
     public static final String FIRST_PRIZE_GRADE_NAME = "1위";
@@ -148,4 +157,91 @@ public class PrizeService {
                 .build();
     }
 
+    public List<OrgPrizeData> getOrganizationPrizeDataByCmptId(Long cmptId) {
+        Competition competition = competitionRepository.findById(cmptId).orElseThrow(() -> new IllegalArgumentException("존재하지 않거나 잘못된 대회ID입니다."));
+        List<CompetitionAttend> cmptAttendDatum = cmptAttendRepository.findByCompetition(competition);
+        List<OrganizationResponseDto> cmptAttendOrgDatum = cmptAttendService.findOrganizationsByCmptId(cmptId);
+
+
+        Map<Long, OrgPrizeData> organizationTotalScore = new HashMap<>();
+
+        // 대회 참가 단체 정보 입력
+        for (OrganizationResponseDto cmptAttendOrg : cmptAttendOrgDatum) {
+            Organization org = orgRepository.findById(cmptAttendOrg.orgId()).orElseThrow(() -> new IllegalArgumentException("잘못되었거나 존재하지 않는 단체ID입니다."));
+            OrgPrizeData orgPrizeData = OrgPrizeData.builder()
+                    .orgName(org.getOrgName())
+                    .fstPrizeCnt(0)
+                    .sndPrizeCnt(0)
+                    .trdPrizeCnt(0)
+                    .totalScore(0)
+                    .build();
+
+            organizationTotalScore.put(org.getOrgId(), orgPrizeData);
+        }
+
+        //점수 삽입
+        eventScoreInsert(cmptAttendDatum, organizationTotalScore);
+
+        //총 점수대로 데이터 정렬
+        List<OrgPrizeData> sortedOrgPrizeData = sortOrgPrizeData(organizationTotalScore);
+        return sortedOrgPrizeData;
+    }
+
+    private List<OrgPrizeData> sortOrgPrizeData(Map<Long, OrgPrizeData> organizationTotalScore) {
+        List<Map.Entry<Long, OrgPrizeData>> entryList = new LinkedList<>(organizationTotalScore.entrySet());
+        entryList.sort(Map.Entry.comparingByValue());
+
+        List<OrgPrizeData> sortedOrgPrizeDatum = new LinkedList<>();
+        for (Map.Entry<Long, OrgPrizeData> entry : entryList) {
+            sortedOrgPrizeDatum.add(entry.getValue());
+        }
+
+        return sortedOrgPrizeDatum;
+    }
+
+    private void eventScoreInsert(List<CompetitionAttend> cmptAttendDatum, Map<Long, OrgPrizeData> organizationTotalScore) {
+        for (CompetitionAttend cmptAttend : cmptAttendDatum) {
+            Organization org = cmptAttend.getOrganization();
+            //System.out.println("org.getOrgId(), org.getOrgName() = " + org.getOrgId() + ", " + org.getOrgName());
+
+            List<EventAttend> eventAttends = eventAttendRepository.findByCompetitionAttend(cmptAttend);
+            for (EventAttend eventAttend : eventAttends) {
+                OrgPrizeData updatedOrgPrizeData = organizationTotalScore.get(org.getOrgId());
+
+                int eventGradeScore = findCmptEventScore(eventAttend.getCompetitionEvent(), eventAttend.getGrade());
+                //수상 카운트 추가
+                updatedOrgPrizeData = addPrizeCnt(updatedOrgPrizeData, eventAttend.getGrade());
+                //총 합산 점수 연산
+                updatedOrgPrizeData.addTotalScore(eventGradeScore);
+                //참가 점수 합산
+                updatedOrgPrizeData.addTotalScore(eventAttend.getCompetitionEvent().getPartPoint());
+
+                organizationTotalScore.put(org.getOrgId(), updatedOrgPrizeData);
+            }
+        }
+    }
+
+    private int findCmptEventScore(CompetitionEvent competitionEvent, int grade) {
+        if (grade == 3) {
+            return competitionEvent.getFstPrizeStandard();
+        } else if (grade == 2) {
+            return competitionEvent.getSndPrizeStandard();
+        } else if (grade == 1) {
+            return competitionEvent.getTrdPrizeStandard();
+        } else {
+            return 0;
+        }
+    }
+
+    private OrgPrizeData addPrizeCnt(OrgPrizeData orgPrizeData, int grade) {
+        if (grade == 3) {
+            orgPrizeData.addFstPrizeCnt(1);
+        } else if (grade == 2) {
+            orgPrizeData.addSndPrizeCnt(1);
+        } else if (grade == 1) {
+            orgPrizeData.addTrdPrizeCnt(1);
+        }
+
+        return orgPrizeData;
+    }
 }
