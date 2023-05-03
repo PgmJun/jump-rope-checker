@@ -20,6 +20,7 @@ public class CompetitionAttendPlayerResponseDto {
     private String playerAffiliation;
     private Long eventAttendId;
     private String eventName;
+    private Long cmptEventId;
     private int grade;
     private int score;
 
@@ -29,6 +30,7 @@ public class CompetitionAttendPlayerResponseDto {
                 .grade(eventAttendResponseDto.getGrade())
                 .eventName(eventAttendResponseDto.getCmptEventName())
                 .eventAttendId(eventAttendResponseDto.getEventAttendId())
+                .cmptEventId(eventAttendResponseDto.getCmptEventId())
                 .cmptAttendId(cmptAttendResponseDto.getCmptAttendId())
                 .departmentName(cmptAttendResponseDto.getDepartmentName())
                 .organizationName(cmptAttendResponseDto.getOrganizationName())
