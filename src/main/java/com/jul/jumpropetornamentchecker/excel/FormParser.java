@@ -21,9 +21,7 @@ import static com.jul.jumpropetornamentchecker.excel.FormCreator.PLAYER_DEFAULT_
 @Component
 @Slf4j
 @RequiredArgsConstructor
-@Transactional
 public class FormParser {
-    private boolean isLastLow = false;
 
     public List<CompetitionAttendRequestDto> parseFormData(MultipartFile form) {
         return parse(form);
@@ -31,6 +29,7 @@ public class FormParser {
 
 
     private List<CompetitionAttendRequestDto> parse(MultipartFile file) {
+        boolean isLastLow = false;
         try {
             HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
             HSSFSheet sheet;
