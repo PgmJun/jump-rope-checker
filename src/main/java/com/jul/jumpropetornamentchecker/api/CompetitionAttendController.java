@@ -75,6 +75,7 @@ public class CompetitionAttendController extends ResponseEntityCreator {
     @Operation(summary = "엑셀 파일 선수 등록 API", description = "엑셀 파일을 사용하여 선수 데이터를 등록합니다.")
     public ResponseEntity<?> registerPlayerByExcelFile(@RequestParam(name = "attendForm") MultipartFile attendForm) {
         boolean saveResult = cmptAttendService.savePlayerByAttendForm(attendForm);
+        System.out.println(" 엑셀 선수 등록!! ");
         return getSaveDataResponseEntity(saveResult);
     }
 
