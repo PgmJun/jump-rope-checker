@@ -51,7 +51,17 @@ public class FormParser {
             ArrayList<Long> cmptEventIds = new ArrayList<>();
             currentRow = sheet.getRow(6);
             for (int cellIdx = PLAYER_DEFAULT_INFO_COUNT; cellIdx < currentRow.getLastCellNum(); cellIdx++) {
-                cmptEventIds.add(Long.parseLong(currentRow.getCell(cellIdx).toString()));
+                // 혹시 대회종목부분 건드렸을 때, 점검
+                if (currentRow.getCell(cellIdx) == null){
+                    break;
+                }
+                if (currentRow.getCell(cellIdx).toString().isBlank()) {
+                    break;
+                }
+                //대회종목ID 저장
+                String cmptEventId = currentRow.getCell(cellIdx).toString().replace(".0", "");
+
+                cmptEventIds.add(Long.parseLong(cmptEventId));
             }
 
             // 등록 유저 데이터 생성
@@ -70,6 +80,10 @@ public class FormParser {
                 for (int cellnum = 0; cellnum < PLAYER_DEFAULT_INFO_COUNT - 3; cellnum++) {
                     // 빈 컬럼 존재시 예외처리
                     if (currentRow.getCell(cellnum) == null) {
+                        isLastLow = true;
+                        break;
+                    }
+                    if (currentRow.getCell(cellnum).toString().trim().isBlank()) {
                         isLastLow = true;
                         break;
                     }
