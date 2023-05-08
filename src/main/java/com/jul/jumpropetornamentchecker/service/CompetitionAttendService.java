@@ -18,6 +18,7 @@ import com.jul.jumpropetornamentchecker.dto.organization.OrganizationResponseDto
 import com.jul.jumpropetornamentchecker.excel.FormCreator;
 import com.jul.jumpropetornamentchecker.excel.FormParser;
 import com.jul.jumpropetornamentchecker.repository.*;
+import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class CompetitionAttendService {
 
+    private final EntityManager em;
     private final CompetitionAttendRepository cmptAttendRepository;
     private final OrganizationRepository organizationRepository;
     private final CompetitionRepository competitionRepository;
@@ -76,11 +78,14 @@ public class CompetitionAttendService {
     @Transactional
     public Boolean savePlayerByAttendForm(MultipartFile attendForm) {
         boolean saveResult = true;
+        System.out.println("savePlayerByAttendForm 메서드 호출");
 
         try {
             List<CompetitionAttendRequestDto> competitionAttendRequestDtos = formParser.parseFormData(attendForm);
-            competitionAttendRequestDtos.forEach(dto -> saveSinglePlayer(dto));
-
+            competitionAttendRequestDtos.forEach(dto -> {
+                saveSinglePlayer(dto);
+            });
+            System.out.println("savePlayerByAttendForm 수행 완료");
         } catch (Exception e) {
             log.error(e.getMessage());
             saveResult = false;
