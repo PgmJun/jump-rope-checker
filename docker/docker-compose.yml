@@ -2,7 +2,7 @@ version: '3'
 
 services:
 
-  db-mysql:
+  mysql:
     container_name: db-mysql
     image: mysql/mysql-server:8.0
 
@@ -12,20 +12,9 @@ services:
       MYSQL_DATABASE: 'jrchecker'
       TZ: Asia/Seoul
 
-    volumes:
-      - ./db-mysql:/var/lib/mysql
-
     ports:
       - '3306:3306'
 
     command:
       - '--character-set-server=utf8mb4'
       - '--collation-server=utf8mb4_unicode_ci'
-
-    networks:
-      - local_network
-
-
-networks:
-  local_network:
-    external: true # 새로 local_network이 만들어지지않고, 기존 local_network에 연결된다.
